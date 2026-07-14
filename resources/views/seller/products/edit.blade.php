@@ -1,0 +1,237 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <div class="mb-8 flex items-center gap-4">
+        <a href="{{ route('seller.dashboard') }}" class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-primary hover:border-primary transition shadow-sm">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 mb-1">Edit Produk</h1>
+            <p class="text-gray-500">Perbarui informasi barang bekas Anda.</p>
+        </div>
+    </div>
+
+    @if($errors->any())
+        <div class="mb-6 bg-red-50 text-danger p-4 rounded-xl border border-red-100">
+            <ul class="list-disc pl-5">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="bg-white rounded-3xl border border-border-color shadow-sm overflow-hidden">
+        <form action="{{ route('seller.products.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="p-6 sm:p-10 space-y-8">
+            @csrf
+            @method('PUT')
+            
+            <!-- Info Dasar -->
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">Informasi Dasar</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
+                        <input type="text" name="title" value="{{ old('title', $product->title) }}" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                            <select name="category_id" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition bg-white cursor-pointer">
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}" {{ old('category_id', $product->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kondisi</label>
+                            <select name="condition" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition bg-white cursor-pointer">
+                                <option value="Barang Baru" {{ old('condition', $product->condition) == 'Barang Baru' ? 'selected' : '' }}>Barang Baru (BNIB)</option>
+                                <option value="Like New" {{ old('condition', $product->condition) == 'Like New' ? 'selected' : '' }}>Like New</option>
+                                <option value="Sangat Baik" {{ old('condition', $product->condition) == 'Sangat Baik' ? 'selected' : '' }}>Sangat Baik</option>
+                                <option value="Baik" {{ old('condition', $product->condition) == 'Baik' ? 'selected' : '' }}>Baik</option>
+                                <option value="Cukup" {{ old('condition', $product->condition) == 'Cukup' ? 'selected' : '' }}>Cukup</option>
+                                <option value="Rusak Ringan" {{ old('condition', $product->condition) == 'Rusak Ringan' ? 'selected' : '' }}>Rusak Ringan</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detail Harga & Lokasi -->
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">Detail Harga & Lokasi</h3>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <span class="text-gray-500">Rp</span>
+                                </div>
+                                <input type="number" name="price" value="{{ old('price', (int)$product->price) }}" required min="0" class="appearance-none block w-full pl-12 pr-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi Pengiriman (Kota)</label>
+                            <input type="text" name="location" value="{{ old('location', $product->location) }}" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deskripsi & Foto -->
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">Deskripsi & Foto</h3>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Lengkap</label>
+                        <textarea name="description" rows="5" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">{{ old('description', $product->description) }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Foto Produk Utama</label>
+                        
+                        <!-- Existing Images Grid -->
+                        @if($product->productImages->count() > 0)
+                        <div class="mb-6">
+                            <p class="text-sm font-medium text-gray-700 mb-3">Foto Saat Ini:</p>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                                @foreach($product->productImages as $img)
+                                <div class="relative w-full aspect-square rounded-xl overflow-hidden border border-gray-200 group bg-white">
+                                    <img src="{{ asset('storage/' . $img->image_path) }}" class="w-full h-full object-cover">
+                                    @if($img->is_primary)
+                                        <span class="absolute top-1 left-1 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">Foto Utama</span>
+                                    @endif
+                                    
+                                    <!-- Form to delete individual image -->
+                                    <button type="button" onclick="if(confirm('Hapus foto ini?')) { document.getElementById('delete-img-{{ $img->id }}').submit(); }" class="absolute top-1 right-1 bg-white/80 hover:bg-red-50 text-gray-700 hover:text-danger rounded-full p-1 opacity-0 group-hover:opacity-100 transition shadow-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    </button>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+
+                        @foreach($product->productImages as $img)
+                            <form id="delete-img-{{ $img->id }}" action="{{ route('seller.products.images.destroy', $img->id) }}" method="POST" class="hidden">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        @endforeach
+
+                        @if($product->productImages->count() < 5)
+                            <p class="text-sm font-medium text-gray-700 mb-2">Tambah Foto Baru (Sisa slot: {{ 5 - $product->productImages->count() }} foto)</p>
+                            <div class="flex flex-col gap-4">
+                                <!-- Preview Grid -->
+                                <div id="preview-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 hidden">
+                                    <!-- Previews will be injected here via JS -->
+                                </div>
+
+                                <!-- Upload Area -->
+                                <div id="upload-area" class="flex items-center justify-center w-full">
+                                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-2xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition hover:border-primary">
+                                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                            <i data-lucide="images" class="w-8 h-8 text-gray-400 mb-2"></i>
+                                            <p class="mb-1 text-sm text-gray-500"><span class="font-semibold">Klik untuk tambah foto</span></p>
+                                        </div>
+                                        <input id="dropzone-file" type="file" name="images[]" class="hidden" accept="image/*" multiple onchange="handleFiles(event)" />
+                                    </label>
+                                </div>
+                            </div>
+                        @else
+                            <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200 text-yellow-800 text-sm">
+                                Anda sudah mencapai batas maksimal 5 foto. Hapus beberapa foto untuk menambahkan yang baru.
+                            </div>
+                        @endif
+                    </div>
+                    
+                    <script>
+                        const existingCount = {{ $product->productImages->count() }};
+                        const maxAllowed = 5 - existingCount;
+                        let selectedFiles = [];
+
+                        function handleFiles(event) {
+                            const newFiles = Array.from(event.target.files);
+                            if (selectedFiles.length + newFiles.length > maxAllowed) {
+                                alert('Maksimal foto yang bisa ditambahkan adalah ' + maxAllowed);
+                                return;
+                            }
+
+                            selectedFiles = selectedFiles.concat(newFiles);
+                            updateFileInputAndPreview();
+                        }
+
+                        function removeFile(index) {
+                            selectedFiles.splice(index, 1);
+                            updateFileInputAndPreview();
+                        }
+
+                        function updateFileInputAndPreview() {
+                            const previewGrid = document.getElementById('preview-grid');
+                            const uploadArea = document.getElementById('upload-area');
+                            
+                            const dt = new DataTransfer();
+                            selectedFiles.forEach(file => dt.items.add(file));
+                            const fileInput = document.getElementById('dropzone-file');
+                            if(fileInput) fileInput.files = dt.files;
+
+                            if(previewGrid) previewGrid.innerHTML = '';
+                            
+                            if (selectedFiles.length > 0 && previewGrid) {
+                                previewGrid.classList.remove('hidden');
+                                if (selectedFiles.length >= maxAllowed && uploadArea) {
+                                    uploadArea.classList.add('hidden');
+                                } else if (uploadArea) {
+                                    uploadArea.classList.remove('hidden');
+                                }
+
+                                selectedFiles.forEach((file, index) => {
+                                    const reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        const div = document.createElement('div');
+                                        div.className = 'relative w-full aspect-square rounded-xl overflow-hidden border border-gray-200 group bg-white';
+                                        
+                                        div.innerHTML = `
+                                            <img src="${e.target.result}" class="w-full h-full object-cover" />
+                                            <button type="button" onclick="removeFile(${index})" class="absolute top-1 right-1 bg-white/80 hover:bg-red-50 text-gray-700 hover:text-danger rounded-full p-1 opacity-0 group-hover:opacity-100 transition shadow-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                            </button>
+                                        `;
+                                        previewGrid.appendChild(div);
+                                    }
+                                    reader.readAsDataURL(file);
+                                });
+                            } else {
+                                if(previewGrid) previewGrid.classList.add('hidden');
+                                if(uploadArea) uploadArea.classList.remove('hidden');
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">Status Produk</h3>
+                <select name="status" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition bg-white cursor-pointer">
+                    <option value="active" {{ old('status', $product->status) == 'active' ? 'selected' : '' }}>Aktif (Ditampilkan di Marketplace)</option>
+                    <option value="sold" {{ old('status', $product->status) == 'sold' ? 'selected' : '' }}>Terjual</option>
+                    <option value="archived" {{ old('status', $product->status) == 'archived' ? 'selected' : '' }}>Diarsipkan (Disembunyikan)</option>
+                </select>
+            </div>
+
+            <div class="pt-6 flex justify-end gap-3">
+                <a href="{{ route('seller.dashboard') }}" class="px-6 py-3 rounded-xl font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition">Batal</a>
+                <button type="submit" class="bg-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

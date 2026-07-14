@@ -1,0 +1,158 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 mb-1">Dashboard Penjual</h1>
+            <p class="text-gray-500">Kelola toko dan pantau performa penjualan Anda.</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ route('seller.orders.index') }}" class="px-5 py-2.5 bg-white border border-border-color text-gray-700 rounded-full font-medium hover:bg-gray-50 transition shadow-sm flex items-center gap-2">
+                <i data-lucide="package-search" class="w-4 h-4"></i> Kelola Pesanan
+            </a>
+            <a href="{{ route('seller.products.create') }}" class="px-5 py-2.5 bg-primary text-white rounded-full font-medium hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i> Tambah Produk
+            </a>
+        </div>
+    </div>
+
+    @if(session('success'))
+        <div class="mb-6 bg-green-50 text-success p-4 rounded-xl flex items-center gap-2 border border-green-100">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-3xl p-6 border border-border-color shadow-sm flex flex-col">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-primary">
+                    <i data-lucide="box" class="w-6 h-6"></i>
+                </div>
+            </div>
+            <div class="text-3xl font-bold text-gray-900 mb-1">{{ $totalProducts }}</div>
+            <div class="text-sm text-gray-500 font-medium">Total Produk</div>
+        </div>
+        
+        <div class="bg-white rounded-3xl p-6 border border-border-color shadow-sm flex flex-col">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-success">
+                    <i data-lucide="check-circle" class="w-6 h-6"></i>
+                </div>
+            </div>
+            <div class="text-3xl font-bold text-gray-900 mb-1">{{ $activeProducts }}</div>
+            <div class="text-sm text-gray-500 font-medium">Produk Aktif</div>
+        </div>
+        
+        <div class="bg-white rounded-3xl p-6 border border-border-color shadow-sm flex flex-col">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600">
+                    <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                </div>
+            </div>
+            <div class="text-3xl font-bold text-gray-900 mb-1">{{ $totalOrders }}</div>
+            <div class="text-sm text-gray-500 font-medium">Pesanan Masuk</div>
+        </div>
+        
+        <div class="bg-white rounded-3xl p-6 border border-border-color shadow-sm flex flex-col">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center text-secondary">
+                    <i data-lucide="banknote" class="w-6 h-6"></i>
+                </div>
+            </div>
+            <div class="text-3xl font-bold text-gray-900 mb-1">Rp {{ number_format($totalSales, 0, ',', '.') }}</div>
+            <div class="text-sm text-gray-500 font-medium">Total Pendapatan</div>
+        </div>
+    </div>
+
+    <!-- Product List -->
+    <div class="bg-white rounded-3xl border border-border-color shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h2 class="text-lg font-bold text-gray-900">Daftar Produk Anda</h2>
+            <div class="relative w-64">
+                <input type="text" placeholder="Cari produk..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-transparent rounded-full text-sm focus:bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-4 top-2.5"></i>
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/50 text-gray-500 text-sm">
+                        <th class="px-6 py-4 font-medium">Produk</th>
+                        <th class="px-6 py-4 font-medium">Harga</th>
+                        <th class="px-6 py-4 font-medium">Status</th>
+                        <th class="px-6 py-4 font-medium">Dilihat</th>
+                        <th class="px-6 py-4 font-medium text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @forelse($products as $product)
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
+                                    @if($product->primaryImage)
+                                        <img src="{{ asset('storage/' . $product->primaryImage->image_path) }}" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                            <i data-lucide="image" class="w-5 h-5"></i>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-900 mb-0.5 line-clamp-1">{{ $product->title }}</div>
+                                    <div class="text-xs text-gray-500">{{ $product->category->name }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="font-semibold text-gray-900">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($product->status == 'active')
+                                <span class="px-2.5 py-1 bg-green-50 text-success text-xs font-semibold rounded-full border border-green-100">Aktif</span>
+                            @elseif($product->status == 'sold')
+                                <span class="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full border border-gray-200">Terjual</span>
+                            @else
+                                <span class="px-2.5 py-1 bg-red-50 text-danger text-xs font-semibold rounded-full border border-red-100">Diarsipkan</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-gray-600">
+                            {{ $product->views }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{{ route('product.show', $product->slug) }}" target="_blank" class="p-2 text-gray-400 hover:text-primary transition" title="Lihat">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                </a>
+                                <a href="{{ route('seller.products.edit', $product->id) }}" class="p-2 text-gray-400 hover:text-secondary transition" title="Edit">
+                                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                                </a>
+                                <form action="{{ route('seller.products.destroy', $product->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 text-gray-400 hover:text-danger transition" title="Hapus">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                            Anda belum menambahkan produk apapun. 
+                            <a href="{{ route('seller.products.create') }}" class="text-primary font-medium hover:underline">Tambah Sekarang</a>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection
