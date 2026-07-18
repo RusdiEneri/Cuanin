@@ -62,7 +62,10 @@
                             
                             @foreach($sortedImages as $index => $image)
                                 <div class="w-full h-full flex-shrink-0 snap-center relative">
-                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $product->title }} - Image {{ $index + 1 }}" class="w-full h-full object-cover">
+                                    @php
+                                        $imgUrl = str_starts_with($image->image_path, 'http') ? $image->image_path : asset('storage/' . $image->image_path);
+                                    @endphp
+                                    <img src="{{ $imgUrl }}" alt="{{ $product->title }} - Image {{ $index + 1 }}" class="w-full h-full object-cover">
                                     
                                     <!-- Pagination Indicator -->
                                     <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10">
@@ -241,7 +244,10 @@
             <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/5 transition duration-300 group flex flex-col">
                 <a href="{{ route('product.show', $item->slug) }}" class="relative aspect-square bg-gray-50 overflow-hidden block">
                     @if($item->primaryImage)
-                        <img src="{{ asset('storage/' . $item->primaryImage->image_path) }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        @php
+                            $imgUrl = str_starts_with($item->primaryImage->image_path, 'http') ? $item->primaryImage->image_path : asset('storage/' . $item->primaryImage->image_path);
+                        @endphp
+                        <img src="{{ $imgUrl }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     @else
                         <div class="w-full h-full flex items-center justify-center text-gray-300">
                             <i data-lucide="image" class="w-10 h-10"></i>

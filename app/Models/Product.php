@@ -2,28 +2,46 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
-    protected $guarded = ['id'];
+    use HasFactory;
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = [
+        'user_id',
+        'category_id', 
+        'title',
+        'slug',
+        'description',
+        'price',
+        'condition',
+        'location',
+        'status',
+        'views',
+    ];
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function productImages()
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function productImages(): HasMany
     {
         return $this->hasMany(ProductImage::class);
     }
-    
-    public function primaryImage()
+
+    // 🎯 TAMBAHKAN METHOD INI
+    public function primaryImage(): HasOne
     {
         return $this->hasOne(ProductImage::class)->where('is_primary', true);
     }

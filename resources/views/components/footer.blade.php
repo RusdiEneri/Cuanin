@@ -10,7 +10,7 @@
                 </p>
                 <div class="flex space-x-4">
                     <a href="javascript:void(0)" class="text-gray-400 hover:text-primary transition"><i data-lucide="facebook" class="h-5 w-5"></i></a>
-                    <a href="javascript:void(0)" class="text-gray-400 hover:text-primary transition"><i data-lucide="twitter" class="h-5 w-5"></i></a>
+                    <a href="javascript:void(0)" class="text-gray-400 hover:text-primary transition"><i data-lucide="twitter-x" class="h-5 w-5"></i></a>
                     <a href="javascript:void(0)" class="text-gray-400 hover:text-primary transition"><i data-lucide="instagram" class="h-5 w-5"></i></a>
                 </div>
             </div>

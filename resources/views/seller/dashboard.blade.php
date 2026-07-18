@@ -96,7 +96,10 @@
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
                                     @if($product->primaryImage)
-                                        <img src="{{ asset('storage/' . $product->primaryImage->image_path) }}" class="w-full h-full object-cover">
+                                        @php
+                                            $imgUrl = str_starts_with($product->primaryImage->image_path, 'http') ? $product->primaryImage->image_path : asset('storage/' . $product->primaryImage->image_path);
+                                        @endphp
+                                        <img src="{{ $imgUrl }}" class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center text-gray-300">
                                             <i data-lucide="image" class="w-5 h-5"></i>
