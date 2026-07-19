@@ -12,7 +12,7 @@ class MarketplaceController extends Controller
     {
         $categories = Category::all();
         
-        $query = Product::with(['primaryImage', 'category'])->where('status', 'active');
+        $query = Product::with(['primaryImage', 'category', 'user'])->where('status', 'active');
         
         // Filter Pencarian
         if ($request->filled('q')) {
@@ -54,15 +54,20 @@ class MarketplaceController extends Controller
         } else {
             $query->latest();
         }
-
-        $products = $query->paginate(12)->withQueryString();
-
+//latest()
+        $products = $query->latest()->paginate(12)->withQueryString();
+    //  return view('marketplace.index', compact('products'));
         return view('marketplace.index', compact('products', 'categories'));
     }
 
     public function show($slug)
     {
-        $product = Product::with(['productImages', 'category', 'user'])->where('slug', $slug)->firstOrFail();
+        $product = Product::with(['primaryImage','productImages', 'category', 'user'])->where('slug', $slug)->firstOrFail();
+
+        if( $product->status !== 'active' && $product->user_id !== auth()->id()) {
+            // abort(404, 'Produk tidak ditemukan atau tidak aktif.');
+            return redirect()->route('marketplace')->with('error', 'Produk yang Anda cari sudah tidak tersedia atau tidak aktif. Silakan cari produk lain yang menarik!');
+        }
         
         // Tambah views
         $product->increment('views');

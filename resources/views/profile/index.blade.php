@@ -1,24 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
-    <!-- Header dengan Tombol Kembali -->
+    <!-- Header -->
     <div class="mb-8 flex items-center gap-4">
-        <a href="{{ route('seller.dashboard') }}" 
+        <a href="{{ route('home') }}" 
            class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-primary hover:border-primary transition shadow-sm">
             <i data-lucide="arrow-left" class="w-5 h-5"></i>
         </a>
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-1">Edit Produk</h1>
-            <p class="text-gray-500">Perbarui informasi barang bekas Anda.</p>
+            <h1 class="text-2xl font-bold text-gray-900 mb-1">Profil Saya</h1>
+            <p class="text-gray-500">Kelola informasi pribadi dan keamanan akun Anda.</p>
         </div>
     </div>
 
     <!-- Error Validation -->
     @if($errors->any())
         <div class="mb-6 bg-red-50 text-danger p-4 rounded-xl border border-red-100">
-            <ul class="list-disc pl-5 space-y-1">
+            <div class="flex items-center gap-2 mb-2 font-semibold">
+                <i data-lucide="alert-circle" class="w-5 h-5"></i> Terdapat kesalahan input:
+            </div>
+            <ul class="list-disc pl-5 space-y-1 text-sm">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -28,413 +31,256 @@
 
     <!-- Success Message -->
     @if(session('success'))
-        <div class="mb-6 bg-green-50 text-green-700 p-4 rounded-xl border border-green-200">
+        <div class="mb-6 bg-green-50 text-green-700 p-4 rounded-xl border border-green-200 flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
             {{ session('success') }}
         </div>
     @endif
 
-    <!-- Main Form Card -->
-    <div class="bg-white rounded-3xl border border-border-color shadow-sm overflow-hidden">
-        <form action="{{ route('seller.products.update', $product->id) }}" 
-              method="POST" 
-              enctype="multipart/form-data" 
-              id="editProductForm"
-              class="p-6 sm:p-10 space-y-8">
-            @csrf
-            @method('PUT')
-            
-            <!-- INFORMASI DASAR -->
-            <section>
-                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">
-                    Informasi Dasar
-                </h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Nama Produk <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" 
-                               name="title" 
-                               value="{{ old('title', $product->title) }}" 
-                               required 
-                               class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Kategori <span class="text-red-500">*</span>
-                            </label>
-                            <select name="category_id" 
-                                    required 
-                                    class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition bg-white cursor-pointer">
-                                @foreach($categories as $cat)
-                                    <option value="{{ $cat->id }}" 
-                                            {{ old('category_id', $product->category_id) == $cat->id ? 'selected' : '' }}>
-                                        {{ $cat->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Kondisi <span class="text-red-500">*</span>
-                            </label>
-                            <select name="condition" 
-                                    required 
-                                    class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition bg-white cursor-pointer">
-                                @php
-                                    $conditions = [
-                                        'Barang Baru' => 'Barang Baru (BNIB)',
-                                        'Like New' => 'Like New',
-                                        'Sangat Baik' => 'Sangat Baik',
-                                        'Baik' => 'Baik',
-                                        'Cukup' => 'Cukup',
-                                        'Rusak Ringan' => 'Rusak Ringan'
-                                    ];
-                                @endphp
-                                @foreach($conditions as $value => $label)
-                                    <option value="{{ $value }}" 
-                                            {{ old('condition', $product->condition) == $value ? 'selected' : '' }}>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- HARGA & LOKASI -->
-            <section>
-                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">
-                    Detail Harga & Lokasi
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Harga (Rp) <span class="text-red-500">*</span>
-                        </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <span class="text-gray-500 font-medium">Rp</span>
-                            </div>
-                            <input type="number" 
-                                   name="price" 
-                                   value="{{ old('price', (int)$product->price) }}" 
-                                   required 
-                                   min="0" 
-                                   class="appearance-none block w-full pl-12 pr-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Lokasi Pengiriman (Kota) <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" 
-                               name="location" 
-                               value="{{ old('location', $product->location) }}" 
-                               required 
-                               placeholder="Contoh: Jakarta Selatan"
-                               class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                    </div>
-                </div>
-            </section>
-
-            <!-- DESKRIPSI & FOTO -->
-            <section>
-                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">
-                    Deskripsi & Foto
-                </h3>
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Deskripsi Lengkap <span class="text-red-500">*</span>
-                        </label>
-                        <textarea name="description" 
-                                  rows="5" 
-                                  required 
-                                  placeholder="Jelaskan kondisi produk, kelengkapan, dan detail lainnya..."
-                                  class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none">{{ old('description', $product->description) }}</textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Foto Produk
-                        </label>
-                        
-                        @php
-                            $existingImages = $product->productImages ?? collect();
-                            $currentCount = $existingImages->count();
-                            $remainingSlots = 5 - $currentCount;
-                        @endphp
-
-                        @if($currentCount > 0)
-                        <div class="mb-6">
-                            <p class="text-sm font-medium text-gray-700 mb-3">
-                                Foto Saat Ini ({{ $currentCount }}/5):
-                            </p>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                                @foreach($existingImages as $img)
-                                    @php
-                                        $imgUrl = str_starts_with($img->image_path, 'http') 
-                                            ? $img->image_path 
-                                            : asset('storage/' . $img->image_path);
-                                    @endphp
-                                    <div class="relative w-full aspect-square rounded-xl overflow-hidden border border-gray-200 group bg-white">
-                                        <img src="{{ $imgUrl }}" 
-                                             alt="Product image" 
-                                             class="w-full h-full object-cover">
-                                        
-                                        @if($img->is_primary)
-                                            <span class="absolute top-1 left-1 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
-                                                Utama
-                                            </span>
-                                        @endif
-                                        
-                                        <button type="button" 
-                                                onclick="confirmDeleteImage({{ $img->id }})" 
-                                                class="absolute top-1 right-1 bg-white/90 hover:bg-red-50 text-gray-700 hover:text-danger rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition shadow-sm">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                        
-                                        <form id="delete-img-{{ $img->id }}" 
-                                              action="{{ route('seller.products.images.destroy', $img->id) }}" 
-                                              method="POST" 
-                                              class="hidden">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        @endif
-
-                        @if($remainingSlots > 0)
-                            <div class="space-y-4">
-                                <p class="text-sm font-medium text-gray-700">
-                                    Tambah Foto Baru (Sisa slot: <span class="text-primary font-bold">{{ $remainingSlots }}</span>)
-                                </p>
-                                
-                                <div id="preview-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 hidden"></div>
-
-                                <div id="upload-area" class="flex items-center justify-center w-full">
-                                    <label for="dropzone-file" 
-                                           class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-2xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition hover:border-primary hover:bg-blue-50">
-                                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                            <i data-lucide="images" class="w-8 h-8 text-gray-400 mb-2"></i>
-                                            <p class="mb-1 text-sm text-gray-500">
-                                                <span class="font-semibold">Klik untuk upload</span> atau drag & drop
-                                            </p>
-                                            <p class="text-xs text-gray-400">PNG, JPG hingga 5MB</p>
-                                        </div>
-                                        <input id="dropzone-file" 
-                                               type="file" 
-                                               name="images[]" 
-                                               class="hidden" 
-                                               accept="image/*" 
-                                               multiple />
-                                    </label>
-                                </div>
-                            </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Sidebar: Info User & Status Penjual -->
+        <div class="md:col-span-1">
+            <div class="bg-white rounded-3xl border border-border-color shadow-sm p-6 text-center sticky top-24">
+                <!-- Avatar Container dengan aspect-ratio square -->
+                <div class="w-28 h-28 mx-auto mb-4 relative">
+                    <div class="w-full h-full rounded-full overflow-hidden border-4 border-primary/10 shadow-md bg-blue-50">
+                        @if($user->avatar)
+                            <img src="{{ asset('storage/' . $user->avatar) }}" 
+                                alt="{{ $user->name }}" 
+                                class="w-full h-full object-cover"
+                                style="aspect-ratio: 1 / 1;">
                         @else
-                            <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200 text-yellow-800 text-sm flex items-center gap-2">
-                                <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                                Anda sudah mencapai batas maksimal 5 foto. Hapus beberapa foto untuk menambahkan yang baru.
+                            <div class="w-full h-full rounded-full flex items-center justify-center text-primary font-bold text-4xl bg-blue-100" style="aspect-ratio: 1 / 1;">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
                             </div>
                         @endif
                     </div>
                 </div>
-            </section>
-
-            <!-- STATUS PRODUK -->
-            <section>
-                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">
-                    Status Produk
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    @php
-                        $statuses = [
-                            'active' => [
-                                'icon' => 'check-circle',
-                                'label' => 'Aktif',
-                                'desc' => 'Ditampilkan di Marketplace',
-                                'color' => 'green',
-                                'bg' => 'blue-50',
-                                'border' => 'primary'
-                            ],
-                            'sold' => [
-                                'icon' => 'package-check',
-                                'label' => 'Terjual',
-                                'desc' => 'Produk sudah terjual',
-                                'color' => 'yellow',
-                                'bg' => 'yellow-50',
-                                'border' => 'yellow-500'
-                            ],
-                            'archived' => [
-                                'icon' => 'archive',
-                                'label' => 'Diarsipkan',
-                                'desc' => 'Disembunyikan dari Marketplace',
-                                'color' => 'gray',
-                                'bg' => 'gray-50',
-                                'border' => 'gray-500'
-                            ]
-                        ];
-                    @endphp
-
-                    @foreach($statuses as $value => $status)
-                        <label class="cursor-pointer group">
-                            <input type="radio" 
-                                   name="status" 
-                                   value="{{ $value }}" 
-                                   {{ old('status', $product->status) == $value ? 'checked' : '' }} 
-                                   class="sr-only peer" 
-                                   required>
-                            <div class="p-4 border-2 border-gray-200 rounded-xl hover:border-{{ $status['border'] }} transition peer-checked:border-{{ $status['border'] }} peer-checked:bg-{{ $status['bg'] }}">
-                                <div class="flex items-center gap-2 text-gray-700 font-semibold">
-                                    <i data-lucide="{{ $status['icon'] }}" class="w-5 h-5 text-{{ $status['color'] }}-500"></i> 
-                                    {{ $status['label'] }}
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">{{ $status['desc'] }}</p>
-                            </div>
-                        </label>
-                    @endforeach
-                </div>
-            </section>
-
-            <!-- ACTION BUTTONS -->
-            <div class="pt-6 border-t border-gray-100 flex justify-end gap-3">
-                <a href="{{ route('seller.dashboard') }}" 
-                   class="px-6 py-3 rounded-xl font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition">
-                    Batal
-                </a>
-                <button type="submit" 
-                        id="submitBtn"
-                        class="bg-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
-                    <i data-lucide="save" class="w-5 h-5"></i>
-                    <span id="submitText">Simpan Perubahan</span>
-                </button>
+                
+                <h2 class="text-xl font-bold text-gray-900">{{ $user->name }}</h2>
+                <p class="text-sm text-gray-500 mb-4 break-all">{{ $user->email }}</p>
+                
+                @if($user->role === 'penjual')
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 text-xs font-semibold rounded-full border border-green-200">
+                        <i data-lucide="store" class="w-3.5 h-3.5"></i> Penjual Aktif
+                    </span>
+                    <div class="mt-5 pt-5 border-t border-gray-100">
+                        <a href="{{ route('seller.dashboard') }}" class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-primary text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-sm text-sm">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Buka Dashboard
+                        </a>
+                    </div>
+                @else
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-600 text-xs font-semibold rounded-full border border-gray-200">
+                        <i data-lucide="user" class="w-3.5 h-3.5"></i> Pembeli
+                    </span>
+                    <div class="mt-5 pt-5 border-t border-gray-100">
+                        <p class="text-xs text-gray-500 mb-3">Ingin menjual barang bekas Anda?</p>
+                        <form action="{{ route('profile.becomeSeller') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full py-2.5 px-4 bg-secondary text-dark font-bold rounded-xl hover:bg-yellow-500 transition shadow-sm text-sm flex items-center justify-center gap-2">
+                                <i data-lucide="shopping-bag" class="w-4 h-4"></i> Mulai Jadi Penjual
+                            </button>
+                        </form>
+                    </div>
+                @endif
             </div>
-        </form>
+        </div>
+
+        <!-- Main Form -->
+        <div class="md:col-span-2">
+            <div class="bg-white rounded-3xl border border-border-color shadow-sm overflow-hidden">
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="p-6 sm:p-8 space-y-8" id="profile-form">
+                    @csrf
+                    @method('PUT')
+
+                    <!-- Informasi Pribadi -->
+                    <section>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <i data-lucide="user-cog" class="w-5 h-5 text-primary"></i> Informasi Pribadi
+                        </h3>
+                        <div class="space-y-6">
+                            
+                            <!-- 🌟 AVATAR / FOTO PROFIL (DESAIN BARU) 🌟 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Foto Profil</label>
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                                    
+                                    <!-- Preview Foto -->
+                                    <div class="relative w-24 h-24 rounded-full overflow-hidden border-4 border-primary/10 bg-blue-50 flex-shrink-0 shadow-sm" id="avatar-preview-container">
+                                        @if($user->avatar)
+                                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full rounded-full flex items-center justify-center text-primary font-bold text-3xl bg-blue-100">
+                                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Action Buttons & Info -->
+                                    <div class="flex-1 space-y-3">
+                                        <div class="flex flex-wrap items-center gap-3">
+                                            <!-- Tombol Ganti Foto -->
+                                            <label for="avatar-input" class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm">
+                                                <i data-lucide="camera" class="w-4 h-4"></i> Ganti Foto
+                                            </label>
+                                            <input type="file" name="avatar" id="avatar-input" accept="image/png, image/jpeg, image/webp" class="hidden">
+                                            
+                                            <!-- Checkbox Hapus Foto (Muncul jika user punya avatar) -->
+                                            @if($user->avatar)
+                                                <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-danger hover:text-red-700 font-medium transition select-none" id="remove-avatar-label">
+                                                    <input type="checkbox" name="remove_avatar" value="1" class="w-4 h-4 text-danger border-gray-300 rounded focus:ring-danger" id="remove-avatar-checkbox">
+                                                    Hapus Foto
+                                                </label>
+                                            @endif
+                                        </div>
+                                        
+                                        <div class="text-xs text-gray-500 flex items-center gap-1.5">
+                                            <i data-lucide="info" class="w-3.5 h-3.5 text-gray-400"></i>
+                                            Format: JPG, PNG, WEBP. Maksimal 2MB.
+                                        </div>
+                                        
+                                        <!-- Pesan Error dari Javascript -->
+                                        <p class="text-xs text-danger font-medium hidden items-center gap-1.5" id="avatar-error">
+                                            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+                                            <span id="avatar-error-text"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Name -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                                <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            </div>
+
+                            <!-- Phone -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon / WhatsApp</label>
+                                <input type="text" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}" placeholder="08123456789" class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            </div>
+
+                            <!-- Address -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
+                                <textarea name="address" rows="3" placeholder="Jl. Contoh No. 123, Kecamatan, Kota" class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none">{{ old('address', $user->address) }}</textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Keamanan Akun -->
+                    <section>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-primary"></i> Keamanan Akun
+                        </h3>
+                        <div class="space-y-4">
+                            <p class="text-sm text-gray-500 bg-blue-50 p-3 rounded-lg border border-blue-100 flex items-start gap-2">
+                                <i data-lucide="info" class="w-4 h-4 mt-0.5 flex-shrink-0 text-primary"></i> 
+                                <span>Kosongkan kolom di bawah jika Anda tidak ingin mengubah kata sandi.</span>
+                            </p>
+                            
+                            <!-- Password -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi Baru</label>
+                                <input type="password" name="password" autocomplete="new-password" placeholder="Minimal 8 karakter" class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Kata Sandi Baru</label>
+                                <input type="password" name="password_confirmation" autocomplete="new-password" placeholder="Ulangi kata sandi baru" class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Action Button -->
+                    <div class="pt-4 flex justify-end border-t border-gray-100">
+                        <button type="submit" class="bg-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
+                            <i data-lucide="save" class="w-5 h-5"></i>
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- JavaScript untuk Upload Foto - DIPERBAIKI -->
+<!-- 🌟 JAVASCRIPT UNTUK PREVIEW & VALIDASI FOTO 🌟 -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const existingCount = {{ $currentCount }};
-    const maxAllowed = {{ $remainingSlots }};
-    let selectedFiles = [];
+    const avatarInput = document.getElementById('avatar-input');
+    const avatarError = document.getElementById('avatar-error');
+    const avatarErrorText = document.getElementById('avatar-error-text');
+    const previewContainer = document.getElementById('avatar-preview-container');
+    const removeCheckbox = document.getElementById('remove-avatar-checkbox');
     
-    const fileInput = document.getElementById('dropzone-file');
-    const previewGrid = document.getElementById('preview-grid');
-    const uploadArea = document.getElementById('upload-area');
-    const form = document.getElementById('editProductForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const submitText = document.getElementById('submitText');
+    // Simpan HTML asli untuk placeholder jika user batal upload / hapus
+    const originalPreviewHTML = previewContainer.innerHTML;
 
-    // Handle file input change
-    if (fileInput) {
-        fileInput.addEventListener('change', function(event) {
-            const newFiles = Array.from(event.target.files);
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
             
-            if (selectedFiles.length + newFiles.length > maxAllowed) {
-                alert(`Maksimal foto yang bisa ditambahkan adalah ${maxAllowed}`);
-                event.target.value = '';
-                return;
+            // Reset error
+            avatarError.classList.add('hidden');
+            avatarError.classList.remove('flex');
+            avatarErrorText.textContent = '';
+
+            if (file) {
+                // 1. Validasi Ukuran (Maksimal 2MB)
+                const maxSize = 2 * 1024 * 1024; // 2MB
+                if (file.size > maxSize) {
+                    avatarErrorText.textContent = `Ukuran file terlalu besar! Maksimal 2MB. (Ukuran file Anda: ${(file.size / (1024*1024)).toFixed(2)} MB)`;
+                    avatarError.classList.remove('hidden');
+                    avatarError.classList.add('flex');
+                    e.target.value = ''; // Reset input file
+                    previewContainer.innerHTML = originalPreviewHTML; // Kembalikan preview
+                    if (removeCheckbox) removeCheckbox.checked = false;
+                    if (window.lucide) lucide.createIcons();
+                    return;
+                }
+
+                // 2. Validasi Tipe File
+                const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    avatarErrorText.textContent = 'Format file tidak valid! Gunakan JPG, PNG, atau WEBP.';
+                    avatarError.classList.remove('hidden');
+                    avatarError.classList.add('flex');
+                    e.target.value = '';
+                    previewContainer.innerHTML = originalPreviewHTML;
+                    if (removeCheckbox) removeCheckbox.checked = false;
+                    if (window.lucide) lucide.createIcons();
+                    return;
+                }
+
+                // 3. Preview Gambar Langsung
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    previewContainer.innerHTML = `<img src="${event.target.result}" alt="Preview Avatar" class="w-full h-full object-cover">`;
+                }
+                reader.readAsDataURL(file);
+
+                // Jika user upload foto baru, batalkan centang "Hapus Foto"
+                if (removeCheckbox) removeCheckbox.checked = false;
             }
-            
-            selectedFiles = selectedFiles.concat(newFiles);
-            updateFileInputAndPreview();
         });
     }
 
-    // Remove file from selection
-    window.removeFile = function(index) {
-        selectedFiles.splice(index, 1);
-        updateFileInputAndPreview();
-    }
-
-    // Confirm delete existing image
-    window.confirmDeleteImage = function(imageId) {
-        if (confirm('Yakin ingin menghapus foto ini?')) {
-            const deleteForm = document.getElementById(`delete-img-${imageId}`);
-            if (deleteForm) {
-                deleteForm.submit();
-            }
-        }
-    }
-
-    // Update preview and file input
-    function updateFileInputAndPreview() {
-        // Update file input
-        const dt = new DataTransfer();
-        selectedFiles.forEach(file => dt.items.add(file));
-        if (fileInput) {
-            fileInput.files = dt.files;
-        }
-
-        // Clear preview
-        if (previewGrid) {
-            previewGrid.innerHTML = '';
-        }
-        
-        if (selectedFiles.length > 0 && previewGrid) {
-            previewGrid.classList.remove('hidden');
-            
-            if (selectedFiles.length >= maxAllowed && uploadArea) {
-                uploadArea.classList.add('hidden');
-            } else if (uploadArea) {
-                uploadArea.classList.remove('hidden');
-            }
-
-            selectedFiles.forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = 'relative w-full aspect-square rounded-xl overflow-hidden border border-gray-200 group bg-white';
-                    
-                    div.innerHTML = `
-                        <img src="${e.target.result}" class="w-full h-full object-cover" alt="Preview" />
-                        <button type="button" 
-                                onclick="removeFile(${index})" 
-                                class="absolute top-1 right-1 bg-white/90 hover:bg-red-50 text-gray-700 hover:text-danger rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition shadow-sm">
-                            <i data-lucide="x" class="w-4 h-4"></i>
-                        </button>
-                    `;
-                    previewGrid.appendChild(div);
-                }
-                reader.readAsDataURL(file);
-            });
-            
-            // Re-initialize Lucide icons with error handling
-            try {
-                if (window.lucide && typeof window.lucide.createIcons === 'function') {
-                    window.lucide.createIcons();
-                }
-            } catch (error) {
-                console.warn('Lucide icons error:', error);
-            }
-        } else {
-            if (previewGrid) {
-                previewGrid.classList.add('hidden');
-            }
-            if (uploadArea) {
-                uploadArea.classList.remove('hidden');
-            }
-        }
-    }
-
-    // Form submission with loading state
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            if (submitBtn && submitText) {
-                submitBtn.disabled = true;
-                submitText.textContent = 'Menyimpan...';
-                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+    // Handle jika user centang "Hapus Foto"
+    if (removeCheckbox) {
+        removeCheckbox.addEventListener('change', function(e) {
+            avatarError.classList.add('hidden'); // Reset error
+            if (e.target.checked) {
+                // Tampilkan placeholder inisial
+                const initial = "{{ strtoupper(substr($user->name, 0, 1)) }}";
+                previewContainer.innerHTML = `<div class="w-full h-full rounded-full flex items-center justify-center text-primary font-bold text-3xl bg-blue-100">${initial}</div>`;
+                // Kosongkan input file jika ada
+                if (avatarInput) avatarInput.value = '';
+            } else {
+                // Kembalikan ke foto asli
+                previewContainer.innerHTML = originalPreviewHTML;
             }
         });
     }

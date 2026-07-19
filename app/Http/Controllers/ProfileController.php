@@ -23,7 +23,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'phone_number' => 'nullable|string|max:20',
             'address' => 'nullable|string',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', // Validasi backend 2MB
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
@@ -31,9 +31,17 @@ class ProfileController extends Controller
         $user->phone_number = $request->phone_number;
         $user->address = $request->address;
 
-        if ($request->hasFile('avatar')) {
+        // 🌟 LOGIKA AVATAR BARU 🌟
+        if ($request->boolean('remove_avatar')) {
+            // 1. Jika user mencentang "Hapus Foto"
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
+                $user->avatar = null;
+            }
+        } elseif ($request->hasFile('avatar')) {
+            // 2. Jika user upload foto baru
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar); // Hapus yang lama agar tidak menumpuk
             }
             $path = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $path;

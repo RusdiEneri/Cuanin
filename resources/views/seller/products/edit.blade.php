@@ -253,52 +253,58 @@
                     Status Produk
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    @php
-                        $statuses = [
-                            'active' => [
-                                'icon' => 'check-circle',
-                                'label' => 'Aktif',
-                                'desc' => 'Ditampilkan di Marketplace',
-                                'color' => 'green',
-                                'bg' => 'blue-50',
-                                'border' => 'primary'
-                            ],
-                            'sold' => [
-                                'icon' => 'package-check',
-                                'label' => 'Terjual',
-                                'desc' => 'Produk sudah terjual',
-                                'color' => 'yellow',
-                                'bg' => 'yellow-50',
-                                'border' => 'yellow-500'
-                            ],
-                            'archived' => [
-                                'icon' => 'archive',
-                                'label' => 'Diarsipkan',
-                                'desc' => 'Disembunyikan dari Marketplace',
-                                'color' => 'gray',
-                                'bg' => 'gray-50',
-                                'border' => 'gray-500'
-                            ]
-                        ];
-                    @endphp
-
-                    @foreach($statuses as $value => $status)
-                        <label class="cursor-pointer group">
-                            <input type="radio" 
-                                   name="status" 
-                                   value="{{ $value }}" 
-                                   {{ old('status', $product->status) == $value ? 'checked' : '' }} 
-                                   class="sr-only peer" 
-                                   required>
-                            <div class="p-4 border-2 border-gray-200 rounded-xl hover:border-{{ $status['border'] }} transition peer-checked:border-{{ $status['border'] }} peer-checked:bg-{{ $status['bg'] }}">
-                                <div class="flex items-center gap-2 text-gray-700 font-semibold">
-                                    <i data-lucide="{{ $status['icon'] }}" class="w-5 h-5 text-{{ $status['color'] }}-500"></i> 
-                                    {{ $status['label'] }}
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">{{ $status['desc'] }}</p>
+                    
+                    <!-- Pilihan 1: Aktif -->
+                    <label class="cursor-pointer">
+                        <input type="radio" 
+                               name="status" 
+                               value="active" 
+                               {{ old('status', $product->status) == 'active' ? 'checked' : '' }} 
+                               class="sr-only peer" 
+                               required>
+                        <div class="p-4 border-2 border-gray-200 rounded-xl hover:border-primary transition peer-checked:border-primary peer-checked:bg-blue-50">
+                            <div class="flex items-center gap-2 text-gray-700 font-semibold">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-green-500"></i> 
+                                Aktif
                             </div>
-                        </label>
-                    @endforeach
+                            <p class="text-xs text-gray-500 mt-1">Ditampilkan di Marketplace</p>
+                        </div>
+                    </label>
+
+                    <!-- Pilihan 2: Terjual -->
+                    <label class="cursor-pointer">
+                        <input type="radio" 
+                               name="status" 
+                               value="sold" 
+                               {{ old('status', $product->status) == 'sold' ? 'checked' : '' }} 
+                               class="sr-only peer" 
+                               required>
+                        <div class="p-4 border-2 border-gray-200 rounded-xl hover:border-yellow-500 transition peer-checked:border-yellow-500 peer-checked:bg-yellow-50">
+                            <div class="flex items-center gap-2 text-gray-700 font-semibold">
+                                <i data-lucide="package-check" class="w-5 h-5 text-yellow-600"></i> 
+                                Terjual
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Produk sudah terjual</p>
+                        </div>
+                    </label>
+
+                    <!-- Pilihan 3: Diarsipkan -->
+                    <label class="cursor-pointer">
+                        <input type="radio" 
+                               name="status" 
+                               value="archived" 
+                               {{ old('status', $product->status) == 'archived' ? 'checked' : '' }} 
+                               class="sr-only peer" 
+                               required>
+                        <div class="p-4 border-2 border-gray-200 rounded-xl hover:border-gray-500 transition peer-checked:border-gray-500 peer-checked:bg-gray-50">
+                            <div class="flex items-center gap-2 text-gray-700 font-semibold">
+                                <i data-lucide="archive" class="w-5 h-5 text-gray-500"></i> 
+                                Diarsipkan
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Disembunyikan dari Marketplace</p>
+                        </div>
+                    </label>
+
                 </div>
             </section>
 
