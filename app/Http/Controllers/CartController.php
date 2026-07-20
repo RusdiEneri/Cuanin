@@ -28,6 +28,10 @@ class CartController extends Controller
         ]);
 
         $product = Product::findOrFail($request->product_id);
+
+        if ($product->status !== 'active') {
+        return back()->with('error', 'Produk ini sudah tidak tersedia (Terjual/Diarsipkan).');
+    }
         
         // Cek jika produk milik sendiri
         if ($product->user_id == Auth::id()) {

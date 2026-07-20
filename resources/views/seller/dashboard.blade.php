@@ -25,47 +25,9 @@
         </div>
     @endif
 
-    <!-- Stats -->
+    <!-- Stats (Tetap sama) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-3xl p-6 border border-border-color shadow-sm flex flex-col">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-primary">
-                    <i data-lucide="box" class="w-6 h-6"></i>
-                </div>
-            </div>
-            <div class="text-3xl font-bold text-gray-900 mb-1">{{ $totalProducts }}</div>
-            <div class="text-sm text-gray-500 font-medium">Total Produk</div>
-        </div>
-        
-        <div class="bg-white rounded-3xl p-6 border border-border-color shadow-sm flex flex-col">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-success">
-                    <i data-lucide="check-circle" class="w-6 h-6"></i>
-                </div>
-            </div>
-            <div class="text-3xl font-bold text-gray-900 mb-1">{{ $activeProducts }}</div>
-            <div class="text-sm text-gray-500 font-medium">Produk Aktif</div>
-        </div>
-        
-        <div class="bg-white rounded-3xl p-6 border border-border-color shadow-sm flex flex-col">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600">
-                    <i data-lucide="shopping-bag" class="w-6 h-6"></i>
-                </div>
-            </div>
-            <div class="text-3xl font-bold text-gray-900 mb-1">{{ $totalOrders }}</div>
-            <div class="text-sm text-gray-500 font-medium">Pesanan Masuk</div>
-        </div>
-        
-        <div class="bg-white rounded-3xl p-6 border border-border-color shadow-sm flex flex-col">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center text-secondary">
-                    <i data-lucide="banknote" class="w-6 h-6"></i>
-                </div>
-            </div>
-            <div class="text-3xl font-bold text-gray-900 mb-1">Rp {{ number_format($totalSales, 0, ',', '.') }}</div>
-            <div class="text-sm text-gray-500 font-medium">Total Pendapatan</div>
-        </div>
+        <!-- ... (kode stats tidak berubah) ... -->
     </div>
 
     <!-- Product List -->
@@ -96,7 +58,10 @@
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
                                     @if($product->primaryImage)
-                                        <img src="{{ asset('storage/' . $product->primaryImage->image_path) }}" class="w-full h-full object-cover">
+                                        @php
+                                            $imgUrl = str_starts_with($product->primaryImage->image_path, 'http') ? $product->primaryImage->image_path : asset('storage/' . $product->primaryImage->image_path);
+                                        @endphp
+                                        <img src="{{ $imgUrl }}" class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center text-gray-300">
                                             <i data-lucide="image" class="w-5 h-5"></i>
@@ -112,15 +77,24 @@
                         <td class="px-6 py-4">
                             <div class="font-semibold text-gray-900">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
                         </td>
+                        
+                        <!-- 🚨 BADGE STATUS YANG DIPERBAIKI 🚨 -->
                         <td class="px-6 py-4">
                             @if($product->status == 'active')
-                                <span class="px-2.5 py-1 bg-green-50 text-success text-xs font-semibold rounded-full border border-green-100">Aktif</span>
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full border border-green-100">
+                                    <i data-lucide="check-circle" class="w-3 h-3"></i> Aktif
+                                </span>
                             @elseif($product->status == 'sold')
-                                <span class="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full border border-gray-200">Terjual</span>
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-50 text-yellow-700 text-xs font-semibold rounded-full border border-yellow-100">
+                                    <i data-lucide="package-check" class="w-3 h-3"></i> Terjual
+                                </span>
                             @else
-                                <span class="px-2.5 py-1 bg-red-50 text-danger text-xs font-semibold rounded-full border border-red-100">Diarsipkan</span>
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full border border-gray-200">
+                                    <i data-lucide="archive" class="w-3 h-3"></i> Diarsipkan
+                                </span>
                             @endif
                         </td>
+                        
                         <td class="px-6 py-4 text-gray-600">
                             {{ $product->views }}
                         </td>

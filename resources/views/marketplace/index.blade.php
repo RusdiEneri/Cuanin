@@ -148,7 +148,10 @@
                     <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/10 transition duration-300 group flex flex-col relative">
                         <a href="{{ route('product.show', $item->slug) }}" class="relative aspect-square bg-gray-50 overflow-hidden block">
                             @if($item->primaryImage)
-                                <img src="{{ asset('storage/' . $item->primaryImage->image_path) }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                @php
+                                    $imgUrl = str_starts_with($item->primaryImage->image_path, 'http') ? $item->primaryImage->image_path : asset('storage/' . $item->primaryImage->image_path);
+                                @endphp
+                                <img src="{{ $imgUrl }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-gray-300">
                                     <i data-lucide="image" class="w-12 h-12"></i>

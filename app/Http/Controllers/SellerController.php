@@ -81,62 +81,75 @@ class SellerController extends Controller
     }
 
     public function edit($id)
-    {
-        $product = Product::where('user_id', Auth::id())->findOrFail($id);
+{
+        $product = Product::with('productImages')->findOrFail($id);
+        
+        // Security: hanya owner yang bisa edit
+        if ($product->user_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses.');
+        }
+
         $categories = Category::all();
         return view('seller.products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, $id)
-    {
-        $product = Product::where('user_id', Auth::id())->findOrFail($id);
+{
+    // 1. Ambil data produk berdasarkan ID
+    $product = \App\Models\Product::findOrFail($id);
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'condition' => 'required|string',
-            'location' => 'required|string',
-            'status' => 'required|in:active,sold,archived',
-            'images' => 'nullable|array|max:5',
-            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
-
-        $product->update([
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'description' => $request->description,
-            'price' => $request->price,
-            'condition' => $request->condition,
-            'location' => $request->location,
-            'status' => $request->status,
-        ]);
-
-        if ($request->hasFile('images')) {
-            // Check if product already has primary image
-            $hasPrimary = $product->primaryImage ? true : false;
-            
-            foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('products', 'public');
-                
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_path' => $path,
-                    'is_primary' => !$hasPrimary && $index === 0, // Set as primary only if it doesn't have one and it's the first in loop
-                ]);
-            }
-        }
-
-        return redirect()->route('seller.dashboard')->with('success', 'Produk berhasil diperbarui.');
+    // 2. Security: Pastikan yang mengedit adalah pemilik produk
+    if ($product->user_id !== auth()->id()) {
+        abort(403, 'Anda tidak memiliki akses untuk mengubah produk ini.');
     }
+
+    // 3. Validasi input dari form
+    $validated = $request->validate([
+        'title'         => 'required|string|max:255',
+        'category_id'   => 'required|exists:categories,id',
+        'condition'     => 'required|in:Barang Baru,Like New,Sangat Baik,Baik,Cukup,Rusak Ringan',
+        'price'         => 'required|numeric|min:0|max:9999999999999.99',
+        'location'      => 'required|string|max:255',
+        'description'   => 'required|string',
+        'status'        => 'required|in:active,sold,archived',
+        'images.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', // Maksimal 5MB per foto
+    ]);
+
+    // 4. Generate slug baru
+    $validated['slug'] = \Illuminate\Support\Str::slug($validated['title']) . '-' . $product->id;
+
+    // 5. Update data utama produk
+    $product->update($validated);
+
+    // 6. Handle Upload Foto Baru (Jika ada file gambar yang dikirim)
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            // Simpan file ke storage/app/public/products/
+            $path = $image->store('products', 'public');
+            
+            // Simpan record ke database
+            \App\Models\ProductImage::create([
+                'product_id' => $product->id, // PENTING: Gunakan $product->id, BUKAN $id
+                'image_path' => $path,
+                // Otomatis jadikan foto utama (primary) jika produk ini belum punya foto sama sekali
+                'is_primary' => $product->productImages()->count() === 0, 
+            ]);
+        }
+    }
+
+    // 7. Redirect kembali ke dashboard dengan pesan sukses
+    return redirect()->route('seller.dashboard')
+                     ->with('success', 'Produk dan foto berhasil diperbarui!');
+}
 
     public function destroy($id)
     {
         $product = Product::where('user_id', Auth::id())->findOrFail($id);
         
         foreach ($product->productImages as $image) {
-            Storage::disk('public')->delete($image->image_path);
+            if (!str_starts_with($image->image_path, 'http')) {
+                Storage::disk('public')->delete($image->image_path);
+            }
             $image->delete();
         }
         
@@ -145,28 +158,26 @@ class SellerController extends Controller
         return back()->with('success', 'Produk berhasil dihapus.');
     }
 
-    public function destroyImage($id)
+    public function destroyImage($imageId)
     {
-        $image = ProductImage::whereHas('product', function($q) {
-            $q->where('user_id', Auth::id());
-        })->findOrFail($id);
-
-        Storage::disk('public')->delete($image->image_path);
+        $image = ProductImage::findOrFail($imageId);
         
-        $productId = $image->product_id;
-        $isPrimary = $image->is_primary;
+        // Security: pastikan product milik user
+        $product = $image->product;
+        if ($product->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        // Hapus file fisik (jika path lokal, bukan URL external)
+        if (!str_starts_with($image->image_path, 'http')) {
+            if (Storage::disk('public')->exists($image->image_path)) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+        }
         
         $image->delete();
 
-        // If primary image was deleted, make another one primary if exists
-        if ($isPrimary) {
-            $anotherImage = ProductImage::where('product_id', $productId)->first();
-            if ($anotherImage) {
-                $anotherImage->update(['is_primary' => true]);
-            }
-        }
-
-        return back()->with('success', 'Foto produk berhasil dihapus.');
+        return back()->with('success', 'Foto berhasil dihapus.');
     }
 
     public function orders()

@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Hero Section -->
     <div class="bg-primary rounded-3xl overflow-hidden relative mb-16 shadow-xl shadow-blue-900/20">
         <div class="absolute inset-0 bg-gradient-to-r from-blue-700 to-primary"></div>
         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
@@ -24,9 +23,8 @@
                     </a>
                 </div>
             </div>
-            <div class="md:w-1/2 flex justify-center relative">
-                <!-- Abstract Hero Image Replacement (for minimal premium look) -->
-                <div class="relative w-72 h-72 md:w-96 md:h-96">
+            <div class="md:w-1/2 flex items-center justify-center relative">
+                <div class="relative w-72 md:w-96 h-auto">
                     <div class="absolute top-0 right-0 w-48 h-48 bg-secondary rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob"></div>
                     <div class="absolute top-0 left-10 w-48 h-48 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000"></div>
                     <div class="absolute -bottom-8 left-20 w-48 h-48 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-4000"></div>
@@ -41,7 +39,9 @@
                                 <p class="text-blue-200 text-sm">Like New • 98% Mulus</p>
                             </div>
                         </div>
-                        <div class="w-full h-32 bg-white/20 rounded-lg mb-4"></div>
+                        <div class="w-full h-56 bg-white rounded-xl mb-4 overflow-hidden p-4 flex items-center justify-center">
+                            <img src="https://jakartaberkamera.com/wp-content/uploads/2022/08/sewa-rental-iphone13-pro-jakarta-1.jpg" alt="iPhone 13 Pro" class="max-w-full max-h-full object-contain">
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="text-secondary font-bold text-xl">Rp 10.500.000</span>
                             <button class="bg-white text-primary px-4 py-1.5 rounded-full text-sm font-semibold">Beli</button>
@@ -52,7 +52,6 @@
         </div>
     </div>
 
-    <!-- Categories -->
     <div class="mb-16">
         <div class="flex justify-between items-end mb-6">
             <div>
@@ -63,7 +62,6 @@
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <!-- Category Item -->
             @foreach($categories as $cat)
             <a href="{{ route('marketplace', ['category' => $cat->id]) }}" class="bg-white border border-border-color rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition group">
                 <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition">
@@ -75,7 +73,6 @@
         </div>
     </div>
 
-    <!-- Popular Products -->
     <div class="mb-16">
         <div class="flex justify-between items-end mb-6">
             <div>
@@ -89,7 +86,10 @@
             <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/5 transition duration-300 group flex flex-col relative">
                 <a href="{{ route('product.show', $item->slug) }}" class="relative aspect-square bg-gray-50 overflow-hidden block">
                     @if($item->primaryImage)
-                        <img src="{{ asset('storage/' . $item->primaryImage->image_path) }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        @php
+                            $imgUrl = str_starts_with($item->primaryImage->image_path, 'http') ? $item->primaryImage->image_path : asset('storage/' . $item->primaryImage->image_path);
+                        @endphp
+                        <img src="{{ $imgUrl }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     @else
                         <div class="w-full h-full flex items-center justify-center text-gray-300">
                             <i data-lucide="image" class="w-12 h-12"></i>

@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\ProductImage::create([
             'product_id' => $product1->id,
-            'image_path' => 'dummy/iphone.jpg', // we will use fallback in view if file not exist
+            'image_path' => 'https://picsum.photos/seed/iphone/400/400',
             'is_primary' => true,
         ]);
 
@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
         
         \App\Models\ProductImage::create([
             'product_id' => $product2->id,
-            'image_path' => 'dummy/shoes.jpg',
+            'image_path' => 'https://picsum.photos/seed/shoes/400/400',
             'is_primary' => true,
         ]);
         
@@ -90,7 +90,7 @@ class DatabaseSeeder extends Seeder
         
         \App\Models\ProductImage::create([
             'product_id' => $product3->id,
-            'image_path' => 'dummy/macbook.jpg', // Placeholder for keychron/macbook
+            'image_path' => 'https://picsum.photos/seed/keyboard/400/400',
             'is_primary' => true,
         ]);
 
@@ -109,7 +109,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\ProductImage::create([
             'product_id' => $product4->id,
-            'image_path' => 'dummy/macbook.jpg',
+            'image_path' => 'https://picsum.photos/seed/macbook/400/400',
             'is_primary' => true,
         ]);
 
@@ -128,7 +128,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\ProductImage::create([
             'product_id' => $product5->id,
-            'image_path' => 'dummy/ps5.jpg',
+            'image_path' => 'https://picsum.photos/seed/ps5/400/400',
             'is_primary' => true,
         ]);
 
@@ -147,7 +147,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\ProductImage::create([
             'product_id' => $product6->id,
-            'image_path' => 'dummy/vario.jpg',
+            'image_path' => 'https://picsum.photos/seed/motorcycle/400/400',
             'is_primary' => true,
         ]);
 
@@ -166,7 +166,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\ProductImage::create([
             'product_id' => $product7->id,
-            'image_path' => 'dummy/sofa.jpg',
+            'image_path' => 'https://picsum.photos/seed/sofa/400/400',
             'is_primary' => true,
         ]);
 
@@ -185,7 +185,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\ProductImage::create([
             'product_id' => $product8->id,
-            'image_path' => 'dummy/komik.jpg',
+            'image_path' => 'https://picsum.photos/seed/books/400/400',
             'is_primary' => true,
         ]);
     }
