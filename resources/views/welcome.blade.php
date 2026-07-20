@@ -1,34 +1,42 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="bg-primary rounded-3xl overflow-hidden relative mb-16 shadow-xl shadow-blue-900/20">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+    {{-- ================= HERO ================= --}}
+    <div class="bg-primary rounded-3xl overflow-hidden relative mb-12 md:mb-16 shadow-xl shadow-blue-900/20">
         <div class="absolute inset-0 bg-gradient-to-r from-blue-700 to-primary"></div>
         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        
-        <div class="relative z-10 px-8 py-16 md:py-24 md:px-16 flex flex-col md:flex-row items-center justify-between">
-            <div class="md:w-1/2 text-white mb-10 md:mb-0">
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+
+        {{-- padding responsif: lebih rapat di HP --}}
+        <div class="relative z-10 px-6 sm:px-8 py-12 md:py-24 md:px-16 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
+
+            {{-- Kolom teks: full width & rata tengah di mobile --}}
+            <div class="w-full md:w-1/2 text-center md:text-left text-white">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 md:mb-6">
                     Temukan <span class="text-secondary">Barang Bekas</span> Berkualitas!
                 </h1>
-                <p class="text-blue-100 text-lg md:text-xl mb-8 max-w-lg leading-relaxed">
+                <p class="text-blue-100 text-base md:text-xl mb-6 md:mb-8 max-w-lg mx-auto md:mx-0 leading-relaxed">
                     Marketplace terpercaya untuk jual beli barang preloved. Aman, mudah, dan penuh cuan.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
                     <a href="{{ route('marketplace') }}" class="bg-secondary text-dark font-semibold px-8 py-3.5 rounded-full text-center hover:bg-yellow-400 transition shadow-lg shadow-yellow-500/30 transform hover:-translate-y-1">
                         Mulai Belanja
                     </a>
-                    <a href="javascript:void(0)" onclick="alert('Panduan berjualan segera hadir!')" class="bg-white/10 backdrop-blur-md text-white border border-white/20 font-semibold px-8 py-3.5 rounded-full text-center hover:bg-white/20 transition">
+                    <a href="{{ route('cara-jualan') }}" class="bg-white/10 backdrop-blur-md text-white border border-white/20 font-semibold px-8 py-3.5 rounded-full text-center hover:bg-white/20 transition">
                         Cara Jualan
                     </a>
                 </div>
             </div>
-            <div class="md:w-1/2 flex items-center justify-center relative">
+
+            {{-- ✅ PERBAIKAN UTAMA: kartu istimewa DISSEMBUNYIKAN di mobile (hidden md:flex) --}}
+            {{-- (catatan: baris "//istimewa" sebelumnya adalah BUG karena ter-render jadi teks) --}}
+            <div class="hidden md:flex md:w-1/2 items-center justify-center relative">
                 <div class="relative w-72 md:w-96 h-auto">
                     <div class="absolute top-0 right-0 w-48 h-48 bg-secondary rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob"></div>
                     <div class="absolute top-0 left-10 w-48 h-48 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000"></div>
                     <div class="absolute -bottom-8 left-20 w-48 h-48 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-4000"></div>
-                    
+
                     <div class="relative bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-2xl transform rotate-3 hover:rotate-0 transition duration-500">
                         <div class="flex items-center gap-4 mb-4">
                             <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary">
@@ -49,35 +57,38 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
-    <div class="mb-16">
+    {{-- ================= KATEGORI ================= --}}
+    <div class="mb-12 md:mb-16">
         <div class="flex justify-between items-end mb-6">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-1">Kategori Pilihan</h2>
-                <p class="text-gray-500">Temukan barang incaranmu dari berbagai kategori</p>
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Kategori Pilihan</h2>
+                <p class="text-sm sm:text-base text-gray-500">Temukan barang incaranmu dari berbagai kategori</p>
             </div>
             <a href="{{ route('marketplace') }}" class="text-primary font-medium hover:underline hidden sm:block">Lihat Semua</a>
         </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
             @foreach($categories as $cat)
-            <a href="{{ route('marketplace', ['category' => $cat->id]) }}" class="bg-white border border-border-color rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition group">
-                <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition">
-                    <i data-lucide="{{ $cat->icon ?? 'box' }}" class="w-7 h-7"></i>
+            <a href="{{ route('marketplace', ['category' => $cat->id]) }}" class="bg-white border border-border-color rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center gap-2 sm:gap-3 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition group">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition">
+                    <i data-lucide="{{ $cat->icon ?? 'box' }}" class="w-6 h-6 sm:w-7 sm:h-7"></i>
                 </div>
-                <span class="font-medium text-gray-700 group-hover:text-primary transition">{{ $cat->name }}</span>
+                <span class="font-medium text-xs sm:text-base text-gray-700 text-center group-hover:text-primary transition line-clamp-1">{{ $cat->name }}</span>
             </a>
             @endforeach
         </div>
     </div>
 
-    <div class="mb-16">
+    {{-- ================= REKOMENDASI ================= --}}
+    <div class="mb-12 md:mb-16">
         <div class="flex justify-between items-end mb-6">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-1">Rekomendasi Terbaru</h2>
-                <p class="text-gray-500">Barang-barang bekas berkualitas yang baru saja diunggah</p>
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Rekomendasi Terbaru</h2>
+                <p class="text-sm sm:text-base text-gray-500">Barang-barang bekas berkualitas yang baru saja diunggah</p>
             </div>
         </div>
 
@@ -95,12 +106,13 @@
                             <i data-lucide="image" class="w-12 h-12"></i>
                         </div>
                     @endif
-                    <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
-                        <i data-lucide="{{ $item->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'Barang Baru' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->condition }}
+                    <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 bg-white/90 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
+                        <i data-lucide="{{ $item->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'Barang Baru' ? 'text-secondary fill-current' : 'text-success' }}"></i>
+                        <span class="line-clamp-1">{{ $item->condition }}</span>
                     </div>
                 </a>
-                
-                <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-3 right-3 z-20">
+
+                <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-2 right-2 sm:top-3 sm:right-3 z-20">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $item->id }}">
                     <button type="submit" class="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-400 hover:text-primary hover:bg-blue-50 transition shadow-sm" title="Tambah ke Wishlist">
@@ -124,7 +136,7 @@
             @endforeach
         </div>
 
-        <div class="text-center mt-10">
+        <div class="text-center mt-8 md:mt-10">
             <a href="{{ route('marketplace') }}" class="inline-flex items-center gap-2 bg-white border border-border-color text-gray-700 px-6 py-2.5 rounded-full font-medium hover:bg-gray-50 hover:text-primary transition shadow-sm">
                 Lihat Semua Produk <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>

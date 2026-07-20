@@ -32,7 +32,7 @@ Route::get('/', function () {
 // KEMBALIKAN KE NAMA ASLI ANDA
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
 Route::get('/product/{slug}', [MarketplaceController::class, 'show'])->name('product.show');
-
+Route::view('/cara-jualan', 'cara-jualan')->name('cara-jualan');
 /*
 |--------------------------------------------------------------------------
 | Guest Routes
