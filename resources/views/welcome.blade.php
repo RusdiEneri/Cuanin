@@ -18,7 +18,7 @@
                     <a href="{{ route('marketplace') }}" class="bg-secondary text-dark font-semibold px-8 py-3.5 rounded-full text-center hover:bg-yellow-400 transition shadow-lg shadow-yellow-500/30 transform hover:-translate-y-1">
                         Mulai Belanja
                     </a>
-                    <a href="javascript:void(0)" onclick="alert('Panduan berjualan segera hadir!')" class="bg-white/10 backdrop-blur-md text-white border border-white/20 font-semibold px-8 py-3.5 rounded-full text-center hover:bg-white/20 transition">
+                    <a href="{{ route('cara-jualan') }}" class="bg-white/10 backdrop-blur-md text-white border border-white/20 font-semibold px-8 py-3.5 rounded-full text-center hover:bg-white/20 transition">
                         Cara Jualan
                     </a>
                 </div>
@@ -81,10 +81,13 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {{-- ✅ PERUBAHAN 1: grid-cols-2 di mobile (2 kolom), gap lebih rapat di HP --}}
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             @foreach($latestProducts as $item)
             <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/5 transition duration-300 group flex flex-col relative">
-                <a href="{{ route('product.show', $item->slug) }}" class="relative aspect-square bg-gray-50 overflow-hidden block">
+                
+                {{-- ✅ PERUBAHAN 2: aspect-square → aspect-[3/4] (gambar portrait/vertikal) --}}
+                <a href="{{ route('product.show', $item->slug) }}" class="relative aspect-[3/4] bg-gray-50 overflow-hidden block">
                     @if($item->primaryImage)
                         @php
                             $imgUrl = str_starts_with($item->primaryImage->image_path, 'http') ? $item->primaryImage->image_path : asset('storage/' . $item->primaryImage->image_path);
@@ -95,35 +98,42 @@
                             <i data-lucide="image" class="w-12 h-12"></i>
                         </div>
                     @endif
-                    <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
+                    {{-- ✅ badge kondisi: posisi & padding responsif --}}
+                    <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 bg-white/90 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
                         <i data-lucide="{{ $item->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'Barang Baru' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->condition }}
                     </div>
                 </a>
                 
-                <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-3 right-3 z-20">
+                {{-- ✅ wishlist button: lebih kecil di HP --}}
+                <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-2 right-2 sm:top-3 sm:right-3 z-20">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $item->id }}">
-                    <button type="submit" class="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-400 hover:text-danger hover:bg-red-50 transition shadow-sm" title="Tambah ke Wishlist">
-                        <i data-lucide="heart" class="w-5 h-5"></i>
+                    <button type="submit" class="bg-white/90 backdrop-blur-sm p-1.5 sm:p-2 rounded-full text-gray-400 hover:text-danger hover:bg-red-50 transition shadow-sm" title="Tambah ke Wishlist">
+                        <i data-lucide="heart" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                     </button>
                 </form>
-                <div class="p-5 flex flex-col flex-grow">
-                    <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                        <i data-lucide="map-pin" class="w-3 h-3"></i> {{ $item->location }}
+
+                {{-- ✅ PERUBAHAN 3: padding responsif (p-3 di HP, p-5 di desktop) --}}
+                <div class="p-3 sm:p-5 flex flex-col flex-grow">
+                    <div class="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-gray-500 mb-1 sm:mb-2">
+                        <i data-lucide="map-pin" class="w-3 h-3"></i> 
+                        <span class="line-clamp-1">{{ $item->location }}</span>
                     </div>
                     <a href="{{ route('product.show', $item->slug) }}">
-                        <h3 class="font-semibold text-gray-900 mb-1 line-clamp-2 group-hover:text-primary transition leading-snug">{{ $item->title }}</h3>
+                        {{-- ✅ judul: font lebih kecil di HP --}}
+                        <h3 class="text-sm sm:text-base font-semibold text-gray-900 mb-1 line-clamp-2 group-hover:text-primary transition leading-snug">{{ $item->title }}</h3>
                     </a>
-                    <div class="font-bold text-lg text-primary mt-auto pt-2 mb-3">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
-                    <div class="flex items-center gap-3 border-t border-gray-100 pt-3">
-                        <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold text-xs overflow-hidden flex-shrink-0">
+                    {{-- ✅ harga: ukuran responsif --}}
+                    <div class="font-bold text-base sm:text-lg text-primary mt-auto pt-1 sm:pt-2 mb-2 sm:mb-3">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+                    <div class="flex items-center gap-2 sm:gap-3 border-t border-gray-100 pt-2 sm:pt-3">
+                        <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold text-[10px] sm:text-xs overflow-hidden flex-shrink-0">
                             @if($item->user->avatar)
                                 <img src="{{ asset('storage/' . $item->user->avatar) }}" alt="{{ $item->user->name }}" class="w-full h-full object-cover">
                             @else
                                 {{ substr($item->user->name, 0, 1) }}
                             @endif
                         </div>
-                        <div class="text-xs text-gray-500 line-clamp-1">{{ $item->user->name }}</div>
+                        <div class="text-[10px] sm:text-xs text-gray-500 line-clamp-1">{{ $item->user->name }}</div>
                     </div>
                 </div>
             </div>
