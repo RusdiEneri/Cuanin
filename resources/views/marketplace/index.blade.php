@@ -23,7 +23,7 @@
     <div class="flex flex-col lg:flex-row gap-8">
         
         <!-- Sidebar Filter -->
-        <aside class="w-full lg:w-1/4">
+        <aside class="w-full lg:w-64 flex-shrink-0">
             <div class="bg-white rounded-3xl p-6 border border-border-color shadow-lg shadow-blue-900/5 sticky top-24">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -111,7 +111,7 @@
         </aside>
 
         <!-- Product Grid -->
-        <div class="w-full lg:w-3/4">
+        <div class="flex-1 w-full">
             
             <!-- Toolbar -->
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -143,9 +143,9 @@
 
             <!-- Grid -->
             @if($products->count() > 0)
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach($products as $item)
-                    <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/10 transition duration-300 group flex flex-col relative">
+                    <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/20 hover:border-primary transition duration-300 group flex flex-col relative">
                         <a href="{{ route('product.show', $item->slug) }}" class="relative aspect-square bg-gray-50 overflow-hidden block">
                             @if($item->primaryImage)
                                 @php
@@ -166,21 +166,22 @@
                         <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-3 right-3 z-20">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $item->id }}">
-                            <button type="submit" class="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-400 hover:text-danger hover:bg-red-50 transition shadow-sm" title="Tambah ke Wishlist">
+                            <button type="submit" class="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-400 hover:text-primary hover:bg-blue-50 transition shadow-sm" title="Tambah ke Wishlist">
                                 <i data-lucide="heart" class="w-5 h-5"></i>
                             </button>
                         </form>
-                        <div class="p-5 flex-grow flex flex-col">
-                            <div class="flex items-center justify-between gap-2 mb-2">
-                                <span class="text-xs font-medium text-primary bg-blue-50 px-2 py-1 rounded-md">{{ $item->category->name }}</span>
-                                <div class="flex items-center gap-1 text-xs text-gray-500">
-                                    <i data-lucide="map-pin" class="w-3 h-3"></i> {{ $item->location }}
+                        <div class="p-3 sm:p-4 flex flex-col flex-grow">
+                            <a href="{{ route('product.show', $item->slug) }}" class="mb-1">
+                                <h3 class="text-[13px] sm:text-sm text-gray-700 line-clamp-2 group-hover:text-primary transition leading-relaxed">{{ $item->title }}</h3>
+                            </a>
+                            <div class="mt-auto">
+                                <div class="font-bold text-[15px] sm:text-[17px] text-primary mb-1 truncate">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+                                
+                                <div class="flex items-center gap-1.5 text-[11px] text-gray-500">
+                                    <i data-lucide="map-pin" class="w-3 h-3 text-primary flex-shrink-0"></i>
+                                    <span class="truncate">{{ $item->location }}</span>
                                 </div>
                             </div>
-                            <a href="{{ route('product.show', $item->slug) }}">
-                                <h3 class="font-semibold text-gray-900 mb-1 line-clamp-2 group-hover:text-primary transition leading-snug">{{ $item->title }}</h3>
-                            </a>
-                            <div class="font-bold text-lg text-gray-900 mt-auto pt-3">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
                         </div>
                     </div>
                     @endforeach

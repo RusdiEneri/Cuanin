@@ -9,9 +9,9 @@
     </div>
 
     @if($wishlists->count() > 0)
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             @foreach($wishlists as $item)
-            <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/5 transition duration-300 group flex flex-col relative">
+            <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/20 hover:border-primary transition duration-300 group flex flex-col relative">
                 
                 <!-- Remove Wishlist Form -->
                 <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-3 right-3 z-20">
@@ -24,31 +24,44 @@
 
                 <a href="{{ route('product.show', $item->product->slug) }}" class="relative aspect-square bg-gray-50 overflow-hidden block">
                     @if($item->product->primaryImage)
-                        <img src="{{ asset('storage/' . $item->product->primaryImage->image_path) }}" alt="{{ $item->product->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        @php
+                            $imgUrl = str_starts_with($item->product->primaryImage->image_path, 'http') ? $item->product->primaryImage->image_path : asset('storage/' . $item->product->primaryImage->image_path);
+                        @endphp
+                        <img src="{{ $imgUrl }}" alt="{{ $item->product->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     @else
                         <div class="w-full h-full flex items-center justify-center text-gray-300">
-                            <i data-lucide="image" class="w-10 h-10"></i>
+                            <i data-lucide="image" class="w-12 h-12"></i>
                         </div>
                     @endif
-                    <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
+                    
+                    <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
                         <i data-lucide="{{ $item->product->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->product->condition == 'Barang Baru' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->product->condition }}
                     </div>
                 </a>
-                <div class="p-4 flex-grow flex flex-col">
-                    <a href="{{ route('product.show', $item->product->slug) }}">
-                        <h3 class="font-semibold text-sm sm:text-base text-gray-900 mb-1 line-clamp-2 group-hover:text-primary transition">{{ $item->product->title }}</h3>
+                
+                <div class="p-3 sm:p-4 flex flex-col flex-grow">
+                    <a href="{{ route('product.show', $item->product->slug) }}" class="mb-1">
+                        <h3 class="text-[13px] sm:text-sm text-gray-700 line-clamp-2 group-hover:text-primary transition leading-relaxed">{{ $item->product->title }}</h3>
                     </a>
-                    <div class="font-bold text-primary mt-auto pt-2 mb-4">Rp {{ number_format($item->product->price, 0, ',', '.') }}</div>
                     
-                    <!-- Add to Cart Form -->
-                    <form action="{{ route('cart.store') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" class="w-full bg-blue-50 text-primary py-2 rounded-xl text-sm font-medium hover:bg-primary hover:text-white transition flex items-center justify-center gap-2">
-                            <i data-lucide="shopping-cart" class="w-4 h-4"></i> Masukkan Keranjang
-                        </button>
-                    </form>
+                    <div class="mt-auto">
+                        <div class="font-bold text-[15px] sm:text-[17px] text-primary mb-1 truncate">Rp {{ number_format($item->product->price, 0, ',', '.') }}</div>
+                        
+                        <div class="flex items-center gap-1.5 text-[11px] text-gray-500 mb-3">
+                            <i data-lucide="map-pin" class="w-3 h-3 text-primary flex-shrink-0"></i>
+                            <span class="truncate">{{ $item->product->location }}</span>
+                        </div>
+                        
+                        <!-- Add to Cart Form -->
+                        <form action="{{ route('cart.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="w-full bg-blue-50 text-primary py-2 rounded-xl text-[13px] sm:text-sm font-medium hover:bg-primary hover:text-white transition flex items-center justify-center gap-2">
+                                <i data-lucide="shopping-cart" class="w-4 h-4"></i> Keranjang
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
             @endforeach
