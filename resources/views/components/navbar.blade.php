@@ -127,12 +127,13 @@
     <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 bg-white">
         <div class="px-4 py-4 space-y-3">
             <!-- Search Bar (Mobile) -->
-            <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
-                </div>
-                <input type="text" name="q" value="{{ request('q') }}" class="block w-full pl-10 pr-3 py-2.5 border border-border-color rounded-full leading-5 bg-background placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Cari barang bekas incaranmu...">
-            </form>
+                 <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                    </div>
+                    <!-- rounded-full -->
+                    <input type="text" name="q" value="{{ request('q') }}" class="block w-full pl-10 pr-3 py-2.5 border border-border-color leading-5 rounded-full bg-background placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Cari barang bekas incaranmu..."> 
+                </form>
 
             <!-- Mulai Jualan -->
             <a href="{{ Auth::check() && Auth::user()->role == 'penjual' ? route('seller.dashboard') : route('profile.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition font-medium mobile-link">
@@ -140,7 +141,7 @@
                 <span>Mulai Jualan</span>
             </a>
 
-            @guest
+            <!-- @guest
                 <div class="pt-3 border-t border-gray-100 grid grid-cols-2 gap-3">
                     <a href="{{ route('login') }}" class="flex items-center justify-center px-3 py-2.5 border-2 border-primary text-primary rounded-full font-semibold hover:bg-primary hover:text-white transition mobile-link">
                         Masuk
@@ -148,7 +149,7 @@
                     <a href="{{ route('register') }}" class="flex items-center justify-center px-3 py-2.5 bg-primary text-white rounded-full font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/30 mobile-link">
                         Daftar
                     </a>
-                </div>
+                </div> -->
             @else
                 <!-- Menu Links (LANGSUNG TANPA USER INFO) -->
                 <div class="pt-3 border-t border-gray-100 space-y-1">
