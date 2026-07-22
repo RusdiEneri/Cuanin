@@ -1,6 +1,6 @@
 <nav class="bg-white sticky top-0 z-50 border-b border-border-color shadow-sm">
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Height responsive: h-16 mobile, h-20 desktop -->
+        <!-- BARIS 1: Header utama (height responsive: h-16 mobile, h-20 desktop) -->
         <div class="flex justify-between items-center h-16 md:h-20 gap-4 md:gap-6">
             <!-- Logo -->
             <div class="flex-shrink-0 flex items-center">
@@ -9,7 +9,7 @@
                 </a>
             </div>
 
-            <!-- Search Bar (Desktop) - LEBIH KONTRAS -->
+            <!-- Search Bar (DESKTOP ONLY) -->
             <div class="hidden md:flex flex-1 max-w-2xl">
                 <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -19,7 +19,7 @@
                 </form>
             </div>
 
-            <!-- Desktop Navigation - SPASI LEBIH LONGGAR -->
+            <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
                 <a href="{{ Auth::check() && Auth::user()->role == 'penjual' ? route('seller.dashboard') : route('profile.index') }}" class="hidden lg:flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition font-medium">
                     <i data-lucide="shopping-bag" class="h-5 w-5"></i>
@@ -81,12 +81,12 @@
             <div class="md:hidden flex items-center gap-0.5">
                 @auth
                     @php $cartCount = \App\Models\Cart::where('user_id', Auth::id())->count(); @endphp
-                    
+
                     <!-- Wishlist -->
                     <a href="{{ route('wishlist.index') }}" class="relative text-gray-600 hover:text-danger transition p-2 -mr-1">
                         <i data-lucide="heart" class="h-5 w-5"></i>
                     </a>
-                    
+
                     <!-- Cart with badge -->
                     <a href="{{ route('cart.index') }}" class="relative text-gray-600 hover:text-primary transition p-2">
                         <i data-lucide="shopping-cart" class="h-5 w-5"></i>
@@ -94,7 +94,7 @@
                         <span class="absolute top-0.5 right-0.5 inline-flex items-center justify-center min-w-[1rem] h-4 px-1 text-[9px] font-bold leading-none text-white bg-danger rounded-full">{{ $cartCount }}</span>
                         @endif
                     </a>
-                    
+
                     <!-- Avatar -->
                     <a href="{{ route('profile.index') }}" class="w-9 h-9 bg-blue-100 rounded-full overflow-hidden border-2 border-transparent hover:border-primary transition flex-shrink-0 mx-1">
                         @if(Auth::user()->avatar)
@@ -104,12 +104,12 @@
                         @endif
                     </a>
                 @endauth
-                
+
                 @guest
                     <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-primary transition px-2 py-1.5 font-medium">Masuk</a>
                     <a href="{{ route('register') }}" class="text-xs bg-primary text-white px-3 py-1.5 rounded-full font-medium hover:bg-blue-700 transition whitespace-nowrap">Daftar</a>
                 @endguest
-                
+
                 <!-- Hamburger Button -->
                 <button type="button" id="mobileMenuBtn" class="text-gray-500 hover:text-gray-600 focus:outline-none p-2 relative w-10 h-10 flex items-center justify-center">
                     <span id="iconOpen" class="flex items-center justify-center">
@@ -121,37 +121,31 @@
                 </button>
             </div>
         </div>
+
+        <!-- BARIS 2: Search Bar (MOBILE ONLY) - selalu tampil di mobile, hidden di desktop -->
+        <div class="md:hidden pb-3">
+            <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                </div>
+                <input type="text" name="q" value="{{ request('q') }}" class="block w-full pl-10 pr-3 py-2.5 border border-border-color leading-5 rounded-full bg-background placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Cari barang bekas incaranmu...">
+            </form>
+        </div>
     </div>
 
-    <!-- MOBILE MENU (LEBIH BERSIH - TANPA USER INFO CARD) -->
+    <!-- MOBILE MENU (toggle) -->
     <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 bg-white">
         <div class="px-4 py-4 space-y-3">
-            <!-- Search Bar (Mobile) -->
-                 <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
-                    </div>
-                    <!-- rounded-full -->
-                    <input type="text" name="q" value="{{ request('q') }}" class="block w-full pl-10 pr-3 py-2.5 border border-border-color leading-5 rounded-full bg-background placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Cari barang bekas incaranmu..."> 
-                </form>
-
             <!-- Mulai Jualan -->
             <a href="{{ Auth::check() && Auth::user()->role == 'penjual' ? route('seller.dashboard') : route('profile.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition font-medium mobile-link">
                 <i data-lucide="shopping-bag" class="h-5 w-5 flex-shrink-0"></i>
                 <span>Mulai Jualan</span>
             </a>
 
-            <!-- @guest
-                <div class="pt-3 border-t border-gray-100 grid grid-cols-2 gap-3">
-                    <a href="{{ route('login') }}" class="flex items-center justify-center px-3 py-2.5 border-2 border-primary text-primary rounded-full font-semibold hover:bg-primary hover:text-white transition mobile-link">
-                        Masuk
-                    </a>
-                    <a href="{{ route('register') }}" class="flex items-center justify-center px-3 py-2.5 bg-primary text-white rounded-full font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/30 mobile-link">
-                        Daftar
-                    </a>
-                </div> -->
+            @guest
+                {{-- opsional: tombol Masuk/Daftar di menu --}}
             @else
-                <!-- Menu Links (LANGSUNG TANPA USER INFO) -->
+                <!-- Menu Links -->
                 <div class="pt-3 border-t border-gray-100 space-y-1">
                     <a href="{{ route('profile.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition mobile-link">
                         <i data-lucide="user" class="w-5 h-5 flex-shrink-0"></i>

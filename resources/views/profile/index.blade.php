@@ -157,13 +157,13 @@
 
                             <!-- Phone -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon / WhatsApp</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon / WhatsApp <span class="text-red-500">*</span></label>
                                 <input type="text" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}" placeholder="08123456789" class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
                             </div>
 
                             <!-- Address -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap <span class="text-red-500">*</span></label>
                                 <textarea name="address" rows="3" placeholder="Jl. Contoh No. 123, Kecamatan, Kota" class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none">{{ old('address', $user->address) }}</textarea>
                             </div>
                         </div>
