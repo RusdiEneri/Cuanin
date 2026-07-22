@@ -24,7 +24,7 @@ Route::get('/', function () {
     $latestProducts = Product::with(['primaryImage', 'category', 'user'])
         ->where('status', 'active')
         ->latest()
-        ->limit(5)
+        ->limit(6)
         ->get();
     return view('welcome', compact('categories', 'latestProducts'));
 })->name('home');
