@@ -32,20 +32,52 @@
                         @enderror
                     </div>
                     <div>
+                        <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp</label>
+                        <input id="phone_number" name="phone_number" type="text" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" placeholder="081234567890" value="{{ old('phone_number') }}">
+                        @error('phone_number')
+                            <p class="text-danger text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- ===== PASSWORD dengan toggle mata ===== --}}
+                    <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input id="password" name="password" type="password" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" placeholder="Minimal 8 karakter">
+                        <div class="relative">
+                            <input id="password" name="password" type="password" required 
+                                class="appearance-none block w-full px-4 py-3 pr-12 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" 
+                                placeholder="Minimal 8 karakter">
+                            {{-- +cursor-pointer --}}
+                            <button type="button" onclick="togglePassword('password', 'eye-password', 'eyeOff-password')" 
+                                class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600 transition cursor-pointer">
+                                <i data-lucide="eye" id="eye-password" class="w-5 h-5 pointer-events-none"></i>
+                                <i data-lucide="eye-off" id="eyeOff-password" class="w-5 h-5 hidden pointer-events-none"></i>
+                            </button>
+                        </div>
                         @error('password')
                             <p class="text-danger text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    {{-- ===== KONFIRMASI PASSWORD dengan toggle mata ===== --}}
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password</label>
-                        <input id="password_confirmation" name="password_confirmation" type="password" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" placeholder="Ulangi password">
+                        <div class="relative">
+                            <input id="password_confirmation" name="password_confirmation" type="password" required 
+                                class="appearance-none block w-full px-4 py-3 pr-12 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" 
+                                placeholder="Ulangi password">
+                            {{-- +cursor-pointer --}}
+                            <button type="button" onclick="togglePassword('password_confirmation', 'eye-confirm', 'eyeOff-confirm')" 
+                                class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600 transition cursor-pointer">
+                                <i data-lucide="eye" id="eye-confirm" class="w-5 h-5 pointer-events-none"></i>
+                                <i data-lucide="eye-off" id="eyeOff-confirm" class="w-5 h-5 hidden pointer-events-none"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <div>
-                    <button type="submit" class="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-md shadow-blue-500/20 text-sm font-semibold text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition transform hover:-translate-y-0.5">
+                    {{-- +cursor-pointer --}}
+                    <button type="submit" class="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-md shadow-blue-500/20 text-sm font-semibold text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition transform hover:-translate-y-0.5 cursor-pointer">
                         Daftar
                     </button>
                 </div>
@@ -59,3 +91,30 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function togglePassword(inputId, eyeId, eyeOffId) {
+        const input = document.getElementById(inputId);
+        const eyeIcon = document.getElementById(eyeId);
+        const eyeOffIcon = document.getElementById(eyeOffId);
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeIcon.classList.add('hidden');
+            eyeOffIcon.classList.remove('hidden');
+        } else {
+            input.type = 'password';
+            eyeIcon.classList.remove('hidden');
+            eyeOffIcon.classList.add('hidden');
+        }
+    }
+
+    // Inisialisasi Lucide Icons
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
+@endpush
