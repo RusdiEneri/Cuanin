@@ -177,38 +177,50 @@
                 </div>
 
                 <!-- 🚨 ACTION BUTTONS (Dinamis berdasarkan Status) 🚨 -->
-                <div class="mt-auto">
-                    @if($product->status === 'active')
-                        <div class="grid grid-cols-2 gap-4">
-                            @php
-                                $waNumber = $product->user->phone_number;
-                                if (substr($waNumber, 0, 1) == '0') {
-                                    $waNumber = '62' . substr($waNumber, 1);
-                                }
-                                $waText = "Halo *" . $product->user->name . "*, saya tertarik dengan barang *" . $product->title . "* yang Anda jual di Cuanin seharga Rp " . number_format($product->price, 0, ',', '.') . ". Apakah masih tersedia?";
-                            @endphp
-                            <a href="https://wa.me/{{ $waNumber }}?text={{ urlencode($waText) }}" target="_blank" class="w-full py-3.5 px-4 bg-white border border-primary text-primary font-semibold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2">
-                                <i data-lucide="message-circle" class="w-5 h-5"></i> Chat Penjual
-                            </a>
-                            <button type="button" onclick="document.getElementById('nego-modal').classList.remove('hidden')" class="w-full py-3.5 px-4 bg-yellow-400 text-dark font-semibold rounded-xl hover:bg-yellow-500 transition shadow-md shadow-yellow-500/20 flex items-center justify-center gap-2">
-                                <i data-lucide="handshake" class="w-5 h-5"></i> Nego Harga
-                            </button>
-                            <form action="{{ route('cart.store') }}" method="POST" class="w-full col-span-2">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="w-full py-3.5 px-4 bg-primary text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2">
-                                    <i data-lucide="shopping-cart" class="w-5 h-5"></i> Masukkan Keranjang
-                                </button>
-                            </form>
-                        </div>
-                    @else
-                        <!-- Tampilan jika produk Terjual / Diarsipkan -->
-                        <button disabled class="w-full py-3.5 px-4 bg-gray-200 text-gray-500 font-semibold rounded-xl cursor-not-allowed flex items-center justify-center gap-2">
-                            <i data-lucide="ban" class="w-5 h-5"></i> Produk Tidak Tersedia
-                        </button>
-                    @endif
-                </div>
+<div class="mt-auto">
+    @if($product->status === 'active')
+        @php
+            $waNumber = $product->user->phone_number;
+            if (substr($waNumber, 0, 1) == '0') {
+                $waNumber = '62' . substr($waNumber, 1);
+            }
+            $waText = "Halo *" . $product->user->name . "*, saya tertarik dengan barang *" . $product->title . "* yang Anda jual di Cuanin seharga Rp " . number_format($product->price, 0, ',', '.') . ". Apakah masih tersedia?";
+        @endphp
+
+        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+
+            {{-- Baris 1: Nego Harga (kiri) | Masukkan Keranjang (kanan) --}}
+            <button type="button"
+                    onclick="document.getElementById('nego-modal').classList.remove('hidden')"
+                    class="w-full py-3.5 px-4 bg-yellow-400 text-dark font-semibold rounded-xl hover:bg-yellow-500 transition shadow-md shadow-yellow-500/20 flex items-center justify-center gap-2 text-sm sm:text-base">
+                <i data-lucide="handshake" class="w-5 h-5"></i> Nego Harga
+            </button>
+
+            {{-- ⬇️ col-span-2 DIHAPUS supaya sejajar dengan Nego Harga --}}
+            <form action="{{ route('cart.store') }}" method="POST" class="w-full">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit"
+                        class="w-full py-3.5 px-4 bg-primary text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i> Masukkan Keranjang
+                </button>
+            </form>
+
+            {{-- Baris 2: Beli Sekarang full width (col-span-2) --}}
+            <a href="https://wa.me/{{ $waNumber }}?text={{ urlencode($waText) }}" target="_blank"
+               class="col-span-2 w-full py-3.5 px-4 bg-white border border-primary text-primary font-semibold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2">
+                <i data-lucide="message-circle" class="w-5 h-5"></i> Beli Sekarang
+            </a>
+
+        </div>
+    @else
+        <!-- Tampilan jika produk Terjual / Diarsipkan -->
+        <button disabled class="w-full py-3.5 px-4 bg-gray-200 text-gray-500 font-semibold rounded-xl cursor-not-allowed flex items-center justify-center gap-2">
+            <i data-lucide="ban" class="w-5 h-5"></i> Produk Tidak Tersedia
+        </button>
+    @endif
+</div>
             </div>
         </div>
     </div>
