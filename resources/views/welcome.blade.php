@@ -8,10 +8,7 @@
         <div class="absolute inset-0 bg-gradient-to-r from-blue-700 to-primary"></div>
         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 
-        {{-- padding responsif: lebih rapat di HP --}}
         <div class="relative z-10 px-6 sm:px-8 py-12 md:py-24 md:px-16 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
-
-            {{-- Kolom teks: full width & rata tengah di mobile --}}
             <div class="w-full md:w-1/2 text-center md:text-left text-white">
                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 md:mb-6">
                     Temukan <span class="text-secondary">Barang Bekas</span> Berkualitas!
@@ -29,8 +26,6 @@
                 </div>
             </div>
 
-            {{-- ✅ PERBAIKAN UTAMA: kartu istimewa DISSEMBUNYIKAN di mobile (hidden md:flex) --}}
-            {{-- (catatan: baris "//istimewa" sebelumnya adalah BUG karena ter-render jadi teks) --}}
             <div class="hidden md:flex md:w-1/2 items-center justify-center relative">
                 <div class="relative w-72 md:w-96 h-auto">
                     <div class="absolute top-0 right-0 w-48 h-48 bg-secondary rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob"></div>
@@ -57,11 +52,10 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    {{-- ================= KATEGORI ================= --}}
+    {{-- ================= KATEGORI (SWIPE DI MOBILE) ================= --}}
     <div class="mb-12 md:mb-16">
         <div class="flex justify-between items-end mb-6">
             <div>
@@ -71,13 +65,33 @@
             <a href="{{ route('marketplace') }}" class="text-primary font-medium hover:underline hidden sm:block">Lihat Semua</a>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+        {{-- Mobile: Horizontal Scroll dengan Loop --}}
+        <div class="relative md:hidden">
+            <div id="categoryCarousel" class="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth pb-2 -mx-4 px-4" style="scroll-snap-type: x mandatory;">
+                @foreach($categories as $cat)
+                <a href="{{ route('marketplace', ['category' => $cat->id]) }}" 
+                   class="category-card flex-shrink-0 w-[140px] bg-white border border-border-color rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition group"
+                   style="scroll-snap-align: start;">
+                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition">
+                        <i data-lucide="{{ $cat->icon ?? 'box' }}" class="w-6 h-6"></i>
+                    </div>
+                    <span class="font-medium text-xs text-gray-700 text-center group-hover:text-primary transition line-clamp-2">{{ $cat->name }}</span>
+                </a>
+                @endforeach
+            </div>
+            
+            {{-- Navigation Dots --}}
+            <div id="carouselDots" class="flex justify-center gap-2 mt-4"></div>
+        </div>
+
+        {{-- Desktop: Grid Normal --}}
+        <div class="hidden md:grid grid-cols-4 lg:grid-cols-6 gap-4">
             @foreach($categories as $cat)
-            <a href="{{ route('marketplace', ['category' => $cat->id]) }}" class="bg-white border border-border-color rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center gap-2 sm:gap-3 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition group">
-                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition">
-                    <i data-lucide="{{ $cat->icon ?? 'box' }}" class="w-6 h-6 sm:w-7 sm:h-7"></i>
+            <a href="{{ route('marketplace', ['category' => $cat->id]) }}" class="bg-white border border-border-color rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition group">
+                <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition">
+                    <i data-lucide="{{ $cat->icon ?? 'box' }}" class="w-7 h-7"></i>
                 </div>
-                <span class="font-medium text-xs sm:text-base text-gray-700 text-center group-hover:text-primary transition line-clamp-1">{{ $cat->name }}</span>
+                <span class="font-medium text-base text-gray-700 text-center group-hover:text-primary transition line-clamp-1">{{ $cat->name }}</span>
             </a>
             @endforeach
         </div>
@@ -92,7 +106,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
             @foreach($latestProducts as $item)
             <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/20 hover:border-primary transition duration-300 group flex flex-col relative">
                 <a href="{{ route('product.show', $item->slug) }}" class="relative aspect-square bg-gray-50 overflow-hidden block">
@@ -119,13 +133,13 @@
                         <i data-lucide="heart" class="w-5 h-5"></i>
                     </button>
                 </form>
+                
                 <div class="p-3 sm:p-4 flex flex-col flex-grow">
                     <a href="{{ route('product.show', $item->slug) }}" class="mb-1">
                         <h3 class="text-[13px] sm:text-sm text-gray-700 line-clamp-2 group-hover:text-primary transition leading-relaxed">{{ $item->title }}</h3>
                     </a>
                     <div class="mt-auto">
                         <div class="font-bold text-[15px] sm:text-[17px] text-primary mb-1 truncate">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
-                        
                         <div class="flex items-center gap-1.5 text-[11px] text-gray-500">
                             <i data-lucide="map-pin" class="w-3 h-3 text-primary flex-shrink-0"></i>
                             <span class="truncate">{{ $item->location }}</span>
@@ -143,4 +157,90 @@
         </div>
     </div>
 </div>
+
+@push('styles')
+<style>
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('categoryCarousel');
+    const dotsContainer = document.getElementById('carouselDots');
+    
+    if (!carousel || !dotsContainer) return;
+    
+    const cards = carousel.querySelectorAll('.category-card');
+    const cardWidth = 140 + 12; // width + gap
+    let currentIndex = 0;
+    
+    // Create dots
+    const totalDots = Math.ceil(cards.length / 2); // Show 2 cards per view on mobile
+    for (let i = 0; i < totalDots; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'w-2 h-2 rounded-full bg-gray-300 transition-all duration-300';
+        dot.addEventListener('click', () => scrollToIndex(i));
+        dotsContainer.appendChild(dot);
+    }
+    
+    const dots = dotsContainer.querySelectorAll('button');
+    
+    function updateDots() {
+        const scrollLeft = carousel.scrollLeft;
+        const newIndex = Math.round(scrollLeft / (cardWidth * 2));
+        
+        if (newIndex !== currentIndex) {
+            currentIndex = newIndex;
+            dots.forEach((dot, i) => {
+                dot.className = i === currentIndex 
+                    ? 'w-6 h-2 rounded-full bg-primary transition-all duration-300' 
+                    : 'w-2 h-2 rounded-full bg-gray-300 transition-all duration-300';
+            });
+        }
+    }
+    
+    function scrollToIndex(index) {
+        carousel.scrollTo({
+            left: index * cardWidth * 2,
+            behavior: 'smooth'
+        });
+    }
+    
+    carousel.addEventListener('scroll', updateDots);
+    updateDots(); // Initial state
+    
+    // Touch swipe enhancement
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    
+    carousel.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - carousel.offsetLeft;
+        scrollLeft = carousel.scrollLeft;
+    });
+    
+    carousel.addEventListener('touchend', () => {
+        isDown = false;
+    });
+    
+    carousel.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.touches[0].pageX - carousel.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        carousel.scrollLeft = scrollLeft - walk;
+    });
+});
+</script>
+@endpush
+
 @endsection
