@@ -49,8 +49,8 @@ mysql -u root -p db_cuanin < backup_database.sql
 
 ### 7. Jalankan Migration & Seeder
 ```bash
-php artisan migrate
-php artisan db:seed
+php artisan migrate:fresh --seed
+# php artisan db:seed
 ```
 
 ### 8. Setup Storage (PENTING untuk gambar)
