@@ -37,8 +37,18 @@
                             <div class="p-5 hover:bg-gray-50 transition">
                                 <div class="flex items-start gap-4">
                                     <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                                        @if($offer->product->primaryImage)
-                                            <img src="{{ asset('storage/' . $offer->product->primaryImage->image_path) }}" class="w-full h-full object-cover">
+                                        @php
+                                            $offerImage = $offer->product->primaryImage ?? $offer->product->productImages->first();
+                                        @endphp
+                                        @if($offerImage)
+                                            @php
+                                                $imgUrl = str_starts_with($offerImage->image_path, 'http') ? $offerImage->image_path : asset('storage/' . $offerImage->image_path);
+                                            @endphp
+                                            <img src="{{ $imgUrl }}" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+                                                <i data-lucide="image" class="w-6 h-6"></i>
+                                            </div>
                                         @endif
                                     </div>
                                     <div class="flex-grow">
@@ -97,8 +107,18 @@
                             <div class="p-5 hover:bg-gray-50 transition">
                                 <div class="flex items-start gap-4">
                                     <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                                        @if($offer->product->primaryImage)
-                                            <img src="{{ asset('storage/' . $offer->product->primaryImage->image_path) }}" class="w-full h-full object-cover">
+                                        @php
+                                            $offerImage = $offer->product->primaryImage ?? $offer->product->productImages->first();
+                                        @endphp
+                                        @if($offerImage)
+                                            @php
+                                                $imgUrl = str_starts_with($offerImage->image_path, 'http') ? $offerImage->image_path : asset('storage/' . $offerImage->image_path);
+                                            @endphp
+                                            <img src="{{ $imgUrl }}" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+                                                <i data-lucide="image" class="w-6 h-6"></i>
+                                            </div>
                                         @endif
                                     </div>
                                     <div class="flex-grow">
