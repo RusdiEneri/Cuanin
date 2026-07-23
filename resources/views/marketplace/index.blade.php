@@ -1,5 +1,15 @@
 @extends('layouts.app')
 
+@push('styles')
+<style>
+    @media (min-width: 1024px) {
+        .custom-filter-width {
+            width: 240px !important;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
 @php
     // hitung jumlah filter aktif untuk badge di tombol "Filter" (mobile)
@@ -43,7 +53,7 @@
              desktop: sidebar biasa (lg:static + lg:translate-y-0)
         -->
         <aside id="filterPanel"
-               class="w-full lg:w-80 lg:flex-shrink-0
+               class="w-full lg:w-80 custom-filter-width lg:flex-shrink-0
                       fixed lg:static inset-x-0 bottom-0 lg:inset-auto
                       z-[60] lg:z-auto lg:sticky lg:top-24
                       transform translate-y-full lg:translate-y-0
@@ -79,7 +89,7 @@
                 <div class="flex-1 overflow-y-auto lg:overflow-visible p-6 space-y-6">
 
                     <!-- Desktop Header -->
-                    <div class="hidden lg:flex items-center justify-between mb-0">
+                    <div class="hidden lg:flex items-center justify-between pb-4 border-b border-gray-100">
                         <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
                             <i data-lucide="filter" class="w-5 h-5 text-primary"></i> Filter
                         </h3>
@@ -88,10 +98,10 @@
 
                     <!-- Kategori -->
                     <div>
-                        <h4 class="font-semibold text-gray-900 mb-3">Kategori</h4>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-2 lg:gap-x-3 text-sm">
+                        <h4 class="font-semibold text-gray-900 mb-4">Kategori</h4>
+                        <div class="flex flex-col space-y-3 text-sm">
                             @foreach($categories as $cat)
-                            <label class="flex items-center gap-2 min-w-0 group cursor-pointer">
+                            <label class="flex items-center gap-3 min-w-0 group cursor-pointer">
                                 <input type="radio" name="category" value="{{ $cat->id }}"
                                        class="w-4 h-4 flex-shrink-0 text-primary focus:ring-primary border-gray-300"
                                        {{ request('category') == $cat->id ? 'checked' : '' }}
@@ -106,22 +116,24 @@
 
                     <!-- Harga -->
                     <div>
-                        <h4 class="font-semibold text-gray-900 mb-3">Harga</h4>
-                        <div class="flex items-center gap-2">
+                        <h4 class="font-semibold text-gray-900 mb-4">Harga</h4>
+                        <div class="flex items-center gap-1">
                             <div class="relative flex-1">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span class="text-gray-500 text-sm">Rp</span>
+                                    <span class="text-gray-500 text-xs font-medium">Rp</span>
                                 </div>
                                 <input type="number" name="min_price" placeholder="Min" value="{{ request('min_price') }}"
-                                       class="block w-full pl-9 pr-3 py-2 border border-border-color rounded-xl text-sm focus:ring-primary focus:border-primary transition">
+                                       style="padding-left: 32px; padding-right: 8px;"
+                                       class="block w-full py-2 border border-border-color rounded-xl text-xs focus:ring-primary focus:border-primary transition">
                             </div>
-                            <span class="text-gray-400">-</span>
+                            <span class="text-gray-400 text-sm">-</span>
                             <div class="relative flex-1">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span class="text-gray-500 text-sm">Rp</span>
+                                    <span class="text-gray-500 text-xs font-medium">Rp</span>
                                 </div>
                                 <input type="number" name="max_price" placeholder="Max" value="{{ request('max_price') }}"
-                                       class="block w-full pl-9 pr-3 py-2 border border-border-color rounded-xl text-sm focus:ring-primary focus:border-primary transition">
+                                       style="padding-left: 32px; padding-right: 8px;"
+                                       class="block w-full py-2 border border-border-color rounded-xl text-xs focus:ring-primary focus:border-primary transition">
                             </div>
                         </div>
                     </div>
@@ -130,10 +142,10 @@
 
                     <!-- Kondisi -->
                     <div>
-                        <h4 class="font-semibold text-gray-900 mb-3">Kondisi</h4>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-2 lg:gap-x-3 text-sm">
+                        <h4 class="font-semibold text-gray-900 mb-4">Kondisi</h4>
+                        <div class="flex flex-col space-y-3 text-sm">
                             @foreach($conditions as $cond)
-                            <label class="flex items-center gap-2 min-w-0 group cursor-pointer">
+                            <label class="flex items-center gap-3 min-w-0 group cursor-pointer">
                                 <input type="radio" name="condition" value="{{ $cond }}"
                                        class="w-4 h-4 flex-shrink-0 text-primary focus:ring-primary border-gray-300"
                                        {{ request('condition') == $cond ? 'checked' : '' }}
@@ -148,7 +160,7 @@
 
                     <!-- Lokasi -->
                     <div>
-                        <h4 class="font-semibold text-gray-900 mb-3">Lokasi</h4>
+                        <h4 class="font-semibold text-gray-900 mb-4">Lokasi</h4>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i>
@@ -190,24 +202,37 @@
                     <p class="text-sm text-gray-500">Menampilkan {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} dari {{ $products->total() }} produk</p>
                 </div>
 
-                <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="flex items-center justify-between w-full sm:justify-start sm:w-auto gap-3">
 
                     {{-- Tombol buka popup filter: hanya MOBILE --}}
                     <button type="button" onclick="openFilter()"
                             class="lg:hidden relative flex items-center gap-2 px-4 py-2.5 border border-border-color rounded-xl text-sm font-medium text-gray-700 bg-white hover:border-primary hover:text-primary transition flex-shrink-0">
-                        <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+                        <i data-lucide="filter" class="w-4 h-4 text-primary"></i>
                         Filter
                         @if($activeFilters > 0)
                             <span class="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center">{{ $activeFilters }}</span>
                         @endif
                     </button>
 
-                    <form action="{{ route('marketplace') }}" method="GET" class="w-full sm:w-auto">
+                    <form action="{{ route('marketplace') }}" method="GET" class="sm:w-auto" id="sortForm">
                         @foreach(request()->except('sort', 'page') as $key => $value)
                             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                         @endforeach
-                        <div class="relative w-full sm:w-48">
-                            <select name="sort" onchange="this.form.submit()"
+                        <input type="hidden" name="sort" id="sortInput" value="{{ request('sort', 'terbaru') }}">
+                        
+                        <!-- Mobile Sort Icon -->
+                        <div class="relative sm:hidden flex items-center justify-center border border-border-color rounded-xl text-gray-700 bg-white hover:text-primary hover:border-primary transition" style="width: 42px; height: 42px;">
+                            <i data-lucide="arrow-up-down" class="w-4 h-4 pointer-events-none text-primary"></i>
+                            <select onchange="document.getElementById('sortInput').value = this.value; document.getElementById('sortForm').submit();" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                                <option value="termurah" {{ request('sort') == 'termurah' ? 'selected' : '' }}>Harga Terendah</option>
+                                <option value="termahal" {{ request('sort') == 'termahal' ? 'selected' : '' }}>Harga Tertinggi</option>
+                            </select>
+                        </div>
+
+                        <!-- Desktop Sort Select -->
+                        <div class="relative hidden sm:block w-48">
+                            <select onchange="document.getElementById('sortInput').value = this.value; document.getElementById('sortForm').submit();"
                                     class="block w-full pl-4 pr-10 py-2.5 border border-border-color rounded-xl text-sm focus:ring-primary focus:border-primary appearance-none bg-white font-medium cursor-pointer transition">
                                 <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
                                 <option value="termurah" {{ request('sort') == 'termurah' ? 'selected' : '' }}>Harga Terendah</option>
