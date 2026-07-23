@@ -64,6 +64,6 @@ class ProfileController extends Controller
             $user->save();
         }
         
-        return redirect()->route('seller.dashboard')->with('success', 'Selamat! Dasbor Penjual Anda telah aktif. Anda sekarang bisa mulai menjual barang.');
+        return redirect()->route('seller.dashboard')->with('success', 'Selamat! Akun Penjual Anda telah aktif. Anda sekarang bisa mulai menjual barang.');
     }
 }
