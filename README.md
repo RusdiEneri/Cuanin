@@ -79,6 +79,10 @@ Akses: http://localhost:8000
 - Email: rusdi@example.com
 - Password: password
 
+### Login Default
+- Email: ilham@example.com
+- Password: password
+
 ### Struktur Database
 - users
 - categories
