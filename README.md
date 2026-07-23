@@ -76,7 +76,7 @@ php artisan serve
 Akses: http://localhost:8000
 
 ### Login Default
-- Email: budi@example.com
+- Email: rusdi@example.com
 - Password: password
 
 ### Struktur Database
