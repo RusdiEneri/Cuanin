@@ -228,10 +228,11 @@
     <!-- Nego Modal -->
     <div id="nego-modal" onclick="if(event.target === this) this.classList.add('hidden')" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <button type="button" onclick="document.getElementById('nego-modal').classList.add('hidden')" class="absolute right-4 top-4 text-gray-400 hover:text-gray-700 transition">
+            
+            <div class="p-6 sm:p-8">
+                <button type="button" onclick="document.getElementById('nego-modal').classList.add('hidden')" class="absolute right-4 top-6 text-gray-400 hover:text-gray-700 transition">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <div class="p-6 sm:p-8">
                 <div class="flex items-start gap-4 mb-6">
                     <div class="w-12 h-12 rounded-2xl bg-yellow-50 flex items-center justify-center text-yellow-600">
                         <i data-lucide="handshake" class="w-6 h-6"></i>
@@ -249,8 +250,7 @@
                     <div>
                         <label for="offered_price" class="block text-sm font-medium text-gray-700 mb-2">Harga Nego</label>
                         <div class="relative">
-                            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">Rp</span>
-                            <input id="offered_price" name="offered_price" type="number" min="1000" step="1000" required value="{{ old('offered_price') }}" class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-14 py-3 text-gray-900 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none">
+                            <input id="offered_price" name="offered_price" type="number" min="1000" step="1000" required value="{{ old('offered_price') }}" class="w-full rounded-2xl border border-gray-200 bg-gray-50 pl-4 pr-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none">
                         </div>
                         @error('offered_price')
                             <p class="mt-2 text-sm text-danger">{{ $message }}</p>
