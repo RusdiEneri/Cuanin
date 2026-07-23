@@ -132,9 +132,21 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-                        Anda belum menambahkan produk apapun.
-                        <a href="{{ route('seller.products.create') }}" class="text-primary font-medium hover:underline">Tambah Sekarang</a>
+                    <td colspan="5" class="px-6 py-20 text-center">
+                        <div class="flex flex-col items-center justify-center">
+                            <div class="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center text-primary mb-6 shadow-sm border border-blue-100">
+                                <i data-lucide="package-open" class="w-12 h-12"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Toko Anda Masih Kosong</h3>
+                            <p class="text-gray-500 max-w-md mx-auto mb-8 leading-relaxed">
+                                Ayo tambahkan produk pertama Anda sekarang dan mulai hasilkan cuan!
+                            </p>
+                            <a href="{{ route('seller.products.create') }}" 
+                               class="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-semibold shadow-lg shadow-blue-500/30 hover:bg-blue-700 hover:-translate-y-0.5 transition duration-300">
+                                <i data-lucide="plus" class="w-5 h-5"></i>
+                                Tambah Produk Pertama
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 @endforelse
