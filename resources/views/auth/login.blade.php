@@ -17,6 +17,11 @@
 
     /* Panggung koin: kasih perspective biar efek 3D-nya kebaca */
     .coin-stage{ width: 88px; height: 88px; perspective: 800px; }
+
+    /* [NEW] Varian koin BESAR untuk panel kiri desktop */
+    .coin-stage--lg{ width: 112px; height: 112px; }
+    @media (min-width: 1280px){ .coin-stage--lg{ width: 128px; height: 128px; } }
+
     .coin{
         position: relative; width: 100%; height: 100%;
         transform-style: preserve-3d;
@@ -58,9 +63,14 @@
          + font-poppins (seluruh teks card pakai Poppins). --}}
     <div class="font-poppins mx-auto w-full max-w-md lg:max-w-5xl grid lg:grid-cols-2 bg-white rounded-3xl shadow-xl shadow-blue-900/10 border border-gray-100 overflow-hidden">
 
-        {{-- ══ KOLOM KIRI : PANEL BRANDING (desktop only) ══ --}}
-        <div class="hidden lg:flex relative flex-col justify-between p-10 xl:p-12 bg-primary text-white overflow-hidden">
+        {{-- ══ KOLOM KIRI : PANEL BRANDING (desktop only) ══
+             [KOREKSI] Dibuat SIMPEL: hanya KOIN BERPUTAR + heading
+             "Jual Beli Barang Bekas, Jadi Cuan!". Logo, badge, paragraf,
+             list fitur, dan CTA daftar di panel kiri DIBUANG.
+             Layout di-CENTER (vertikal & horizontal) supaya rapi. --}}
+        <div class="hidden lg:flex relative flex-col items-center justify-center text-center p-10 xl:p-12 bg-primary text-white overflow-hidden">
 
+            {{-- Dekorasi latar (tetap, biar panel tidak polos) --}}
             <div class="absolute inset-0 opacity-60"
                  style="background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 22px 22px;"></div>
 
@@ -68,54 +78,28 @@
             <div class="absolute -bottom-24 -left-16 w-72 h-72 bg-blue-950 rounded-full filter blur-3xl opacity-40"></div>
             <div class="absolute top-1/3 -left-10 w-40 h-40 bg-secondary rounded-full filter blur-3xl opacity-20"></div>
 
-            <div class="relative z-10 flex items-center gap-2">
-                <div class="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shadow-lg shadow-blue-900/30">
-                    <i data-lucide="dollar-sign" class="w-5 h-5 text-primary"></i>
-                </div>
-                <span class="text-2xl font-extrabold tracking-tight">Cuanin<span class="text-secondary">.</span></span>
-            </div>
+            {{-- Konten: KOIN BERPUTAR di atas, heading di bawahnya --}}
+            <div class="relative z-10 flex flex-col items-center">
 
-            <div class="relative z-10 my-10">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-medium text-secondary backdrop-blur-sm mb-5">
-                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                    Marketplace Barang Bekas #1
-                </span>
-                <h2 class="text-3xl xl:text-4xl font-extrabold leading-tight mb-4">
+                {{-- KOIN BERPUTAR (desktop) --}}
+                <div class="relative inline-block mb-6 xl:mb-8">
+                    <div class="absolute inset-0 -m-4 rounded-full bg-secondary opacity-40 blur-2xl pointer-events-none"></div>
+                    <div class="coin-stage coin-stage--lg relative" aria-hidden="true">
+                        <div class="coin">
+                            <div class="coin-face front">
+                                <i data-lucide="dollar-sign" class="coin-emblem w-12 h-12 xl:w-14 xl:h-14"></i>
+                            </div>
+                            <div class="coin-face back">
+                                <i data-lucide="dollar-sign" class="coin-emblem w-12 h-12 xl:w-14 xl:h-14"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Satu-satunya tulisan di panel kiri --}}
+                <h2 class="text-3xl xl:text-4xl font-extrabold leading-tight max-w-xs xl:max-w-sm">
                     Jual Beli Barang Bekas, <span class="text-secondary">Jadi Cuan!</span>
                 </h2>
-                <p class="text-blue-100/80 text-sm leading-relaxed mb-8 max-w-sm">
-                    Bergabunglah dengan ribuan pengguna yang sudah mengubah barang tak terpakai menjadi penghasilan.
-                </p>
-
-                <ul class="space-y-4">
-                    <li class="flex items-center gap-3">
-                        <span class="w-9 h-9 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center shrink-0">
-                            <i data-lucide="tag" class="w-4 h-4 text-secondary"></i>
-                        </span>
-                        <span class="text-sm text-blue-50">Jual barang bekas dengan mudah & cepat</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <span class="w-9 h-9 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center shrink-0">
-                            <i data-lucide="search" class="w-4 h-4 text-secondary"></i>
-                        </span>
-                        <span class="text-sm text-blue-50">Temukan harga terbaik untuk incaranmu</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <span class="w-9 h-9 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center shrink-0">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-secondary"></i>
-                        </span>
-                        <span class="text-sm text-blue-50">Transaksi aman & terpercaya</span>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="relative z-10">
-                <p class="text-sm text-blue-100/80 mb-3">Belum punya akun?</p>
-                <a href="{{ route('register') }}"
-                   class="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-secondary text-primary font-semibold text-sm shadow-lg shadow-blue-900/30 hover:bg-yellow-300 transition transform hover:-translate-y-0.5 active:translate-y-0">
-                    <i data-lucide="user-plus" class="w-4 h-4"></i>
-                    Daftar Sekarang
-                </a>
             </div>
         </div>
 
@@ -127,7 +111,7 @@
 
             <div class="relative z-10">
 
-                {{-- HEADER MOBILE : KOIN EMAS BERPUTAR --}}
+                {{-- HEADER MOBILE : KOIN EMAS BERPUTAR (tetap hanya di mobile) --}}
                 <div class="lg:hidden flex flex-col items-center mb-6">
                     <div class="relative mb-3">
                         <div class="absolute inset-0 -m-3 rounded-full bg-secondary opacity-40 blur-xl pointer-events-none"></div>
