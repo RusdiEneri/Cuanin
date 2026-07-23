@@ -1,55 +1,128 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
 
     {{-- ================= HERO ================= --}}
-    <div class="bg-primary rounded-3xl overflow-hidden relative mb-12 md:mb-16 shadow-xl shadow-blue-900/20">
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-700 to-primary"></div>
-        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+    <div class="bg-primary rounded-3xl overflow-hidden relative mb-12 md:mb-16 shadow-2xl shadow-blue-900/30">
+        {{-- Base Gradient --}}
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-primary to-blue-950"></div>
+        
+        {{-- Glowing Orbs (Aurora Mesh Effect) - Mengisi ruang kosong dengan warna dinamis --}}
+        <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
+            <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[70%] bg-blue-400/30 rounded-full mix-blend-overlay filter blur-[100px] animate-[float_8s_ease-in-out_infinite]"></div>
+            <div class="absolute bottom-[-20%] right-[-10%] w-[60%] h-[80%] bg-purple-500/20 rounded-full mix-blend-overlay filter blur-[120px] animate-[float_6s_ease-in-out_infinite_reverse]"></div>
+            <div class="absolute top-[20%] left-[30%] w-[40%] h-[40%] bg-yellow-400/15 rounded-full mix-blend-overlay filter blur-[90px] animate-[float_10s_ease-in-out_infinite]"></div>
+        </div>
 
-        <div class="relative z-10 px-6 sm:px-8 py-12 md:py-24 md:px-16 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
+        
+        
+        {{-- Glass Reflection Overlay (Efek kilapan kaca di ujung) --}}
+        <div class="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pointer-events-none"></div>
+
+        {{-- Hiasan Corak (Batik/Arabesque) Khusus di Kanan (Tidak merubah ukuran layout) --}}
+        <div class="absolute top-0 right-0 w-full md:w-[65%] h-full pointer-events-none rounded-r-3xl opacity-40" 
+             style="background-image: url('https://www.transparenttextures.com/patterns/arabesque.png'); mask-image: linear-gradient(to right, transparent, black 60%); -webkit-mask-image: linear-gradient(to right, transparent, black 60%);">
+        </div>
+
+        
+        <div class="relative z-10 px-6 sm:px-8 py-10 md:py-12 lg:py-12 md:px-16 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
             <div class="w-full md:w-1/2 text-center md:text-left text-white">
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 md:mb-6">
-                    Temukan <span class="text-secondary">Barang Bekas</span> Berkualitas!
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-3 md:mb-4 animate-[fadeInUp_0.8s_ease-out_forwards]">
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                    </span>
+                    <span class="text-xs font-medium text-blue-50">Pusat Barang Bekas Pilihan #1</span>
+                </div>
+                
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold leading-[1.1] mb-3 md:mb-4 tracking-tight text-white animate-[fadeInUp_0.8s_ease-out_0.2s_forwards] opacity-0 drop-shadow-lg">
+                    Temukan <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500 drop-shadow-none">Barang Bekas</span> <br>
+                    Berkualitas!
                 </h1>
-                <p class="text-blue-100 text-base md:text-xl mb-6 md:mb-8 max-w-lg mx-auto md:mx-0 leading-relaxed">
+                
+                <p class="text-base sm:text-lg md:text-lg lg:text-xl text-blue-100 mb-6 max-w-lg mx-auto md:mx-0 leading-relaxed animate-[fadeInUp_0.8s_ease-out_0.4s_forwards] opacity-0 drop-shadow-md">
                     Marketplace terpercaya untuk jual beli barang preloved. Aman, mudah, dan penuh cuan.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-                    <a href="{{ route('marketplace') }}" class="bg-secondary text-dark font-semibold px-8 py-3.5 rounded-full text-center hover:bg-yellow-400 transition shadow-lg shadow-yellow-500/30 transform hover:-translate-y-1">
-                        Mulai Belanja
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto animate-[fadeInUp_0.8s_ease-out_0.6s_forwards] opacity-0">
+                    <a href="{{ route('marketplace') }}" class="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-950 font-bold px-8 py-3.5 rounded-full overflow-hidden transition-all hover:scale-105 shadow-[0_0_20px_rgba(250,204,21,0.3)] hover:shadow-[0_0_25px_rgba(250,204,21,0.5)]">
+                        <span class="relative z-10 flex items-center gap-2">
+                            Mulai Belanja
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </span>
+                        <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
                     </a>
-                    <a href="{{ route('cara-jualan') }}" class="bg-white/10 backdrop-blur-md text-white border border-white/20 font-semibold px-8 py-3.5 rounded-full text-center hover:bg-white/20 transition">
+                    <a href="{{ route('cara-jualan') }}" class="bg-white/10 backdrop-blur-md text-white border border-white/20 font-semibold px-8 py-3.5 rounded-full text-center hover:bg-white/20 transition hover:scale-105 flex items-center justify-center gap-2">
                         Cara Jualan
                     </a>
                 </div>
             </div>
 
             <div class="hidden md:flex md:w-1/2 items-center justify-center relative">
-                <div class="relative w-72 md:w-96 h-auto">
+                <div class="relative w-72 md:w-80 lg:w-96 h-auto origin-center">
                     <div class="absolute top-0 right-0 w-48 h-48 bg-secondary rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob"></div>
                     <div class="absolute top-0 left-10 w-48 h-48 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000"></div>
                     <div class="absolute -bottom-8 left-20 w-48 h-48 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-4000"></div>
 
-                    <div class="relative bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-2xl transform rotate-3 hover:rotate-0 transition duration-500">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary">
-                                <i data-lucide="smartphone" class="w-6 h-6"></i>
+                    @php
+                        $heroProducts = isset($latestProducts) ? $latestProducts->take(3) : collect();
+                    @endphp
+
+                    @if($heroProducts->isNotEmpty())
+                        <div id="hero-slider" class="relative w-full">
+                            @foreach($heroProducts as $index => $product)
+                                @php
+                                    $imgUrl = $product->primaryImage 
+                                        ? (str_starts_with($product->primaryImage->image_path, 'http') ? $product->primaryImage->image_path : asset('storage/' . $product->primaryImage->image_path))
+                                        : asset('images/placeholder.jpg');
+                                    
+                                    $icon = 'package';
+                                    if(isset($product->category) && $product->category->icon) {
+                                        $icon = $product->category->icon;
+                                    }
+                                @endphp
+                                <a href="{{ route('product.show', $product->slug ?? $product->id) }}" 
+                                   class="hero-slide block bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl transition-all duration-1000 ease-in-out {{ $index === 0 ? 'relative opacity-100 z-10 rotate-3 hover:rotate-0' : 'absolute inset-0 opacity-0 z-0 pointer-events-none' }}">
+                                    <div class="flex items-center gap-4 mb-4">
+                                        <div class="w-12 h-12 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center text-white shrink-0 shadow-inner">
+                                            <i data-lucide="{{ $icon }}" class="w-6 h-6"></i>
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <h3 class="text-white font-bold truncate" title="{{ $product->title }}">{{ $product->title }}</h3>
+                                            <p class="text-blue-200 text-sm truncate">{{ $product->category->name ?? 'Lainnya' }} • {{ $product->condition }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="w-full h-44 bg-white/5 border border-white/10 rounded-xl mb-4 overflow-hidden relative group">
+                                        <img src="{{ $imgUrl }}" alt="{{ $product->title }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-out">
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-yellow-400 font-extrabold text-xl truncate pr-2">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                        <span class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-950 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform">Beli</span>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl transform rotate-3 hover:rotate-0 transition duration-500">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-12 h-12 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center text-white shrink-0 shadow-inner">
+                                    <i data-lucide="smartphone" class="w-6 h-6"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <h3 class="text-white font-bold truncate">iPhone 13 Pro</h3>
+                                    <p class="text-blue-200 text-sm truncate">Elektronik • Kondisi Bekas</p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 class="text-white font-semibold">iPhone 13 Pro</h3>
-                                <p class="text-blue-200 text-sm">Like New • 98% Mulus</p>
+                            <div class="w-full h-44 bg-white/5 border border-white/10 rounded-xl mb-4 overflow-hidden relative group">
+                                <img src="https://jakartaberkamera.com/wp-content/uploads/2022/08/sewa-rental-iphone13-pro-jakarta-1.jpg" alt="iPhone 13 Pro" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-out">
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-yellow-400 font-extrabold text-xl truncate pr-2">Rp 10.500.000</span>
+                                <span class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-950 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform">Beli</span>
                             </div>
                         </div>
-                        <div class="w-full h-56 bg-white rounded-xl mb-4 overflow-hidden p-4 flex items-center justify-center">
-                            <img src="https://jakartaberkamera.com/wp-content/uploads/2022/08/sewa-rental-iphone13-pro-jakarta-1.jpg" alt="iPhone 13 Pro" class="max-w-full max-h-full object-contain">
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-secondary font-bold text-xl">Rp 10.500.000</span>
-                            <button class="bg-white text-primary px-4 py-1.5 rounded-full text-sm font-semibold">Beli</button>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -160,6 +233,17 @@
 
 @push('styles')
 <style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+        100% { transform: translateX(100%); }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
     .scrollbar-hide::-webkit-scrollbar {
         display: none;
     }
@@ -240,6 +324,30 @@ document.addEventListener('DOMContentLoaded', function() {
         carousel.scrollLeft = scrollLeft - walk;
     });
 });
+</script>
+@endpush
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.hero-slide');
+        if (slides.length <= 1) return;
+        
+        let currentIndex = 0;
+        
+        setInterval(() => {
+            // Hide current
+            slides[currentIndex].classList.remove('opacity-100', 'z-10', 'rotate-3', 'hover:rotate-0');
+            slides[currentIndex].classList.add('opacity-0', 'z-0', 'pointer-events-none');
+            
+            // Move to next
+            currentIndex = (currentIndex + 1) % slides.length;
+            
+            // Show next
+            slides[currentIndex].classList.remove('opacity-0', 'z-0', 'pointer-events-none');
+            slides[currentIndex].classList.add('opacity-100', 'z-10', 'rotate-3', 'hover:rotate-0');
+        }, 4000);
+    });
 </script>
 @endpush
 
