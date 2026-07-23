@@ -225,9 +225,49 @@
         </div>
     </div>
 
-    <!-- Nego Modal (Tetap sama) -->
-    <div id="nego-modal" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-        <!-- ... (kode modal nego tidak berubah) ... -->
+    <!-- Nego Modal -->
+    <div id="nego-modal" onclick="if(event.target === this) this.classList.add('hidden')" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
+            <button type="button" onclick="document.getElementById('nego-modal').classList.add('hidden')" class="absolute right-4 top-4 text-gray-400 hover:text-gray-700 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="p-6 sm:p-8">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-2xl bg-yellow-50 flex items-center justify-center text-yellow-600">
+                        <i data-lucide="handshake" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900">Ajukan Nego Harga</h2>
+                        <p class="mt-1 text-sm text-gray-500">Masukkan harga yang ingin Anda tawarkan ke penjual.</p>
+                    </div>
+                </div>
+
+                <form action="{{ route('negotiations.store') }}" method="POST" class="space-y-5">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                    <div>
+                        <label for="offered_price" class="block text-sm font-medium text-gray-700 mb-2">Harga Nego</label>
+                        <div class="relative">
+                            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">Rp</span>
+                            <input id="offered_price" name="offered_price" type="number" min="1000" step="1000" required value="{{ old('offered_price') }}" class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-14 py-3 text-gray-900 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none">
+                        </div>
+                        @error('offered_price')
+                            <p class="mt-2 text-sm text-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button type="button" onclick="document.getElementById('nego-modal').classList.add('hidden')" class="w-full px-4 py-3 rounded-2xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 font-semibold transition">
+                            Batal
+                        </button>
+                        <button type="submit" class="w-full px-4 py-3 rounded-2xl bg-primary text-white hover:bg-blue-700 font-semibold transition">
+                            Kirim Nego
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Related Products -->

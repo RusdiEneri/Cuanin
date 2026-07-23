@@ -11,12 +11,12 @@ class NegotiationController extends Controller
 {
     public function index()
     {
-        $myOffers = Negotiation::with('product.primaryImage', 'seller')
+        $myOffers = Negotiation::with(['product.primaryImage', 'product.productImages', 'seller'])
             ->where('buyer_id', Auth::id())
             ->latest()
             ->get();
             
-        $incomingOffers = Negotiation::with('product.primaryImage', 'buyer')
+        $incomingOffers = Negotiation::with(['product.primaryImage', 'product.productImages', 'buyer'])
             ->where('seller_id', Auth::id())
             ->latest()
             ->get();
