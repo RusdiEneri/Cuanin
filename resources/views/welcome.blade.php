@@ -4,7 +4,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
 
     {{-- ================= HERO ================= --}}
-    <div class="bg-primary rounded-3xl overflow-hidden relative mb-12 md:mb-16 shadow-2xl shadow-blue-900/30">
+    <div id="heroCard" class="bg-primary rounded-3xl overflow-hidden relative mb-12 md:mb-16 shadow-2xl shadow-blue-900/30">
         {{-- Base Gradient --}}
         <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-primary to-blue-950"></div>
         
@@ -20,9 +20,23 @@
         {{-- Glass Reflection Overlay (Efek kilapan kaca di ujung) --}}
         <div class="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pointer-events-none"></div>
 
-        {{-- Hiasan Corak (Batik/Arabesque) Khusus di Kanan (Tidak merubah ukuran layout) --}}
-        <div class="absolute top-0 right-0 w-full md:w-[65%] h-full pointer-events-none rounded-r-3xl opacity-40" 
-             style="background-image: url('https://www.transparenttextures.com/patterns/arabesque.png'); mask-image: linear-gradient(to right, transparent, black 60%); -webkit-mask-image: linear-gradient(to right, transparent, black 60%);">
+        {{-- Hiasan Corak (Arabesque) — DIAM di tempatnya, hanya sebagai hiasan samar --}}
+        <div class="absolute inset-0 pointer-events-none rounded-r-3xl opacity-[0.18]"
+            style="background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+                    background-repeat: repeat;
+                    -webkit-mask-image: linear-gradient(to right, transparent 30%, black 70%);
+                    mask-image: linear-gradient(to right, transparent 30%, black 70%);">
+        </div>
+
+        {{-- Pattern interaktif: TIDAK bergeser. Hanya MASK-nya yang mengikuti kursor,
+            sehingga pola "agak keliatan" di sekitar kursor (seamless dgn hiasan di atas) --}}
+        <div id="heroPatternCursor"
+            class="absolute inset-0 pointer-events-none opacity-0"
+            style="background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+                    background-repeat: repeat;
+                    transition: opacity .35s ease;
+                    -webkit-mask-image: radial-gradient(240px circle at var(--mx, -1000px) var(--my, -1000px), rgba(0,0,0,.60) 0%, rgba(0,0,0,.25) 42%, transparent 72%);
+                    mask-image: radial-gradient(240px circle at var(--mx, -1000px) var(--my, -1000px), rgba(0,0,0,.60) 0%, rgba(0,0,0,.25) 42%, transparent 72%);">
         </div>
 
         
@@ -253,9 +267,39 @@
     }
 </style>
 @endpush
-
 @push('scripts')
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const hero = document.getElementById('heroCard');
+    const cursorPattern = document.getElementById('heroPatternCursor');
+    if (!hero || !cursorPattern) return;
+
+    // Aktif hanya di perangkat berkursor (desktop). Mobile = tetap bersih & hemat.
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    let rafId = null, lastX = 0, lastY = 0;
+
+    function update() {
+        rafId = null;
+        const r = hero.getBoundingClientRect();
+        // HANYA gerakkan posisi spotlight (mask), JANGAN sentuh background-position pola.
+        hero.style.setProperty('--mx', (lastX - r.left) + 'px');
+        hero.style.setProperty('--my', (lastY - r.top)  + 'px');
+    }
+
+    hero.addEventListener('mousemove', function (e) {
+        lastX = e.clientX; lastY = e.clientY;
+        cursorPattern.style.opacity = '1';          // pola "agak keliatan" di sekitar kursor
+        if (rafId === null) rafId = requestAnimationFrame(update);
+    });
+
+    hero.addEventListener('mouseleave', function () {
+        cursorPattern.style.opacity = '0';          // fade out spotlight
+        hero.style.setProperty('--mx', '-1000px');  // sembunyikan mask
+        hero.style.setProperty('--my', '-1000px');
+        // TIDAK ada reset --px/--py lagi → pola hiasan tetap diam di tempatnya.
+    });
+});
 document.addEventListener('DOMContentLoaded', function() {
     const carousel = document.getElementById('categoryCarousel');
     const dotsContainer = document.getElementById('carouselDots');

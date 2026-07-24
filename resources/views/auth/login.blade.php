@@ -4,29 +4,41 @@
 
 @section('content')
 
-{{-- [FIX] Style + font. @import WAJIB baris paling atas.
-     Kalau layouts.app punya @stack('styles'), lebih rapi pindahkan
-     seluruh blok <style> ini ke @push('styles'). --}}
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-    /* [FIX] Jaminan Poppins untuk seluruh card (jika layout belum set global) */
     .font-poppins{
         font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     }
 
-    /* Panggung koin: kasih perspective biar efek 3D-nya kebaca */
-    .coin-stage{ width: 88px; height: 88px; perspective: 800px; }
+    /* ═══════════════════ KOIN 3D ═══════════════════ */
+    /* Panggung koin: perspective biar efek 3D kebaca.
+       --coin-t = KETEBALAN koin (atur di sini). */
+    .coin-stage{
+        --coin-t: 12px;                 /* ketebalan mobile */
+        width: 88px; height: 88px;
+        perspective: 900px;
+        perspective-origin: 50% 50%;
+    }
+    .coin-stage--lg{ --coin-t: 16px; width: 112px; height: 112px; }   /* desktop */
+    @media (min-width: 1280px){ .coin-stage--lg{ --coin-t: 18px; width: 128px; height: 128px; } }
 
-    /* [NEW] Varian koin BESAR untuk panel kiri desktop */
-    .coin-stage--lg{ width: 112px; height: 112px; }
-    @media (min-width: 1280px){ .coin-stage--lg{ width: 128px; height: 128px; } }
+    /* Wrapper melayang (terpisah dari spin supaya bisa digabung) */
+    .coin-float{ animation: cuanin-coin-float 3.8s ease-in-out infinite; }
+    @keyframes cuanin-coin-float{
+        0%,100%{ transform: translateY(0); }
+        50%    { transform: translateY(-9px); }
+    }
 
+    /* Benda koin: preserve-3d WAJIB supaya anak-anaknya hidup di ruang 3D */
     .coin{
         position: relative; width: 100%; height: 100%;
         transform-style: preserve-3d;
-        animation: cuanin-coin-spin 3.2s linear infinite;
+        will-change: transform;
+        animation: cuanin-coin-spin 3.4s linear infinite;
     }
+
+    /* Muka & belakang koin (tutup silinder) */
     .coin-face{
         position: absolute; inset: 0; border-radius: 9999px;
         display: flex; align-items: center; justify-content: center;
@@ -44,59 +56,88 @@
         content: ""; position: absolute; inset: 8px;
         border-radius: 9999px; border: 2px dashed rgba(120,53,15,.45);
     }
-    .coin-face.back{ transform: rotateY(180deg); }
+    /* [FIX 3D] dorong muka & belakang ke ujung ketebalan */
+    .coin-face.front{ transform: translateZ(calc(var(--coin-t) / 2 + .6px)); }
+    .coin-face.back { transform: rotateY(180deg) translateZ(calc(var(--coin-t) / 2 + .6px)); }
+
     .coin-emblem{ color: #78350f; filter: drop-shadow(0 1px 0 rgba(255,255,255,.5)); }
-    @keyframes cuanin-coin-spin{
-        0%   { transform: rotateY(0deg)   rotateX(8deg); }
-        100% { transform: rotateY(360deg) rotateX(8deg); }
+
+    /* [NEW 3D] DINDING / TEPI koin: tumpukan layer emas sepanjang sumbu Z.
+       Ini yang bikin koin terlihat TEBAL (bukan kertas) saat miring. */
+    .coin-edge{
+        position: absolute; inset: 0; border-radius: 9999px;
+        backface-visibility: visible;
+        background: linear-gradient(180deg,
+            #fef08a 0%, #eab308 20%, #a16207 47%,
+            #713f12 52%, #a16207 80%, #fef08a 100%);
+        box-shadow:
+            inset 0  1px 1px rgba(255,255,255,.55),
+            inset 0 -1px 2px rgba(0,0,0,.45);
     }
+
+    /* Bayangan lantai (grounding) — bikin terasa mengambang */
+    .coin-shadow{
+        width: 64%; height: 12px; margin: 16px auto 0;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center, rgba(15,23,42,.30), rgba(15,23,42,0) 72%);
+        filter: blur(2px);
+        animation: cuanin-coin-shadow 3.8s ease-in-out infinite;
+    }
+    @keyframes cuanin-coin-shadow{
+        0%,100%{ transform: scaleX(1);   opacity: .55; }
+        50%    { transform: scaleX(.68); opacity: .28; }
+    }
+
+    /* Spin: tilt rotateX diperbesar biar 3D-nya kebaca */
+    @keyframes cuanin-coin-spin{
+        0%   { transform: rotateY(0deg)   rotateX(14deg); }
+        100% { transform: rotateY(360deg) rotateX(14deg); }
+    }
+
     @media (prefers-reduced-motion: reduce){
-        .coin{ animation: none; transform: rotateY(-20deg) rotateX(8deg); }
+        .coin, .coin-float, .coin-shadow{ animation: none; }
+        .coin{ transform: rotateY(-22deg) rotateX(14deg); }
     }
 </style>
 
-{{-- [FIX] Wrapper: HAPUS min-h-screen & items-center (penyebab space kosong).
-     Ganti jadi padding vertikal wajar. bg-background dipertahankan. --}}
+@php $coinLayers = 40; @endphp   {{-- jumlah layer tepi (makin banyak = makin mulus) --}}
+
 <div class="bg-background px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
 
-    {{-- [FIX] Card: tambah mx-auto (center horizontal tanpa flex)
-         + font-poppins (seluruh teks card pakai Poppins). --}}
     <div class="font-poppins mx-auto w-full max-w-md lg:max-w-5xl grid lg:grid-cols-2 bg-white rounded-3xl shadow-xl shadow-blue-900/10 border border-gray-100 overflow-hidden">
 
-        {{-- ══ KOLOM KIRI : PANEL BRANDING (desktop only) ══
-             [KOREKSI] Dibuat SIMPEL: hanya KOIN BERPUTAR + heading
-             "Jual Beli Barang Bekas, Jadi Cuan!". Logo, badge, paragraf,
-             list fitur, dan CTA daftar di panel kiri DIBUANG.
-             Layout di-CENTER (vertikal & horizontal) supaya rapi. --}}
+        {{-- ══ KOLOM KIRI : PANEL BRANDING (desktop only) ══ --}}
         <div class="hidden lg:flex relative flex-col items-center justify-center text-center p-10 xl:p-12 bg-primary text-white overflow-hidden">
 
-            {{-- Dekorasi latar (tetap, biar panel tidak polos) --}}
             <div class="absolute inset-0 opacity-60"
                  style="background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 22px 22px;"></div>
-
             <div class="absolute -top-20 -right-16 w-72 h-72 bg-secondary rounded-full mix-blend-overlay filter blur-3xl opacity-30"></div>
             <div class="absolute -bottom-24 -left-16 w-72 h-72 bg-blue-950 rounded-full filter blur-3xl opacity-40"></div>
             <div class="absolute top-1/3 -left-10 w-40 h-40 bg-secondary rounded-full filter blur-3xl opacity-20"></div>
 
-            {{-- Konten: KOIN BERPUTAR di atas, heading di bawahnya --}}
             <div class="relative z-10 flex flex-col items-center">
 
-                {{-- KOIN BERPUTAR (desktop) --}}
+                {{-- KOIN 3D (desktop) --}}
                 <div class="relative inline-block mb-6 xl:mb-8">
-                    <div class="absolute inset-0 -m-4 rounded-full bg-secondary opacity-40 blur-2xl pointer-events-none"></div>
-                    <div class="coin-stage coin-stage--lg relative" aria-hidden="true">
-                        <div class="coin">
-                            <div class="coin-face front">
-                                <i data-lucide="dollar-sign" class="coin-emblem w-12 h-12 xl:w-14 xl:h-14"></i>
-                            </div>
-                            <div class="coin-face back">
-                                <i data-lucide="dollar-sign" class="coin-emblem w-12 h-12 xl:w-14 xl:h-14"></i>
+                    <div class="coin-float">
+                        <div class="absolute inset-0 -m-4 rounded-full bg-secondary opacity-40 blur-2xl pointer-events-none"></div>
+                        <div class="coin-stage coin-stage--lg relative" aria-hidden="true">
+                            <div class="coin">
+                                <div class="coin-face front">
+                                    <i data-lucide="dollar-sign" class="coin-emblem w-12 h-12 xl:w-14 xl:h-14"></i>
+                                </div>
+                                <div class="coin-face back">
+                                    <i data-lucide="dollar-sign" class="coin-emblem w-12 h-12 xl:w-14 xl:h-14"></i>
+                                </div>
+                                {{-- DINDING/TEPI koin --}}
+                                @for ($i = 0; $i < $coinLayers; $i++)
+                                    <div class="coin-edge" style="transform: translateZ(calc(({{ $i }} / {{ $coinLayers - 1 }} - 0.5) * var(--coin-t)))"></div>
+                                @endfor
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- Satu-satunya tulisan di panel kiri --}}
                 <h2 class="text-3xl xl:text-4xl font-extrabold leading-tight max-w-xs xl:max-w-sm">
                     Jual Beli Barang Bekas, <span class="text-secondary">Jadi Cuan!</span>
                 </h2>
@@ -111,21 +152,27 @@
 
             <div class="relative z-10">
 
-                {{-- HEADER MOBILE : KOIN EMAS BERPUTAR (tetap hanya di mobile) --}}
+                {{-- HEADER MOBILE : KOIN 3D --}}
                 <div class="lg:hidden flex flex-col items-center mb-6">
-                    <div class="relative mb-3">
-                        <div class="absolute inset-0 -m-3 rounded-full bg-secondary opacity-40 blur-xl pointer-events-none"></div>
-                        <div class="coin-stage relative" aria-hidden="true">
-                            <div class="coin">
-                                <div class="coin-face front">
-                                    <i data-lucide="dollar-sign" class="coin-emblem w-9 h-9"></i>
-                                </div>
-                                <div class="coin-face back">
-                                    <i data-lucide="dollar-sign" class="coin-emblem w-9 h-9"></i>
+                    <div class="relative mb-1">
+                        <div class="coin-float">
+                            <div class="absolute inset-0 -m-3 rounded-full bg-secondary opacity-40 blur-xl pointer-events-none"></div>
+                            <div class="coin-stage relative" aria-hidden="true">
+                                <div class="coin">
+                                    <div class="coin-face front">
+                                        <i data-lucide="dollar-sign" class="coin-emblem w-9 h-9"></i>
+                                    </div>
+                                    <div class="coin-face back">
+                                        <i data-lucide="dollar-sign" class="coin-emblem w-9 h-9"></i>
+                                    </div>
+                                    @for ($i = 0; $i < $coinLayers; $i++)
+                                        <div class="coin-edge" style="transform: translateZ(calc(({{ $i }} / {{ $coinLayers - 1 }} - 0.5) * var(--coin-t)))"></div>
+                                    @endfor
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="coin-shadow" aria-hidden="true"></div>
                 </div>
 
                 <div class="text-center">
@@ -159,7 +206,6 @@
 
                     <div class="space-y-4">
 
-                        {{-- LOGIN FIELD --}}
                         <div>
                             <label for="login" class="block text-sm font-medium text-gray-700 mb-1">
                                 Email / Nomor HP
@@ -185,7 +231,6 @@
                             @enderror
                         </div>
 
-                        {{-- PASSWORD FIELD --}}
                         <div>
                             <div class="flex items-center justify-between mb-1">
                                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
@@ -224,7 +269,6 @@
                         </div>
                     </div>
 
-                    {{-- Remember Me --}}
                     <div class="flex items-center">
                         <input
                             id="remember-me" name="remember" type="checkbox"
@@ -236,7 +280,6 @@
                         </label>
                     </div>
 
-                    {{-- Submit --}}
                     <div>
                         <button
                             type="submit"
