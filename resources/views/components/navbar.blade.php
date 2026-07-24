@@ -3,9 +3,18 @@
         <!-- BARIS 1: Header utama (height responsive: h-16 mobile, h-20 desktop) -->
         <div class="flex justify-between items-center h-16 md:h-20 gap-4 md:gap-6">
             <!-- Logo -->
-            <div class="flex-shrink-0 flex items-center">
+            <!-- <div class="flex-shrink-0 flex items-center">
                 <a href="/" class="text-xl md:text-2xl font-bold text-primary tracking-tight">
                     Cuanin<span class="text-secondary">.</span>
+                </a>
+            </div> -->
+                        <div class="flex-shrink-0 flex items-center">
+                <a href="/" class="flex items-center" aria-label="Cuanin - Beranda">
+                    <img src="{{ asset('logo.png') }}?v2"
+                         alt="Cuanin"
+                         draggable="false"
+                         class="h-8 md:h-10 w-auto max-w-[120px] md:max-w-[150px] object-contain select-none
+                    translate-y-0.5 md:translate-y-1">
                 </a>
             </div>
 
