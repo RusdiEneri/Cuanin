@@ -2,12 +2,17 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4 xl:gap-6">
 
-            {{-- Kolom 1: Brand --}}
+            {{-- Kolom 1: Brand (LOGO GAMBAR) --}}
             <div class="max-w-sm pr-2">
-                <a href="/" class="text-2xl font-bold text-primary tracking-tight mb-3 inline-block">
-                    Cuanin<span class="text-secondary">.</span>
+                {{-- FIX: mb-3 -> mb-1.
+                     Logo h-8 = 32px, sedangkan <h4> kolom lain ≈ 24px (selisih 8px).
+                     12px (mb-3) - 8px = 4px (mb-1) supaya paragraf sejajar dgn list. --}}
+                <a href="/" class="mb-1 inline-block">
+                    <img src="{{ asset('logo.png') }}"
+                         alt="Cuanin"
+                         class="h-8 w-auto object-contain block">
                 </a>
-                <p class="text-gray-500 text-sm leading-relaxed mt-1">
+                <p class="text-gray-500 text-sm leading-relaxed">
                     Marketplace barang bekas berkualitas. Temukan barang impianmu dengan harga terbaik dan aman.
                 </p>
             </div>
@@ -15,7 +20,8 @@
             {{-- Kolom 2: Bantuan --}}
             <div class="flex flex-col items-start pr-2">
                 <h4 class="font-semibold text-gray-900 mb-3">Bantuan</h4>
-                <ul class="space-y-1.5 text-sm text-gray-500">
+                {{-- FIX: tambah leading-relaxed agar baseline baris pertama impas dgn <p> kolom 1 --}}
+                <ul class="space-y-1.5 text-sm text-gray-500 leading-relaxed">
                     <li><a href="javascript:void(0)" class="hover:text-primary transition">Pusat Bantuan</a></li>
                     <li><a href="javascript:void(0)" class="hover:text-primary transition">FAQ</a></li>
                     <li><a href="javascript:void(0)" class="hover:text-primary transition">Hubungi Kami</a></li>
@@ -25,11 +31,11 @@
             {{-- Kolom 3: Kategori --}}
             <div class="flex flex-col items-start pr-2">
                 <h4 class="font-semibold text-gray-900 mb-3">Kategori</h4>
-                <ul class="space-y-1.5 text-sm text-gray-500">
+                <ul class="space-y-1.5 text-sm text-gray-500 leading-relaxed">
                     <li><a href="javascript:void(0)" class="hover:text-primary transition">Elektronik</a></li>
                     <li><a href="javascript:void(0)" class="hover:text-primary transition">Pakaian</a></li>
                     <li><a href="javascript:void(0)" class="hover:text-primary transition">Kendaraan</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Furniture</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Furnitur</a></li>
                     <li><a href="javascript:void(0)" class="hover:text-primary transition">Hobi & Mainan</a></li>
                     <li><a href="javascript:void(0)" class="hover:text-primary transition">Buku</a></li>
                 </ul>
@@ -38,7 +44,7 @@
             {{-- Kolom 4: Kontak --}}
             <div class="flex flex-col items-start pr-2">
                 <h4 class="font-semibold text-gray-900 mb-3">Kontak</h4>
-                <ul class="space-y-1.5 text-sm text-gray-500">
+                <ul class="space-y-1.5 text-sm text-gray-500 leading-relaxed">
                     <li><a href="mailto:support@cuanin.id" class="hover:text-primary transition">support@cuanin.id</a></li>
                     <li><span>Gresik, Jawa Timur, Indonesia</span></li>
                     <li><a href="javascript:void(0)" class="hover:text-primary transition">TikTok: Cuanin.id</a></li>
