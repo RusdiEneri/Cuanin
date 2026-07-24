@@ -230,11 +230,11 @@
         <div class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
             
             <div class="p-6 sm:p-8">
-                <button type="button" onclick="document.getElementById('nego-modal').classList.add('hidden')" class="absolute right-4 top-6 text-gray-400 hover:text-gray-700 transition">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-                <div class="flex items-start gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-2xl bg-yellow-50 flex items-center justify-center text-yellow-600">
+                <button type="button" onclick="document.getElementById('nego-modal').classList.add('hidden')" class="absolute right-4 top-4 w-8 h-8 bg-gray-50 hover:bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-700 transition">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+                <div class="flex items-start gap-4 mb-6 pr-8">
+                    <div class="w-12 h-12 rounded-2xl bg-yellow-50 flex items-center justify-center text-yellow-600 flex-shrink-0">
                         <i data-lucide="handshake" class="w-6 h-6"></i>
                     </div>
                     <div>
@@ -249,9 +249,31 @@
 
                     <div>
                         <label for="offered_price" class="block text-sm font-medium text-gray-700 mb-2">Harga Nego</label>
-                        <div class="relative">
-                            <input id="offered_price" name="offered_price" type="number" min="1000" step="1000" required value="{{ old('offered_price') }}" class="w-full rounded-2xl border border-gray-200 bg-gray-50 pl-4 pr-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none">
+                        <div class="relative mb-3">
+                            <input id="offered_price" name="offered_price" type="number" min="1000" required value="{{ old('offered_price') }}" placeholder="Contoh: 150000" class="w-full rounded-2xl border border-gray-200 bg-gray-50 pl-4 pr-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none">
                         </div>
+                        
+                        <!-- Quick Nego Percentage -->
+                        <div class="mb-5">
+                            <p class="text-xs text-gray-500 mb-2">Penawaran Cepat (otomatis hitung):</p>
+                            <div class="flex gap-2">
+                                @php
+                                    $price = $product->price;
+                                    $percentages = [10, 15, 20, 25];
+                                @endphp
+                                @foreach($percentages as $percent)
+                                    @php
+                                        $negoPrice = $price - ($price * ($percent / 100));
+                                    @endphp
+                                    <button type="button" 
+                                            onclick="document.getElementById('offered_price').value = '{{ $negoPrice }}'"
+                                            class="flex-1 py-2.5 px-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 hover:border-primary hover:text-primary hover:bg-blue-50 transition text-center">
+                                        -{{ $percent }}%
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+
                         @error('offered_price')
                             <p class="mt-2 text-sm text-danger">{{ $message }}</p>
                         @enderror
