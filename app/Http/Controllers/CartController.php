@@ -12,12 +12,10 @@ class CartController extends Controller
     public function index()
     {
         $carts = Cart::with(['product' => function ($query) {
-            $query->with(['primaryImage', 'productImages']);
+            $query->with(['primaryImage', 'productImages', 'user']);
         }])->where('user_id', Auth::id())->get();
-        
-        $total = $carts->sum(function($cart) {
-            return $cart->product->price * $cart->quantity;
-        });
+
+        $total = $carts->sum(fn($cart) => $cart->product->price * $cart->quantity);
 
         return view('cart.index', compact('carts', 'total'));
     }
@@ -26,29 +24,30 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
+            'quantity'   => 'required|integer|min:1',
         ]);
 
         $product = Product::findOrFail($request->product_id);
 
         if ($product->status !== 'active') {
-        return back()->with('error', 'Produk ini sudah tidak tersedia (Terjual/Diarsipkan).');
-    }
-        
-        // Cek jika produk milik sendiri
+            return back()->with('error', 'Produk ini sudah tidak tersedia (Terjual/Diarsipkan).');
+        }
+
         if ($product->user_id == Auth::id()) {
             return back()->with('error', 'Anda tidak bisa membeli produk Anda sendiri.');
         }
 
-        $cart = Cart::where('user_id', Auth::id())->where('product_id', $request->product_id)->first();
+        $cart = Cart::where('user_id', Auth::id())
+                    ->where('product_id', $request->product_id)
+                    ->first();
 
         if ($cart) {
             $cart->update(['quantity' => $cart->quantity + $request->quantity]);
         } else {
             Cart::create([
-                'user_id' => Auth::id(),
+                'user_id'    => Auth::id(),
                 'product_id' => $request->product_id,
-                'quantity' => $request->quantity
+                'quantity'   => $request->quantity,
             ]);
         }
 
@@ -59,5 +58,11 @@ class CartController extends Controller
     {
         Cart::where('id', $id)->where('user_id', Auth::id())->delete();
         return back()->with('success', 'Produk dihapus dari keranjang.');
+    }
+
+    public function clear(Request $request)
+    {
+        Cart::where('user_id', $request->user()->id)->delete();
+        return redirect()->route('cart.index')->with('success', 'Semua item di keranjang berhasil dihapus.');
     }
 }
