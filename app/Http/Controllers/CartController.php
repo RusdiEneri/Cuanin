@@ -11,7 +11,9 @@ class CartController extends Controller
 {
     public function index()
     {
-        $carts = Cart::with('product.primaryImage')->where('user_id', Auth::id())->get();
+        $carts = Cart::with(['product' => function ($query) {
+            $query->with(['primaryImage', 'productImages']);
+        }])->where('user_id', Auth::id())->get();
         
         $total = $carts->sum(function($cart) {
             return $cart->product->price * $cart->quantity;

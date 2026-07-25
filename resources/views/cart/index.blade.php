@@ -31,12 +31,16 @@
                     <div class="p-6">
                         <div class="space-y-6">
                             @foreach($carts as $item)
+                                @php
+                                    $product = $item->product;
+                                    $displayImageUrl = $product->displayImageUrl();
+                                @endphp
                                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 pb-6 {{ !$loop->last ? 'border-b border-gray-100' : '' }}">
                                     
                                     <!-- Image -->
                                     <div class="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100">
-                                        @if($item->product->primaryImage)
-                                            <img src="{{ asset('storage/' . $item->product->primaryImage->image_path) }}" alt="{{ $item->product->title }}" class="w-full h-full object-cover">
+                                        @if($displayImageUrl)
+                                            <img src="{{ $displayImageUrl }}" alt="{{ $product->title }}" class="w-full h-full object-cover">
                                         @else
                                             <div class="w-full h-full flex items-center justify-center text-gray-300">
                                                 <i data-lucide="image" class="w-8 h-8"></i>
@@ -46,11 +50,11 @@
 
                                     <!-- Product Info -->
                                     <div class="flex-grow">
-                                        <a href="{{ route('product.show', $item->product->slug) }}">
-                                            <h3 class="font-semibold text-gray-900 hover:text-primary transition line-clamp-1 mb-1">{{ $item->product->title }}</h3>
+                                        <a href="{{ route('product.show', $product->slug) }}">
+                                            <h3 class="font-semibold text-gray-900 hover:text-primary transition line-clamp-1 mb-1">{{ $product->title }}</h3>
                                         </a>
-                                        <div class="text-sm text-gray-500 mb-2">Penjual: {{ $item->product->user->name }}</div>
-                                        <div class="font-bold text-primary">Rp {{ number_format($item->product->price, 0, ',', '.') }}</div>
+                                        <div class="text-sm text-gray-500 mb-2">Penjual: {{ $product->user->name }}</div>
+                                        <div class="font-bold text-primary">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
                                     </div>
 
                                     <!-- Actions -->
