@@ -196,16 +196,7 @@
                 <i data-lucide="handshake" class="w-5 h-5"></i> Nego Harga
             </button>
 
-            {{-- ⬇️ col-span-2 DIHAPUS supaya sejajar dengan Nego Harga --}}
-            <form action="{{ route('cart.store') }}" method="POST" class="w-full">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit"
-                        class="w-full py-3.5 px-4 bg-primary text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 text-sm sm:text-base">
-                    <i data-lucide="shopping-cart" class="w-5 h-5"></i> Masukkan Keranjang
-                </button>
-            </form>
+           
 
             {{-- Baris 2: Beli Sekarang full width (col-span-2) --}}
             <a href="https://wa.me/{{ $waNumber }}?text={{ urlencode($waText) }}" target="_blank"

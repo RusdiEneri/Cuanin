@@ -73,10 +73,14 @@
                                 </div>
                                 <div class="space-y-4">
                                     @foreach($sellerCarts as $item)
+                                    @php
+                                        $product = $item->product;
+                                        $displayImageUrl = $product->displayImageUrl();
+                                    @endphp
                                     <div class="flex items-center gap-4">
                                         <div class="w-16 h-16 bg-white rounded-lg overflow-hidden border border-gray-100 flex-shrink-0">
-                                            @if($item->product->primaryImage)
-                                                <img src="{{ asset('storage/' . $item->product->primaryImage->image_path) }}" class="w-full h-full object-cover">
+                                            @if($displayImageUrl)
+                                                <img src="{{ $displayImageUrl }}" alt="{{ $product->title }}" class="w-full h-full object-cover">
                                             @else
                                                 <div class="w-full h-full flex items-center justify-center text-gray-300">
                                                     <i data-lucide="image" class="w-6 h-6"></i>
@@ -84,11 +88,11 @@
                                             @endif
                                         </div>
                                         <div class="flex-grow">
-                                            <h4 class="font-medium text-gray-900 line-clamp-1">{{ $item->product->title }}</h4>
-                                            <div class="text-sm text-gray-500">{{ $item->product->condition }}</div>
+                                            <h4 class="font-medium text-gray-900 line-clamp-1">{{ $product->title }}</h4>
+                                            <div class="text-sm text-gray-500">{{ $product->condition }}</div>
                                         </div>
                                         <div class="text-right">
-                                            <div class="font-bold text-primary">Rp {{ number_format($item->product->price, 0, ',', '.') }}</div>
+                                            <div class="font-bold text-primary">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
                                             <div class="text-xs text-gray-500">Qty: {{ $item->quantity }}</div>
                                         </div>
                                     </div>

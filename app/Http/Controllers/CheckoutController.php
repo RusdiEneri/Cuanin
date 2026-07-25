@@ -13,7 +13,9 @@ class CheckoutController extends Controller
 {
     public function index()
     {
-        $carts = Cart::with('product.user')->where('user_id', Auth::id())->get();
+        $carts = Cart::with(['product' => function ($query) {
+            $query->with(['primaryImage', 'productImages', 'user']);
+        }])->where('user_id', Auth::id())->get();
         
         if ($carts->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Keranjang Anda kosong.');

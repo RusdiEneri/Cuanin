@@ -45,4 +45,30 @@ class Product extends Model
     {
         return $this->hasOne(ProductImage::class)->where('is_primary', true);
     }
+
+    public function displayImage()
+    {
+        $primaryImage = $this->primaryImage()->first();
+
+        if ($primaryImage) {
+            return $primaryImage;
+        }
+
+        return $this->productImages()->orderBy('is_primary', 'desc')->orderBy('id', 'asc')->first();
+    }
+
+    public function displayImageUrl(): ?string
+    {
+        $image = $this->displayImage();
+
+        if (!$image) {
+            return null;
+        }
+
+        if (str_starts_with($image->image_path, 'http')) {
+            return $image->image_path;
+        }
+
+        return asset('storage/' . ltrim($image->image_path, '/'));
+    }
 }
