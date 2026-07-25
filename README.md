@@ -60,8 +60,8 @@ php artisan view:clear
 php artisan storage:link
 ``` -->
 
-### 6. Copy Folder Gambar (Jika ada backup)
-Copy folder `storage/app/public/` dari backup ke project Anda.
+<!-- ### 6. Copy Folder Gambar (Jika ada backup)
+Copy folder `storage/app/public/` dari backup ke project Anda. -->
 
 ### 9. Build Asset
 ```bash
