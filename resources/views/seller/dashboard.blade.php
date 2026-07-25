@@ -35,14 +35,18 @@
 <div class="bg-white rounded-3xl border border-border-color shadow-sm overflow-hidden">
     <div class="p-6 border-b border-gray-200 flex justify-between items-center">
         <h2 class="text-lg font-bold text-gray-900">Daftar Produk Anda</h2>
-        <div class="relative w-64">
+        <form method="GET" action="{{ route('seller.dashboard') }}" class="relative w-64">
             <input
                 type="text"
+                name="search"
+                value="{{ request('search') }}"
                 placeholder="Cari produk..."
                 class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm text-gray-700 placeholder-gray-400 shadow-sm focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition"
             >
-            <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-4 top-2.5 pointer-events-none"></i>
-        </div>
+            <button type="submit" class="absolute left-4 top-2.5">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+            </button>
+        </form>
     </div>
 
     <div class="overflow-x-auto">

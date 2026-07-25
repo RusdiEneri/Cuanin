@@ -15,12 +15,19 @@ use Illuminate\Support\Facades\Storage;
 class SellerController extends Controller
 {
     // Dashboard & Stats
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::where('user_id', Auth::id())->latest()->get();
-        
-        $totalProducts = $products->count();
-        $activeProducts = $products->where('status', 'active')->count();
+        $totalProducts = Product::where('user_id', Auth::id())->count();
+        $activeProducts = Product::where('user_id', Auth::id())->where('status', 'active')->count();
+
+        $query = Product::where('user_id', Auth::id())->latest();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        $products = $query->get();
         
         $orderItems = OrderItem::whereHas('product', function($q) {
             $q->where('user_id', Auth::id());
