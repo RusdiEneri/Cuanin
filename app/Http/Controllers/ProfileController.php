@@ -66,4 +66,22 @@ class ProfileController extends Controller
         
         return redirect()->route('seller.dashboard')->with('success', 'Selamat! Akun Penjual Anda telah aktif. Anda sekarang bisa mulai menjual barang.');
     }
+
+        public function destroy(Request $request)
+{
+    // ✅ Error masuk ke bag 'delete', BUKAN bag default (biar tidak bentrok dgn form update)
+    $request->validateWithBag('delete', [
+        'password' => ['required', 'current_password'],
+    ]);
+
+    $user = $request->user();
+
+    Auth::logout();
+    $user->delete(); // pakai forceDelete() kalau model pakai SoftDeletes & mau hapus permanen
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/')->with('success', 'Akun Anda telah berhasil dihapus.');
+}
 }
