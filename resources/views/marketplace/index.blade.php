@@ -270,7 +270,7 @@
                         <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-3 right-3 z-20">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $item->id }}">
-                            <button type="submit" class="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-400 hover:text-primary hover:bg-blue-50 transition shadow-sm" title="Tambah ke Wishlist">
+                            <button type="submit" class="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-400 hover:text-danger hover:bg-red-50 transition shadow-sm" title="Tambah ke Wishlist">
                                 <i data-lucide="heart" class="w-5 h-5"></i>
                             </button>
                         </form>

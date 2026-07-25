@@ -26,15 +26,60 @@
         </div>
     @endif
 
+    @if($product->status == 'draft')
+    <!-- Step Progress Bar -->
+    <div class="mb-8">
+        <div class="flex items-center justify-center">
+            <!-- Step 1 -->
+            <div class="flex items-center">
+                <div id="step1-indicator" class="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white shadow-lg shadow-blue-500/30 transition-all duration-500">
+                    <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+                </div>
+                <span id="step1-label" class="ml-3 text-sm font-semibold text-primary transition-colors duration-300">Informasi Produk</span>
+            </div>
+            <!-- Divider -->
+            <div class="w-16 sm:w-24 mx-2">
+                <div class="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                    <div id="step-divider" class="h-full bg-primary w-0 transition-all duration-500 ease-out"></div>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="flex items-center">
+                <div id="step2-indicator" class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 text-gray-400 transition-all duration-500">
+                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                </div>
+                <span id="step2-label" class="ml-3 text-sm font-semibold text-gray-400 transition-colors duration-300">Pembayaran</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="fixed top-10 left-1/2 -translate-x-1/2 z-[100] max-w-sm w-full px-4 transform -translate-y-[150%] opacity-0 transition-all duration-500 ease-out pointer-events-none">
+        <div class="bg-white border border-red-200 rounded-2xl shadow-2xl shadow-red-500/10 p-4 flex items-start gap-3 pointer-events-auto">
+            <div class="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center flex-shrink-0">
+                <i data-lucide="alert-circle" class="w-5 h-5 text-danger"></i>
+            </div>
+            <div class="flex-1">
+                <p class="text-sm font-semibold text-gray-900">Lengkapi Informasi</p>
+                <p id="toast-message" class="text-xs text-gray-500 mt-0.5">Harap isi semua field yang wajib diisi.</p>
+            </div>
+            <button type="button" onclick="hideToast()" class="text-gray-400 hover:text-gray-600 transition flex-shrink-0">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+    @endif
+
     <!-- Main Form Card -->
     <div class="bg-white rounded-3xl border border-border-color shadow-sm overflow-hidden">
         <form action="{{ route('seller.products.update', $product->id) }}" 
               method="POST" 
               enctype="multipart/form-data" 
-              class="p-6 sm:p-10 space-y-8" id="main-edit-form">
+              class="p-6 sm:p-10 space-y-0" id="main-edit-form">
             @csrf
             @method('PUT')
             
+            <div id="step1-content" class="space-y-8">
             <!-- ==================== INFORMASI DASAR ==================== -->
             <section>
                 <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">
@@ -247,7 +292,26 @@
                 </div>
             </section>
 
+            @if($product->status == 'draft')
+                <div class="pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-between gap-3 mt-8">
+                    <input type="hidden" name="status" id="draft-status-step1" value="draft">
+                    <button type="submit" class="order-2 sm:order-1 px-6 py-3 rounded-xl font-medium text-gray-600 bg-gray-50 border border-gray-200 hover:bg-red-50 hover:text-danger hover:border-red-200 transition flex items-center justify-center gap-2">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        Simpan sebagai Draft
+                    </button>
+                    <div class="flex gap-3 order-1 sm:order-2">
+                        <a href="{{ route('seller.dashboard') }}" class="px-6 py-3 rounded-xl font-medium text-gray-700 bg-gray-100 hover:bg-yellow-50 hover:text-yellow-700 transition">Batal</a>
+                        <button type="button" onclick="goToStep2()" class="bg-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
+                            Lanjut ke Pembayaran
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            @endif
+            </div> <!-- End step1-content -->
+
             <!-- ==================== STATUS PRODUK ==================== -->
+            @if($product->status !== 'draft')
             <section>
                 <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">
                     Status Produk
@@ -307,19 +371,122 @@
 
                 </div>
             </section>
+            @endif
 
-            <!-- ==================== ACTION BUTTONS ==================== -->
-            <div class="pt-6 border-t border-gray-100 flex justify-end gap-3">
-                <a href="{{ route('seller.dashboard') }}" 
-                   class="px-6 py-3 rounded-xl font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition">
-                    Batal
-                </a>
-                <button type="submit" 
-                        class="bg-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
-                    <i data-lucide="save" class="w-5 h-5"></i>
-                    Simpan Perubahan
-                </button>
-            </div>
+            @if($product->status == 'draft')
+                <!-- ==================== PEMBAYARAN JASA (UNTUK DRAFT) ==================== -->
+                <div id="step2-content" class="hidden">
+                    <section class="mt-8">
+                        <div class="text-center mb-10">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Selesaikan Pembayaran</h3>
+                            <p class="text-gray-500 text-sm">Satu langkah lagi agar produk Anda tampil di marketplace.</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10">
+                            
+                            <!-- Left: QR Code -->
+                            <div class="lg:col-span-5 flex flex-col items-center">
+                                <div class="relative group w-full max-w-[280px]">
+                                    <!-- Glowing effect behind -->
+                                    <div class="absolute -inset-1 bg-gradient-to-r from-primary to-indigo-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
+                                    
+                                    <!-- QR Card -->
+                                    <div class="relative bg-white border border-gray-100 rounded-3xl p-6 shadow-xl shadow-blue-900/5 mx-auto flex flex-col items-center w-full">
+                                        <div class="bg-gray-50 rounded-2xl p-4 mb-4 border border-gray-100 w-full flex justify-center">
+                                            <img src="{{ asset('qr-ilham.jpeg') }}" alt="QR Code Pembayaran" class="w-full h-auto rounded-xl shadow-sm mix-blend-multiply">
+                                        </div>
+                                        
+                                        <div class="text-center w-full">
+                                            <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">Total Tagihan</p>
+                                            <p class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-600">Rp 5.000</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Instructions -->
+                            <div class="lg:col-span-7 space-y-6">
+                                <!-- Alert / Info -->
+                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100/50 rounded-2xl p-5 flex gap-4 items-start shadow-sm">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-1 shadow-inner shadow-white/50">
+                                        <i data-lucide="info" class="w-5 h-5 text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-gray-900 mb-1">Biaya Jasa Listing</h4>
+                                        <p class="text-sm text-gray-600 leading-relaxed">
+                                            Biaya ini dikenakan satu kali untuk mendukung operasional marketplace Cuanin. Produk Anda akan otomatis aktif setelah pembayaran terkonfirmasi.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Timeline Steps -->
+                                <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+                                    <h4 class="text-sm font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                        <i data-lucide="list-ordered" class="w-4 h-4 text-primary"></i>
+                                        Cara Pembayaran
+                                    </h4>
+                                    
+                                    <div class="relative pl-2 space-y-6 border-l-2 border-gray-100 ml-3">
+                                        <div class="relative">
+                                            <div class="absolute -left-[25px] bg-primary w-6 h-6 rounded-full flex items-center justify-center border-4 border-white shadow-sm ring-1 ring-gray-100">
+                                                <span class="text-[10px] font-bold text-white">1</span>
+                                            </div>
+                                            <p class="text-sm text-gray-600 pt-0.5 pl-3">Buka aplikasi e-wallet (GoPay, OVO, Dana) atau Mobile Banking Anda.</p>
+                                        </div>
+                                        
+                                        <div class="relative">
+                                            <div class="absolute -left-[25px] bg-primary w-6 h-6 rounded-full flex items-center justify-center border-4 border-white shadow-sm ring-1 ring-gray-100">
+                                                <span class="text-[10px] font-bold text-white">2</span>
+                                            </div>
+                                            <p class="text-sm text-gray-600 pt-0.5 pl-3">Pilih menu <strong>Scan QR</strong> atau <strong>QRIS</strong>.</p>
+                                        </div>
+
+                                        <div class="relative">
+                                            <div class="absolute -left-[25px] bg-primary w-6 h-6 rounded-full flex items-center justify-center border-4 border-white shadow-sm ring-1 ring-gray-100">
+                                                <span class="text-[10px] font-bold text-white">3</span>
+                                            </div>
+                                            <p class="text-sm text-gray-600 pt-0.5 pl-3">Arahkan kamera ke kode QR di samping dan lakukan pembayaran sebesar <strong class="text-primary">Rp 5.000</strong>.</p>
+                                        </div>
+
+                                        <div class="relative">
+                                            <div class="absolute -left-[25px] bg-primary w-6 h-6 rounded-full flex items-center justify-center border-4 border-white shadow-sm ring-1 ring-gray-100">
+                                                <span class="text-[10px] font-bold text-white">4</span>
+                                            </div>
+                                            <p class="text-sm text-gray-600 pt-0.5 pl-3">Setelah berhasil, klik tombol <strong>"Konfirmasi Pembayaran"</strong> di bawah ini.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-between gap-3">
+                            <button type="button" onclick="goToStep1()" class="order-2 sm:order-1 px-6 py-3 rounded-xl font-medium text-gray-600 bg-gray-50 border border-gray-200 hover:bg-yellow-50 hover:text-yellow-700 hover:border-yellow-200 transition flex items-center justify-center gap-2">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                                Kembali
+                            </button>
+                            <div class="flex gap-3 order-1 sm:order-2">
+                                <button type="submit" onclick="document.getElementById('draft-status-step1').value='active'" class="bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
+                                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                    Konfirmasi Pembayaran & Publikasikan
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            @else
+                <!-- ==================== ACTION BUTTONS ==================== -->
+                <div class="pt-6 border-t border-gray-100 flex justify-end gap-3">
+                    <a href="{{ route('seller.dashboard') }}" 
+                       class="px-6 py-3 rounded-xl font-medium text-gray-700 bg-gray-100 hover:bg-yellow-50 hover:text-yellow-700 transition">
+                        Batal
+                    </a>
+                    <button type="submit" 
+                            class="bg-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
+                        <i data-lucide="save" class="w-5 h-5"></i>
+                        Simpan Perubahan
+                    </button>
+                </div>
+            @endif
         </form>
     </div>
 
@@ -419,6 +586,175 @@
             if(previewGrid) previewGrid.classList.add('hidden');
             if(uploadArea) uploadArea.classList.remove('hidden');
         }
+    }
+
+    // ========================================
+    // TOAST NOTIFICATION
+    // ========================================
+    let toastTimeout = null;
+
+    function showToast(message) {
+        const toast = document.getElementById('toast-notification');
+        if(!toast) return;
+        const msgEl = document.getElementById('toast-message');
+        msgEl.textContent = message;
+        
+        toast.classList.remove('-translate-y-[150%]', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+
+        setTimeout(() => { if(window.lucide) window.lucide.createIcons() }, 50);
+
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => hideToast(), 5000);
+    }
+
+    function hideToast() {
+        const toast = document.getElementById('toast-notification');
+        if(!toast) return;
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('-translate-y-[150%]', 'opacity-0');
+    }
+
+    // ========================================
+    // FIELD HIGHLIGHT ON ERROR
+    // ========================================
+    function highlightEmptyFields() {
+        const fields = [
+            { id: 'title', check: (el) => !el.value.trim() },
+            { id: 'category_id', check: (el) => !el.value },
+            { id: 'condition', check: (el) => !el.value },
+            { id: 'price', check: (el) => !el.value },
+            { id: 'location', check: (el) => !el.value.trim() },
+            { id: 'description', check: (el) => !el.value.trim() }
+        ];
+
+        let firstInvalid = null;
+        let hasError = false;
+
+        fields.forEach(field => {
+            const el = document.querySelector(`[name="${field.id}"]`);
+            if (el) {
+                if (field.check(el)) {
+                    el.classList.add('border-red-500', 'ring-1', 'ring-red-500', 'bg-red-50');
+                    if (!firstInvalid) firstInvalid = el;
+                    hasError = true;
+                } else {
+                    el.classList.remove('border-red-500', 'ring-1', 'ring-red-500', 'bg-red-50');
+                }
+
+                el.addEventListener('input', function() {
+                    if (!field.check(this)) {
+                        this.classList.remove('border-red-500', 'ring-1', 'ring-red-500', 'bg-red-50');
+                    }
+                }, { once: true });
+            }
+        });
+
+        // Cek gambar: kalau existing images 0 dan selected files 0
+        if (existingCount + selectedFiles.length === 0) {
+            const dropzone = document.getElementById('upload-area').querySelector('label');
+            if (dropzone) {
+                dropzone.classList.add('border-red-500', 'bg-red-50');
+                hasError = true;
+                if (!firstInvalid) firstInvalid = dropzone;
+
+                const fileInput = document.getElementById('dropzone-file');
+                fileInput.addEventListener('change', function() {
+                    dropzone.classList.remove('border-red-500', 'bg-red-50');
+                }, { once: true });
+            }
+        }
+
+        if (firstInvalid) {
+            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        return hasError;
+    }
+
+    // ========================================
+    // STEP NAVIGATION
+    // ========================================
+    function goToStep2() {
+        if (highlightEmptyFields()) {
+            showToast('Harap lengkapi informasi produk & foto yang wajib diisi.');
+            return;
+        }
+
+        // Animate Step Indicators
+        document.getElementById('step-divider').classList.remove('w-0');
+        document.getElementById('step-divider').classList.add('w-full');
+
+        document.getElementById('step1-indicator').classList.remove('bg-primary', 'text-white', 'shadow-lg', 'shadow-blue-500/30');
+        document.getElementById('step1-indicator').classList.add('bg-blue-100', 'text-primary');
+        document.getElementById('step1-indicator').innerHTML = '<i data-lucide="check" class="w-5 h-5"></i>';
+        
+        document.getElementById('step1-label').classList.remove('font-bold', 'text-gray-900');
+        document.getElementById('step1-label').classList.add('text-primary');
+
+        document.getElementById('step2-indicator').classList.remove('bg-gray-200', 'text-gray-400');
+        document.getElementById('step2-indicator').classList.add('bg-primary', 'text-white', 'shadow-lg', 'shadow-blue-500/30');
+        
+        document.getElementById('step2-label').classList.remove('text-gray-400');
+        document.getElementById('step2-label').classList.add('font-bold', 'text-gray-900');
+
+        // Switch Content (Fade out Step 1, Fade in Step 2)
+        const s1 = document.getElementById('step1-content');
+        const s2 = document.getElementById('step2-content');
+        
+        s1.style.opacity = '0';
+        setTimeout(() => {
+            s1.classList.add('hidden');
+            s2.classList.remove('hidden');
+            s2.style.opacity = '0';
+            setTimeout(() => {
+                s2.style.opacity = '1';
+                s2.style.transition = 'opacity 0.3s ease';
+            }, 50);
+            
+            // Re-init icons
+            if(window.lucide) window.lucide.createIcons();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 300);
+    }
+
+    function goToStep1() {
+        // Reverse Animate Step Indicators
+        document.getElementById('step-divider').classList.remove('w-full');
+        document.getElementById('step-divider').classList.add('w-0');
+
+        document.getElementById('step1-indicator').classList.remove('bg-blue-100', 'text-primary');
+        document.getElementById('step1-indicator').classList.add('bg-primary', 'text-white', 'shadow-lg', 'shadow-blue-500/30');
+        document.getElementById('step1-indicator').innerHTML = '<i data-lucide="clipboard-list" class="w-5 h-5"></i>';
+        
+        document.getElementById('step1-label').classList.remove('text-primary');
+        document.getElementById('step1-label').classList.add('font-bold', 'text-gray-900');
+
+        document.getElementById('step2-indicator').classList.remove('bg-primary', 'text-white', 'shadow-lg', 'shadow-blue-500/30');
+        document.getElementById('step2-indicator').classList.add('bg-gray-200', 'text-gray-400');
+        
+        document.getElementById('step2-label').classList.remove('font-bold', 'text-gray-900');
+        document.getElementById('step2-label').classList.add('text-gray-400');
+
+        // Switch Content
+        const s1 = document.getElementById('step1-content');
+        const s2 = document.getElementById('step2-content');
+        
+        s2.style.opacity = '0';
+        setTimeout(() => {
+            s2.classList.add('hidden');
+            s1.classList.remove('hidden');
+            s1.style.opacity = '0';
+            setTimeout(() => {
+                s1.style.opacity = '1';
+                s1.style.transition = 'opacity 0.3s ease';
+            }, 50);
+            
+            if(window.lucide) window.lucide.createIcons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 300);
     }
 </script>
 @endsection

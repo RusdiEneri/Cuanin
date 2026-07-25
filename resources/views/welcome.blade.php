@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 pb-4 md:pb-6">
 
     {{-- ================= HERO ================= --}}
-    <div id="heroCard" class="bg-primary rounded-3xl overflow-hidden relative mb-12 md:mb-16 shadow-2xl shadow-blue-900/30">
+    <div id="heroCard" class="bg-primary rounded-3xl overflow-hidden relative mb-6 md:mb-8 shadow-2xl shadow-blue-900/30">
         {{-- Base Gradient --}}
         <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-primary to-blue-950"></div>
         
@@ -216,7 +216,7 @@
                 <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-2 right-2 sm:top-3 sm:right-3 z-20">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $item->id }}">
-                    <button type="submit" class="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-400 hover:text-primary hover:bg-blue-50 transition shadow-sm" title="Tambah ke Wishlist">
+                    <button type="submit" class="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-400 hover:text-danger hover:bg-red-50 transition shadow-sm" title="Tambah ke Wishlist">
                         <i data-lucide="heart" class="w-5 h-5"></i>
                     </button>
                 </form>

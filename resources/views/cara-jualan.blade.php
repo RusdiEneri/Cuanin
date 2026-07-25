@@ -9,7 +9,7 @@
         
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <h1 class="text-4xl md:text-5xl font-bold mb-6">Mulai Hasilkan Cuan dari Barang Bekasmu!</h1>
-            <p class="text-blue-100 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+            <p class="text-blue-100 text-lg md:text-xl max-w-3xl mx-auto mb-10 text-center">
                 Jual barang preloved yang sudah tidak terpakai dengan mudah, aman, dan cepat di Cuanin. Ubah barang bekas jadi uang tunai sekarang juga!
             </p>
             <a href="{{ Auth::check() ? (Auth::user()->role == 'penjual' ? route('seller.dashboard') : route('profile.index')) : route('login') }}" class="inline-block bg-secondary text-dark font-bold px-8 py-4 rounded-full hover:bg-yellow-400 transition shadow-lg shadow-yellow-500/30 transform hover:-translate-y-1">
@@ -120,7 +120,7 @@
         <!-- FAQ Section -->
         <div>
             <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Pertanyaan yang Sering Diajukan</h2>
-            <div class="space-y-4 max-w-3xl mx-auto">
+            <div class="space-y-4">
                 <!-- FAQ 1 -->
                 <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
                     <h3 class="font-bold text-gray-900 text-lg mb-2 flex items-center gap-3">

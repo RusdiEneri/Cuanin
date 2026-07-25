@@ -1,7 +1,7 @@
 <nav class="bg-white sticky top-0 z-50 border-b border-border-color shadow-sm">
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- BARIS 1: Header utama (height responsive: h-16 mobile, h-20 desktop) -->
-        <div class="flex justify-between items-center h-16 md:h-20 gap-4 md:gap-6">
+        <!-- BARIS 1: Header utama (height responsive: h-16 mobile, h-24 desktop) -->
+        <div class="flex justify-between items-center h-16 md:h-24 gap-4 md:gap-6">
             <!-- Logo -->
             <!-- <div class="flex-shrink-0 flex items-center">
                 <a href="/" class="text-xl md:text-2xl font-bold text-primary tracking-tight">

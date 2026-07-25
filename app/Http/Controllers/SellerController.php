@@ -50,6 +50,48 @@ class SellerController extends Controller
 
     public function store(Request $request)
     {
+        $action = $request->input('action', 'publish'); // 'draft' or 'publish'
+
+        if ($action === 'draft') {
+            // Draft: relaxed validation — hanya nama produk wajib
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'category_id' => 'nullable|exists:categories,id',
+                'description' => 'nullable|string',
+                'price' => 'nullable|numeric|min:0',
+                'condition' => 'nullable|string',
+                'location' => 'nullable|string',
+                'images' => 'nullable|array|max:5',
+                'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            ]);
+
+            $product = Product::create([
+                'user_id' => Auth::id(),
+                'category_id' => $request->category_id,
+                'title' => $request->title,
+                'slug' => Str::slug($request->title) . '-' . time(),
+                'description' => $request->description ?? '',
+                'price' => $request->price ?? 0,
+                'condition' => $request->condition ?? 'Baik',
+                'location' => $request->location ?? '',
+                'status' => 'draft',
+            ]);
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $index => $image) {
+                    $path = $image->store('products', 'public');
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $path,
+                        'is_primary' => $index === 0,
+                    ]);
+                }
+            }
+
+            return redirect()->route('seller.dashboard')->with('success', 'Produk disimpan sebagai draft. Anda bisa melanjutkan kapan saja.');
+        }
+
+        // Publish: full validation
         $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -79,12 +121,12 @@ class SellerController extends Controller
                 ProductImage::create([
                     'product_id' => $product->id,
                     'image_path' => $path,
-                    'is_primary' => $index === 0, // First image becomes primary
+                    'is_primary' => $index === 0,
                 ]);
             }
         }
 
-        return redirect()->route('seller.dashboard')->with('success', 'Produk berhasil ditambahkan.');
+        return redirect()->route('seller.dashboard')->with('success', 'Pembayaran dikonfirmasi! Produk berhasil dipublikasikan.');
     }
 
     public function edit($id)
@@ -118,7 +160,7 @@ class SellerController extends Controller
         'price'         => 'required|numeric|min:0|max:9999999999999.99',
         'location'      => 'required|string|max:255',
         'description'   => 'required|string',
-        'status'        => 'required|in:active,sold,archived',
+        'status'        => 'required|in:active,sold,archived,draft',
         'images.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', // Maksimal 5MB per foto
     ]);
 
