@@ -90,11 +90,11 @@
                 </div>
 
                 <!-- Order Footer -->
-                <div class="px-6 py-4 border-t border-gray-100 flex justify-end">
+                <!-- <div class="px-6 py-4 border-t border-gray-100 flex justify-end">
                     <a href="{{ route('order.show', $order->id) }}" class="text-sm font-semibold text-primary hover:text-blue-700 transition flex items-center gap-1">
                         Lihat Detail Pesanan <i data-lucide="chevron-right" class="w-4 h-4"></i>
                     </a>
-                </div>
+                </div> -->
             </div>
             @endforeach
         </div>

@@ -68,8 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
     // Order History
-    Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
+    // Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
+    // Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');

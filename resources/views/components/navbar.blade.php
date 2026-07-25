@@ -70,7 +70,7 @@
                                 <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
                             </div>
                             <a href="{{ route('profile.index') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="user" class="w-4 h-4 mr-3"></i> Profil Saya</a>
-                            <a href="{{ route('order.index') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="package" class="w-4 h-4 mr-3"></i> Pesanan Saya</a>
+                            <!-- <a href="{{ route('order.index') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="package" class="w-4 h-4 mr-3"></i> Pesanan Saya</a> -->
                             <a href="{{ route('negotiations.index') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="handshake" class="w-4 h-4 mr-3"></i> Nego Harga</a>
                             @if(Auth::user()->role === 'penjual')
                             <a href="{{ route('seller.dashboard') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="layout-dashboard" class="w-4 h-4 mr-3"></i> Dashboard Penjual</a>
@@ -164,10 +164,10 @@
                         <i data-lucide="user" class="w-5 h-5 flex-shrink-0"></i>
                         <span>Profil Saya</span>
                     </a>
-                    <a href="{{ route('order.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition mobile-link">
+                    <!-- <a href="{{ route('order.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition mobile-link">
                         <i data-lucide="package" class="w-5 h-5 flex-shrink-0"></i>
                         <span>Pesanan Saya</span>
-                    </a>
+                    </a> -->
                     <a href="{{ route('negotiations.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition mobile-link">
                         <i data-lucide="handshake" class="w-5 h-5 flex-shrink-0"></i>
                         <span>Nego Harga</span>
