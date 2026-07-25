@@ -19,6 +19,7 @@
             </div>
 
             <!-- Search Bar (DESKTOP ONLY) -->
+            @unless(request()->routeIs('login', 'register'))
             <div class="hidden md:flex flex-1 max-w-2xl">
                 <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -27,6 +28,7 @@
                     <input type="text" name="q" value="{{ request('q') }}" class="block w-full pl-12 pr-4 py-2.5 border border-gray-300 rounded-full leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-sm transition duration-150 ease-in-out hover:border-gray-400 shadow-sm" placeholder="Cari barang bekas incaranmu...">
                 </form>
             </div>
+            @endunless
 
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
@@ -132,6 +134,7 @@
         </div>
 
         <!-- BARIS 2: Search Bar (MOBILE ONLY) - selalu tampil di mobile, hidden di desktop -->
+    @unless(request()->routeIs('login', 'register'))
         <div class="md:hidden pb-3">
             <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -141,6 +144,7 @@
             </form>
         </div>
     </div>
+    @endunless
 
     <!-- MOBILE MENU (toggle) -->
     <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 bg-white">
