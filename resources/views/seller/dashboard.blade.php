@@ -95,6 +95,10 @@
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full border border-green-100">
                                 <i data-lucide="check-circle" class="w-3 h-3"></i> Aktif
                             </span>
+                        @elseif($product->status == 'draft')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-orange-50 text-orange-700 text-xs font-semibold rounded-full border border-orange-100">
+                                <i data-lucide="file-edit" class="w-3 h-3"></i> Draft
+                            </span>
                         @elseif($product->status == 'sold')
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-50 text-yellow-700 text-xs font-semibold rounded-full border border-yellow-100">
                                 <i data-lucide="package-check" class="w-3 h-3"></i> Terjual
@@ -114,14 +118,21 @@
                     <td class="px-6 py-4">
                         {{-- ✏️ Ikon aksi: gray-400 -> gray-500 + area hover bulat supaya tidak samar --}}
                         <div class="flex items-center gap-1">
-                            <a href="{{ route('product.show', $product->slug) }}" target="_blank"
-                               class="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-100 transition" title="Lihat">
-                                <i data-lucide="eye" class="w-4 h-4"></i>
-                            </a>
-                            <a href="{{ route('seller.products.edit', $product->id) }}"
-                               class="p-2 rounded-lg text-gray-500 hover:text-secondary hover:bg-gray-100 transition" title="Edit">
-                                <i data-lucide="edit-2" class="w-4 h-4"></i>
-                            </a>
+                            @if($product->status == 'draft')
+                                <a href="{{ route('seller.products.edit', $product->id) }}"
+                                   class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-white hover:bg-blue-700 transition" title="Lanjutkan">
+                                    Lanjutkan Pembayaran
+                                </a>
+                            @else
+                                <a href="{{ route('product.show', $product->slug) }}" target="_blank"
+                                   class="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-100 transition" title="Lihat">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                </a>
+                                <a href="{{ route('seller.products.edit', $product->id) }}"
+                                   class="p-2 rounded-lg text-gray-500 hover:text-secondary hover:bg-gray-100 transition" title="Edit">
+                                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                                </a>
+                            @endif
                             <form action="{{ route('seller.products.destroy', $product->id) }}" method="POST" class="inline-block"
                                   onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
                                 @csrf
