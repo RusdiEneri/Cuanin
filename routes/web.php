@@ -29,10 +29,10 @@ Route::get('/', function () {
     return view('welcome', compact('categories', 'latestProducts'));
 })->name('home');
 
-// KEMBALIKAN KE NAMA ASLI ANDA
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
 Route::get('/product/{slug}', [MarketplaceController::class, 'show'])->name('product.show');
 Route::view('/cara-jualan', 'cara-jualan')->name('cara-jualan');
+
 /*
 |--------------------------------------------------------------------------
 | Guest Routes
@@ -40,9 +40,9 @@ Route::view('/cara-jualan', 'cara-jualan')->name('cara-jualan');
 */
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post'); // Tetap .post
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.post'); // Tetap .post
+    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 });
 
 /*
@@ -52,14 +52,15 @@ Route::middleware('guest')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+
     // Wishlist
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
-    
-    // Cart (Tetap gunakan {id} agar tidak merombak Controller)
+
+    // ✅ CART — hanya SATU set, urutan penting: clear SEBELUM destroy
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/store', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');   // harus di atas {id}
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
     // Checkout
@@ -89,14 +90,14 @@ Route::middleware('auth')->group(function () {
     */
     Route::prefix('seller')->name('seller.')->group(function () {
         Route::get('/dashboard', [SellerController::class, 'index'])->name('dashboard');
-        
+
         Route::get('/products/create', [SellerController::class, 'create'])->name('products.create');
         Route::post('/products', [SellerController::class, 'store'])->name('products.store');
         Route::get('/products/{id}/edit', [SellerController::class, 'edit'])->name('products.edit');
         Route::put('/products/{id}', [SellerController::class, 'update'])->name('products.update');
         Route::delete('/products/{id}', [SellerController::class, 'destroy'])->name('products.destroy');
         Route::delete('/products/images/{id}', [SellerController::class, 'destroyImage'])->name('products.images.destroy');
-        
+
         Route::get('/orders', [SellerController::class, 'orders'])->name('orders.index');
         Route::put('/orders/{id}/status', [SellerController::class, 'updateOrderStatus'])->name('orders.status');
     });
@@ -108,10 +109,10 @@ Route::middleware('auth')->group(function () {
     */
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-        
+
         Route::get('/users', [AdminController::class, 'users'])->name('users.index');
         Route::put('/users/{id}/role', [AdminController::class, 'updateUserRole'])->name('users.role');
-        
+
         Route::get('/categories', [AdminController::class, 'categories'])->name('categories.index');
         Route::post('/categories', [AdminController::class, 'storeCategory'])->name('categories.store');
         Route::delete('/categories/{id}', [AdminController::class, 'destroyCategory'])->name('categories.destroy');

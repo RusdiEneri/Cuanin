@@ -272,7 +272,7 @@
                 <button type="submit"
                     class="flex-1 px-5 py-3 rounded-xl font-semibold text-white bg-red-500 hover:bg-red-600 active:bg-red-700 transition shadow-md shadow-red-500/20 flex items-center justify-center gap-2">
                     <i data-lucide="trash-2" class="w-5 h-5"></i>
-                    Ya, Hapus Akun
+                    Ya, Hapus
                 </button>
             </div>
         </form>
