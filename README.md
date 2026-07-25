@@ -55,22 +55,22 @@ php artisan config:clear
 php artisan view:clear
 ```
 
-### 8. Setup Storage (PENTING untuk gambar)
+<!-- ### 8. Setup Storage (PENTING untuk gambar) 
 ```bash
 php artisan storage:link
-```
+``` -->
 
-### 9. Copy Folder Gambar (Jika ada backup)
+### 6. Copy Folder Gambar (Jika ada backup)
 Copy folder `storage/app/public/` dari backup ke project Anda.
 
-### 10. Build Asset
+### 9. Build Asset
 ```bash
 npm run build
 ```
 
-### 11. Jalankan Aplikasi
+### 10. Jalankan Aplikasi
 ```bash
-php artisan serve
+npm run dev:all
 ```
 
 Akses: http://localhost:8000
