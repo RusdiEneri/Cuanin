@@ -7,9 +7,9 @@
     <nav class="flex text-sm text-gray-500 mb-8" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-                <a href="{{ route('order.index') }}" class="hover:text-primary transition flex items-center gap-1">
+                <!-- <a href="{{ route('order.index') }}" class="hover:text-primary transition flex items-center gap-1">
                     <i data-lucide="package" class="w-4 h-4"></i> Riwayat Pesanan
-                </a>
+                </a> -->
             </li>
             <li>
                 <div class="flex items-center">

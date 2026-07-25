@@ -1,20 +1,14 @@
 <nav class="bg-white sticky top-0 z-50 border-b border-border-color shadow-sm">
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- BARIS 1: Header utama (height responsive: h-16 mobile, h-24 desktop) -->
+        <!-- BARIS 1: Header utama -->
         <div class="flex justify-between items-center h-16 md:h-24 gap-4 md:gap-6">
             <!-- Logo -->
-            <!-- <div class="flex-shrink-0 flex items-center">
-                <a href="/" class="text-xl md:text-2xl font-bold text-primary tracking-tight">
-                    Cuanin<span class="text-secondary">.</span>
-                </a>
-            </div> -->
-                        <div class="flex-shrink-0 flex items-center">
+            <div class="flex-shrink-0 flex items-center">
                 <a href="/" class="flex items-center" aria-label="Cuanin - Beranda">
                     <img src="{{ asset('logo.png') }}?v2"
                          alt="Cuanin"
                          draggable="false"
-                         class="h-8 md:h-10 w-auto max-w-[120px] md:max-w-[150px] object-contain select-none
-                    translate-y-0.5 md:translate-y-1">
+                         class="h-8 md:h-10 w-auto max-w-[120px] md:max-w-[150px] object-contain select-none translate-y-0.5 md:translate-y-1">
                 </a>
             </div>
 
@@ -70,7 +64,7 @@
                                 <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
                             </div>
                             <a href="{{ route('profile.index') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="user" class="w-4 h-4 mr-3"></i> Profil Saya</a>
-                            <a href="{{ route('order.index') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="package" class="w-4 h-4 mr-3"></i> Pesanan Saya</a>
+                            {{-- ✅ Link "Pesanan Saya" (order.index) DIHAPUS — fitur order sudah tidak dipakai --}}
                             <a href="{{ route('negotiations.index') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="handshake" class="w-4 h-4 mr-3"></i> Nego Harga</a>
                             @if(Auth::user()->role === 'penjual')
                             <a href="{{ route('seller.dashboard') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="layout-dashboard" class="w-4 h-4 mr-3"></i> Dashboard Penjual</a>
@@ -133,18 +127,18 @@
             </div>
         </div>
 
-        <!-- BARIS 2: Search Bar (MOBILE ONLY) - selalu tampil di mobile, hidden di desktop -->
-    @unless(request()->routeIs('login', 'register'))
-        <div class="md:hidden pb-3">
-            <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
-                </div>
-                <input type="text" name="q" value="{{ request('q') }}" class="block w-full pl-10 pr-3 py-2.5 border border-border-color leading-5 rounded-full bg-background placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Cari barang bekas incaranmu...">
-            </form>
-        </div>
-    </div>
-    @endunless
+        <!-- BARIS 2: Search Bar (MOBILE ONLY) -->
+        @unless(request()->routeIs('login', 'register'))
+            <div class="md:hidden pb-3">
+                <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                    </div>
+                    <input type="text" name="q" value="{{ request('q') }}" class="block w-full pl-10 pr-3 py-2.5 border border-border-color leading-5 rounded-full bg-background placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Cari barang bekas incaranmu...">
+                </form>
+            </div>
+        @endunless
+    </div> {{-- ✅ penutup container max-w-[1600px] dipindah ke SINI (di luar @unless) supaya selalu tertutup --}}
 
     <!-- MOBILE MENU (toggle) -->
     <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 bg-white">
@@ -164,10 +158,7 @@
                         <i data-lucide="user" class="w-5 h-5 flex-shrink-0"></i>
                         <span>Profil Saya</span>
                     </a>
-                    <a href="{{ route('order.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition mobile-link">
-                        <i data-lucide="package" class="w-5 h-5 flex-shrink-0"></i>
-                        <span>Pesanan Saya</span>
-                    </a>
+                    {{-- ✅ Link "Pesanan Saya" (order.index) DIHAPUS — fitur order sudah tidak dipakai --}}
                     <a href="{{ route('negotiations.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition mobile-link">
                         <i data-lucide="handshake" class="w-5 h-5 flex-shrink-0"></i>
                         <span>Nego Harga</span>
