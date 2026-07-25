@@ -72,7 +72,12 @@ npm run build
 ```bash
 npm run dev:all
 ```
-  
+
+### CLI Backup MySQL di Lokal
+```bash
+mysqldump -u root -p db_cuanin > backup_database.sql
+```
+
 Akses: http://localhost:8000
 
 ### Login Default
