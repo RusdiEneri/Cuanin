@@ -12,25 +12,21 @@
     }
 
     /* ═══════════════════ KOIN 3D ═══════════════════ */
-    /* Panggung koin: perspective biar efek 3D kebaca.
-       --coin-t = KETEBALAN koin (atur di sini). */
     .coin-stage{
-        --coin-t: 12px;                 /* ketebalan mobile */
+        --coin-t: 12px;
         width: 88px; height: 88px;
         perspective: 900px;
         perspective-origin: 50% 50%;
     }
-    .coin-stage--lg{ --coin-t: 16px; width: 112px; height: 112px; }   /* desktop */
+    .coin-stage--lg{ --coin-t: 16px; width: 112px; height: 112px; }
     @media (min-width: 1280px){ .coin-stage--lg{ --coin-t: 18px; width: 128px; height: 128px; } }
 
-    /* Wrapper melayang (terpisah dari spin supaya bisa digabung) */
     .coin-float{ animation: cuanin-coin-float 3.8s ease-in-out infinite; }
     @keyframes cuanin-coin-float{
         0%,100%{ transform: translateY(0); }
         50%    { transform: translateY(-9px); }
     }
 
-    /* Benda koin: preserve-3d WAJIB supaya anak-anaknya hidup di ruang 3D */
     .coin{
         position: relative; width: 100%; height: 100%;
         transform-style: preserve-3d;
@@ -38,7 +34,6 @@
         animation: cuanin-coin-spin 3.4s linear infinite;
     }
 
-    /* Muka & belakang koin (tutup silinder) */
     .coin-face{
         position: absolute; inset: 0; border-radius: 9999px;
         display: flex; align-items: center; justify-content: center;
@@ -56,14 +51,11 @@
         content: ""; position: absolute; inset: 8px;
         border-radius: 9999px; border: 2px dashed rgba(120,53,15,.45);
     }
-    /* [FIX 3D] dorong muka & belakang ke ujung ketebalan */
     .coin-face.front{ transform: translateZ(calc(var(--coin-t) / 2 + .6px)); }
     .coin-face.back { transform: rotateY(180deg) translateZ(calc(var(--coin-t) / 2 + .6px)); }
 
     .coin-emblem{ color: #78350f; filter: drop-shadow(0 1px 0 rgba(255,255,255,.5)); }
 
-    /* [NEW 3D] DINDING / TEPI koin: tumpukan layer emas sepanjang sumbu Z.
-       Ini yang bikin koin terlihat TEBAL (bukan kertas) saat miring. */
     .coin-edge{
         position: absolute; inset: 0; border-radius: 9999px;
         backface-visibility: visible;
@@ -75,7 +67,6 @@
             inset 0 -1px 2px rgba(0,0,0,.45);
     }
 
-    /* Bayangan lantai (grounding) — bikin terasa mengambang */
     .coin-shadow{
         width: 64%; height: 12px; margin: 16px auto 0;
         border-radius: 50%;
@@ -88,7 +79,6 @@
         50%    { transform: scaleX(.68); opacity: .28; }
     }
 
-    /* Spin: tilt rotateX diperbesar biar 3D-nya kebaca */
     @keyframes cuanin-coin-spin{
         0%   { transform: rotateY(0deg)   rotateX(14deg); }
         100% { transform: rotateY(360deg) rotateX(14deg); }
@@ -100,11 +90,13 @@
     }
 </style>
 
-@php $coinLayers = 40; @endphp   {{-- jumlah layer tepi (makin banyak = makin mulus) --}}
+@php $coinLayers = 40; @endphp
 
-<div class="bg-background px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+{{-- [FIX] padding ATAS dikurangi (py-8/sm:py-12 -> pt-6/sm:pt-8) biar card naik dikit & bagian bawah gak ke-potong di laptop --}}
+<div class="bg-background px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12 lg:px-8">
 
-    <div class="font-poppins mx-auto w-full max-w-md lg:max-w-5xl grid lg:grid-cols-2 bg-white rounded-3xl shadow-xl shadow-blue-900/10 border border-gray-100 overflow-hidden">
+    {{-- [FIX] card diperlebar: lg:max-w-5xl -> lg:max-w-6xl xl:max-w-7xl biar gak banyak space kosong kiri-kanan --}}
+    <div class="font-poppins mx-auto w-full max-w-md lg:max-w-6xl xl:max-w-7xl grid lg:grid-cols-2 bg-white rounded-3xl shadow-xl shadow-blue-900/10 border border-gray-100 overflow-hidden">
 
         {{-- ══ KOLOM KIRI : PANEL BRANDING (desktop only) ══ --}}
         <div class="hidden lg:flex relative flex-col items-center justify-center text-center p-10 xl:p-12 bg-primary text-white overflow-hidden">
@@ -129,7 +121,6 @@
                                 <div class="coin-face back">
                                     <i data-lucide="dollar-sign" class="coin-emblem w-12 h-12 xl:w-14 xl:h-14"></i>
                                 </div>
-                                {{-- DINDING/TEPI koin --}}
                                 @for ($i = 0; $i < $coinLayers; $i++)
                                     <div class="coin-edge" style="transform: translateZ(calc(({{ $i }} / {{ $coinLayers - 1 }} - 0.5) * var(--coin-t)))"></div>
                                 @endfor
