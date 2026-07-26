@@ -4,10 +4,9 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite",
-        "start": "vite --host=0.0.0.0 --port=5173",
+        "vite": "vite --host=0.0.0.0 --port=5173",
         "php": "php artisan serve --host=0.0.0.0 --port=8000",
-        "dev:all": "concurrently \"npm run php\" \"npm run start\""
+        "dev": "concurrently \"npm run php\" \"npm run vite\""
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
