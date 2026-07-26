@@ -445,23 +445,26 @@
 
                 if (response.ok && data.status === 'success') {
                     // Update header cart badge
-                    document.querySelectorAll('.cart-badge-count').forEach(el => {
+                    document.querySelectorAll('.cart-badge-count, a[href*="cart.index"] span').forEach(el => {
                         el.textContent = data.cart_count;
                         el.classList.remove('hidden');
+                        if (el.tagName === 'A') { // just in case it doesn't have the span yet
+                            if (!el.querySelector('span')) {
+                                el.innerHTML += `<span class="absolute top-1 right-1 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-bold leading-none text-white bg-danger rounded-full">${data.cart_count}</span>`;
+                            } else {
+                                el.querySelector('span').textContent = data.cart_count;
+                            }
+                        }
                     });
 
-                    // Set quantity in modal
-                    const qtyVal = document.getElementById('qty') ? document.getElementById('qty').value : 1;
-                    document.getElementById('cart-added-qty').textContent = qtyVal;
-
-                    // Open success popup modal
-                    openCartSuccessModal();
+                    // Fly to cart animation
+                    flyToCart();
                 } else {
-                    showCartErrorToast(data.message || 'Gagal menambahkan ke keranjang.');
+                    showCartToast(data.message || 'Gagal menambahkan ke keranjang.', 'error');
                 }
             } catch (err) {
                 console.error(err);
-                showCartErrorToast('Terjadi kesalahan koneksi. Silakan coba lagi.');
+                showCartToast('Terjadi kesalahan koneksi. Silakan coba lagi.', 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnHtml;
@@ -470,44 +473,103 @@
         });
     });
 
-    function openCartSuccessModal() {
-        const modal = document.getElementById('cart-success-modal');
-        if (!modal) return;
-        modal.classList.remove('hidden');
-        setTimeout(() => {
-            modal.classList.remove('opacity-0');
-            modal.querySelector('div').classList.remove('scale-95');
-        }, 10);
-        if (window.lucide) lucide.createIcons();
+    function flyToCart() {
+        // Find the active image in slider
+        const activeImgContainer = document.querySelector('#image-slider div:first-child');
+        const img = activeImgContainer ? activeImgContainer.querySelector('img') : null;
+        
+        // Find the cart icon in navbar (desktop or mobile)
+        const cartIcons = document.querySelectorAll('a[href*="cart.index"]');
+        let targetIcon = null;
+        
+        // Find visible cart icon
+        cartIcons.forEach(icon => {
+            if (icon.offsetParent !== null) {
+                targetIcon = icon;
+            }
+        });
+
+        if (img && targetIcon) {
+            const imgRect = img.getBoundingClientRect();
+            const targetRect = targetIcon.getBoundingClientRect();
+
+            const flyingImg = img.cloneNode(true);
+            flyingImg.style.position = 'fixed';
+            flyingImg.style.left = `${imgRect.left}px`;
+            flyingImg.style.top = `${imgRect.top}px`;
+            flyingImg.style.width = `${imgRect.width}px`;
+            flyingImg.style.height = `${imgRect.height}px`;
+            flyingImg.style.borderRadius = '50%';
+            flyingImg.style.objectFit = 'cover';
+            flyingImg.style.zIndex = '9999';
+            flyingImg.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+            flyingImg.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.3)';
+
+            document.body.appendChild(flyingImg);
+
+            // Trigger animation
+            setTimeout(() => {
+                flyingImg.style.left = `${targetRect.left + (targetRect.width / 2) - 15}px`;
+                flyingImg.style.top = `${targetRect.top + (targetRect.height / 2) - 15}px`;
+                flyingImg.style.width = '30px';
+                flyingImg.style.height = '30px';
+                flyingImg.style.opacity = '0.5';
+                flyingImg.style.transform = 'scale(0.5)';
+            }, 10);
+
+            // Clean up and bump icon
+            setTimeout(() => {
+                document.body.removeChild(flyingImg);
+                
+                // Bump animation on the cart icon
+                targetIcon.style.transform = 'scale(1.2)';
+                targetIcon.style.transition = 'transform 0.2s';
+                setTimeout(() => {
+                    targetIcon.style.transform = 'scale(1)';
+                }, 200);
+                
+                showCartToast('Berhasil ditambahkan ke keranjang!', 'success');
+            }, 800);
+        } else {
+            // Fallback if animation can't play
+            showCartToast('Berhasil ditambahkan ke keranjang!', 'success');
+        }
     }
 
-    function closeCartSuccessModal() {
-        const modal = document.getElementById('cart-success-modal');
-        if (!modal) return;
-        modal.classList.add('opacity-0');
-        modal.querySelector('div').classList.add('scale-95');
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    }
-
-    let toastErrorTimeout = null;
-    function showCartErrorToast(msg) {
+    let toastTimeout = null;
+    function showCartToast(msg, type = 'error') {
         const toast = document.getElementById('cart-error-toast');
         const msgEl = document.getElementById('cart-error-toast-msg');
         if (!toast || !msgEl) return;
 
         msgEl.textContent = msg;
+        
+        // Setup colors based on type
+        const iconContainer = toast.querySelector('.flex-shrink-0');
+        if (type === 'success') {
+            toast.querySelector('div').classList.remove('border-red-200');
+            toast.querySelector('div').classList.add('border-green-200');
+            iconContainer.classList.remove('bg-red-50', 'text-danger');
+            iconContainer.classList.add('bg-green-50', 'text-success');
+            iconContainer.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i>';
+        } else {
+            toast.querySelector('div').classList.add('border-red-200');
+            toast.querySelector('div').classList.remove('border-green-200');
+            iconContainer.classList.add('bg-red-50', 'text-danger');
+            iconContainer.classList.remove('bg-green-50', 'text-success');
+            iconContainer.innerHTML = '<i data-lucide="alert-circle" class="w-5 h-5"></i>';
+        }
+
         toast.classList.remove('-translate-y-[150%]', 'opacity-0');
         toast.classList.add('translate-y-0', 'opacity-100');
 
         if (window.lucide) lucide.createIcons();
 
-        clearTimeout(toastErrorTimeout);
-        toastErrorTimeout = setTimeout(() => hideCartErrorToast(), 5000);
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => hideCartToast(), 3000);
     }
 
-    function hideCartErrorToast() {
+    function hideCartToast() {
         const toast = document.getElementById('cart-error-toast');
         if (!toast) return;
         toast.classList.remove('translate-y-0', 'opacity-100');
