@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-10 pb-6 md:pb-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-8 pb-6 md:pb-8">
 
     {{-- ================= HERO ================= --}}
     <div id="heroCard" class="bg-primary rounded-3xl overflow-hidden relative mb-6 md:mb-8 shadow-2xl shadow-blue-900/30">
