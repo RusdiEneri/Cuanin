@@ -134,16 +134,7 @@
                             @endforeach
                         </div>
 
-                        {{-- Footer Toko --}}
-                        <div class="px-5 sm:px-6 py-4 border-t border-gray-100 bg-gray-50/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <p class="text-sm text-gray-500">
-                                Total terpilih: <span class="store-foot-total font-semibold text-gray-900" data-store="{{ $sellerId }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-                            </p>
-                            <button type="button" data-store="{{ $sellerId }}"
-                                class="store-wa-btn inline-flex items-center justify-center gap-2 bg-[#1F49F2] hover:bg-[#1a3fcc] text-white font-semibold px-5 py-2.5 rounded-xl transition shadow-sm w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed">
-                                <i data-lucide="message-circle" class="w-4 h-4"></i> Lanjut via WhatsApp
-                            </button>
-                        </div>
+                        {{-- Footer Toko dihapus sesuai permintaan agar tidak redundan --}}
                     </div>
                 @endforeach
             </div>
