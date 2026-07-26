@@ -46,8 +46,8 @@
                 <ul class="space-y-1.5 text-sm text-gray-500 leading-relaxed">
                     <li><a href="mailto:support@cuanin.id" class="hover:text-primary transition">support@cuanin.id</a></li>
                     <li><span>Gresik, Jawa Timur, Indonesia</span></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">TikTok: Cuanin.id</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Instagram: Cuanin.id</a></li>
+                    <li><a href="https://www.tiktok.com/@cuanin.id" class="hover:text-primary transition">TikTok: Cuanin.id</a></li>
+                    <li><a href="https://www.instagram.com/this.ilham_" class="hover:text-primary transition">Instagram: Cuanin.id</a></li>
                 </ul>
             </div>
 

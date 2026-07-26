@@ -274,9 +274,13 @@
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                     <div>
-                        <label for="offered_price" class="block text-sm font-medium text-gray-700 mb-2">Harga Nego</label>
+                        <label for="offered_price_display" class="block text-sm font-medium text-gray-700 mb-2">Harga Nego</label>
                         <div class="relative mb-3">
-                            <input id="offered_price" name="offered_price" type="number" min="1000" required value="{{ old('offered_price') }}" placeholder="Contoh: 150000" class="w-full rounded-2xl border border-gray-200 bg-gray-50 pl-4 pr-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 text-sm">
+                                Rp
+                            </div>
+                            <input id="offered_price_display" type="text" inputmode="numeric" required placeholder="Contoh: 150.000" class="w-full rounded-2xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-3 text-gray-900 placeholder:font-normal placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition">
+                            <input type="hidden" id="offered_price" name="offered_price" value="{{ old('offered_price') }}" required>
                         </div>
                         
                         <!-- Quick Nego Percentage -->
@@ -289,10 +293,10 @@
                                 @endphp
                                 @foreach($percentages as $percent)
                                     @php
-                                        $negoPrice = $price - ($price * ($percent / 100));
+                                        $negoPrice = round($price - ($price * ($percent / 100)));
                                     @endphp
                                     <button type="button" 
-                                            onclick="document.getElementById('offered_price').value = '{{ $negoPrice }}'"
+                                            onclick="setNegoPrice({{ $negoPrice }})"
                                             class="flex-1 py-2.5 px-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 hover:border-primary hover:text-primary hover:bg-blue-50 transition text-center">
                                         -{{ $percent }}%
                                     </button>
@@ -422,7 +426,36 @@
 
 @push('scripts')
 <script>
+    function setNegoPrice(val) {
+        const rawInput = document.getElementById('offered_price');
+        const displayInput = document.getElementById('offered_price_display');
+        if (!rawInput || !displayInput) return;
+        
+        rawInput.value = val;
+        displayInput.value = new Intl.NumberFormat('id-ID').format(val);
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+        const displayInput = document.getElementById('offered_price_display');
+        const rawInput = document.getElementById('offered_price');
+
+        if (displayInput && rawInput) {
+            if (rawInput.value) {
+                displayInput.value = new Intl.NumberFormat('id-ID').format(rawInput.value);
+            }
+
+            displayInput.addEventListener('input', function (e) {
+                let digits = this.value.replace(/[^0-9]/g, '');
+                if (digits) {
+                    rawInput.value = digits;
+                    this.value = new Intl.NumberFormat('id-ID').format(digits);
+                } else {
+                    rawInput.value = '';
+                    this.value = '';
+                }
+            });
+        }
+
         const cartForm = document.getElementById('add-to-cart-form');
         if (!cartForm) return;
 
