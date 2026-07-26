@@ -10,38 +10,41 @@
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    {{-- HEADER + TOMBOL HAPUS SEMUA --}}
-    <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-2">Keranjang Belanja</h1>
-            <p class="text-gray-500">Periksa kembali barang yang akan Anda beli.</p>
-        </div>
-    </div>
-
-    @if(session('success'))
-        <div class="mb-6 bg-green-50 text-success p-4 rounded-xl flex items-center gap-2 border border-green-100">
-            <i data-lucide="check-circle" class="w-5 h-5"></i> {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="mb-6 bg-red-50 text-danger p-4 rounded-xl flex items-center gap-2 border border-red-100">
-            <i data-lucide="alert-circle" class="w-5 h-5"></i> {{ session('error') }}
-        </div>
-    @endif
-
     @if($carts->count() > 0)
-        <div class="flex flex-col lg:flex-row gap-8">
-
-            <!-- CART ITEMS (PER TOKO + CHECKBOX) -->
-            <div class="w-full lg:w-2/3">
-                <!-- Hapus Semua diletakkan di atas card keranjang -->
-                <div class="flex justify-end mb-4">
-                    <button type="button" id="clear-cart-btn" class="text-danger hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5 border border-red-100 bg-white shadow-sm">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Semua
-                    </button>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-6">
+            
+            {{-- HEADER, TOMBOL HAPUS SEMUA, & ALERTS (Kiri Atas) --}}
+            <div class="lg:col-span-8">
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 mb-2">Keranjang Belanja</h1>
+                        <p class="text-gray-500">Periksa kembali barang yang akan Anda beli.</p>
+                    </div>
+                    <div>
+                        <button type="button" id="clear-cart-btn" class="text-danger hover:bg-red-50 px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-2 border border-red-100 bg-white shadow-sm">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Semua
+                        </button>
+                    </div>
                 </div>
 
+                @if(session('success'))
+                    <div class="mb-6 bg-green-50 text-success p-4 rounded-xl flex items-center gap-2 border border-green-100">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i> {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="mb-6 bg-red-50 text-danger p-4 rounded-xl flex items-center gap-2 border border-red-100">
+                        <i data-lucide="alert-circle" class="w-5 h-5"></i> {{ session('error') }}
+                    </div>
+                @endif
+            </div>
+            
+            {{-- SPACER UNTUK KANAN ATAS (Agar Ringkasan turun ke baris berikutnya) --}}
+            <div class="hidden lg:block lg:col-span-4"></div>
+
+            <!-- CART ITEMS (PER TOKO + CHECKBOX) -->
+            <div class="lg:col-span-8">
                 <div class="space-y-6">
                     @foreach($grouped as $sellerId => $items)
                     @php
@@ -141,8 +144,7 @@
             </div>
 
             <!-- RINGKASAN -->
-            <!-- RINGKASAN -->
-            <div class="w-full lg:w-1/3">
+            <div class="lg:col-span-4">
                 <div class="bg-white rounded-3xl border border-border-color shadow-sm p-6 sticky top-24">
                     <h3 class="text-lg font-bold text-gray-900 mb-6">Ringkasan Belanja</h3>
 
@@ -179,6 +181,24 @@
             </div>
         </div>
     @else
+        {{-- HEADER UNTUK EMPTY STATE --}}
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Keranjang Belanja</h1>
+            <p class="text-gray-500">Periksa kembali barang yang akan Anda beli.</p>
+        </div>
+
+        @if(session('success'))
+            <div class="mb-6 bg-green-50 text-success p-4 rounded-xl flex items-center gap-2 border border-green-100">
+                <i data-lucide="check-circle" class="w-5 h-5"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-6 bg-red-50 text-danger p-4 rounded-xl flex items-center gap-2 border border-red-100">
+                <i data-lucide="alert-circle" class="w-5 h-5"></i> {{ session('error') }}
+            </div>
+        @endif
+
         <!-- Empty State -->
         <div class="bg-white rounded-3xl border border-dashed border-gray-300 flex flex-col items-center justify-center p-16 text-center">
             <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-primary mb-4">
