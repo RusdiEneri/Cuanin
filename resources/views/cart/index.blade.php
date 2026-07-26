@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!wn) { alert('Penjual ini belum mencantumkan nomor WhatsApp.'); return null; }
         let sub = 0; const lines = [];
         checks.forEach((c, i) => { const p = num(c.dataset.price); sub += p; lines.push((i + 1) + '. ' + c.dataset.title + ' - ' + fmt(p)); });
-        const msg = 'Halo ' + name + ', saya ingin memesan produk berikut dari toko Anda:\n\n' + lines.join('\n') + '\n\nTotal: ' + fmt(sub) + '\n\nMohon info ketersediaan dan cara pembayarannya. Terima kasih.';
+        const msg = 'Halo ' + name + ', saya ingin memesan produk berikut dari toko Anda di website Cuanin:\n\n' + lines.join('\n') + '\n\nTotal: ' + fmt(sub) + '\n\nMohon info ketersediaan barangnya secara detail, Terima kasih.';
         return 'https://wa.me/' + wn + '?text=' + encodeURIComponent(msg);
     }
 
