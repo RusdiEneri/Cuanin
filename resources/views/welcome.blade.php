@@ -256,7 +256,7 @@
                         </div>
                     @endif
                     <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 bg-white/90 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
-                        <i data-lucide="{{ $item->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'Barang Baru' ? 'text-secondary fill-current' : 'text-success' }}"></i>
+                        <i data-lucide="{{ $item->condition == 'BNOB' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'BNOB' ? 'text-secondary fill-current' : 'text-success' }}"></i>
                         <span class="line-clamp-1">{{ $item->condition }}</span>
                     </div>
                 </a>

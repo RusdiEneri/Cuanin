@@ -117,8 +117,8 @@
                     <div>
                         <div class="flex items-center gap-2 mb-3">
                             <span class="text-xs font-medium text-primary bg-blue-50 px-2.5 py-1 rounded-md">{{ $product->category->name }}</span>
-                            <span class="text-xs font-medium flex items-center gap-1 {{ $product->condition == 'Barang Baru' ? 'text-secondary bg-yellow-50' : 'text-success bg-green-50' }} px-2.5 py-1 rounded-md">
-                                <i data-lucide="{{ $product->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $product->condition == 'Barang Baru' ? 'fill-current' : '' }}"></i> {{ $product->condition }}
+                            <span class="text-xs font-medium flex items-center gap-1 {{ $product->condition == 'BNOB' ? 'text-secondary bg-yellow-50' : 'text-success bg-green-50' }} px-2.5 py-1 rounded-md">
+                                <i data-lucide="{{ $product->condition == 'BNOB' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $product->condition == 'BNOB' ? 'fill-current' : '' }}"></i> {{ $product->condition }}
                             </span>
                         </div>
                         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-2">{{ $product->title }}</h1>
@@ -317,7 +317,7 @@
                         </div>
                     @endif
                     <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
-                        <i data-lucide="{{ $item->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'Barang Baru' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->condition }}
+                        <i data-lucide="{{ $item->condition == 'BNOB' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'BNOB' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->condition }}
                     </div>
                 </a>
                 <div class="p-4 flex-grow flex flex-col">

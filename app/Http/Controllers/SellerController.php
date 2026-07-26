@@ -156,7 +156,7 @@ class SellerController extends Controller
     $validated = $request->validate([
         'title'         => 'required|string|max:255',
         'category_id'   => 'required|exists:categories,id',
-        'condition'     => 'required|in:Barang Baru,Like New,Sangat Baik,Baik,Cukup,Rusak Ringan',
+        'condition'     => 'required|in:BNOB,Like New,Normal,Rusak Ringan,Rusak Parah',
         'price'         => 'required|numeric|min:0|max:9999999999999.99',
         'location'      => 'required|string|max:255',
         'description'   => 'required|string',

@@ -125,12 +125,11 @@
                                     class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition bg-white cursor-pointer">
                                 @php
                                     $conditions = [
-                                        'Barang Baru' => 'Barang Baru (BNIB)',
+                                        'BNOB' => 'BNOB (Brand New Open Box)',
                                         'Like New' => 'Like New',
-                                        'Sangat Baik' => 'Sangat Baik',
-                                        'Baik' => 'Baik',
-                                        'Cukup' => 'Cukup',
-                                        'Rusak Ringan' => 'Rusak Ringan'
+                                        'Normal' => 'Normal',
+                                        'Rusak Ringan' => 'Rusak Ringan',
+                                        'Rusak Parah' => 'Rusak Parah'
                                     ];
                                 @endphp
                                 @foreach($conditions as $value => $label)
