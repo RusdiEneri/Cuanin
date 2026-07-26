@@ -13,7 +13,8 @@
             </div>
 
             <!-- Search Bar (DESKTOP ONLY) -->
-            @if(request()->routeIs('home', 'marketplace'))
+            <!-- Search Bar (DESKTOP ONLY) -->
+            @if(request()->routeIs('home', 'marketplace', 'product.show'))
             <div class="hidden md:flex flex-1 max-w-2xl">
                 <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -135,7 +136,8 @@
         </div>
 
         <!-- BARIS 2: Search Bar (MOBILE ONLY) -->
-        @if(request()->routeIs('home', 'marketplace'))
+        <!-- BARIS 2: Search Bar (MOBILE ONLY) -->
+        @if(request()->routeIs('home', 'marketplace', 'product.show'))
             <div class="md:hidden pb-3">
                 <form action="{{ route('marketplace') }}" method="GET" class="relative w-full">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
