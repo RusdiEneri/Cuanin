@@ -31,10 +31,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
             
             <!-- Left Box: Info Penjual (Dark Gradient Banner) -->
-            <div class="lg:col-span-5 bg-gradient-to-br from-[#1E293B] via-[#0F172A] to-[#1F49F2] p-6 sm:p-8 text-white flex flex-col justify-between relative overflow-hidden">
+            <div class="lg:col-span-5 bg-gradient-to-br from-primary to-blue-600 p-6 sm:p-8 text-white flex flex-col justify-between relative overflow-hidden">
                 <!-- Background Accent Glow -->
-                <div class="absolute -top-12 -right-12 w-40 h-40 bg-primary/30 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-secondary/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -top-12 -right-12 w-48 h-48 bg-white opacity-10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-white opacity-10 rounded-full blur-xl pointer-events-none"></div>
 
                 <div class="relative z-10 flex items-start gap-4 mb-6">
                     <!-- Avatar Penjual -->
@@ -195,34 +195,41 @@
     </div>
 
     @if($products->count() > 0)
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-10">
             @foreach($products as $item)
-                <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/5 transition duration-300 group flex flex-col">
+                <div class="bg-white border border-border-color rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/20 hover:border-primary transition duration-300 group flex flex-col relative">
                     <a href="{{ route('product.show', $item->slug) }}" class="relative aspect-square bg-gray-50 overflow-hidden block">
                         @if($item->displayImageUrl())
                             <img src="{{ $item->displayImageUrl() }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-gray-300">
-                                <i data-lucide="image" class="w-10 h-10"></i>
+                                <i data-lucide="image" class="w-12 h-12"></i>
                             </div>
                         @endif
-
-                        <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-lg text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
-                            <i data-lucide="{{ $item->condition == 'BNOB' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'BNOB' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->condition }}
+                        <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 bg-white/90 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
+                            <i data-lucide="{{ $item->condition == 'BNOB' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'BNOB' ? 'text-secondary fill-current' : 'text-success' }}"></i>
+                            <span class="line-clamp-1">{{ $item->condition }}</span>
                         </div>
                     </a>
 
-                    <div class="p-4 flex-grow flex flex-col">
-                        <div class="text-[11px] font-semibold text-primary mb-1 line-clamp-1">{{ $item->category->name }}</div>
-                        <a href="{{ route('product.show', $item->slug) }}">
-                            <h3 class="font-semibold text-sm sm:text-base text-gray-900 mb-1 line-clamp-2 group-hover:text-primary transition">{{ $item->title }}</h3>
+                    <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-2 right-2 sm:top-3 sm:right-3 z-20">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $item->id }}">
+                        <button type="submit" class="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-400 hover:text-danger hover:bg-red-50 transition shadow-sm" title="Tambah ke Wishlist">
+                            <i data-lucide="heart" class="w-5 h-5"></i>
+                        </button>
+                    </form>
+                    
+                    <div class="p-3 sm:p-4 flex flex-col flex-grow">
+                        <a href="{{ route('product.show', $item->slug) }}" class="mb-1">
+                            <h3 class="text-[13px] sm:text-sm text-gray-700 line-clamp-2 group-hover:text-primary transition leading-relaxed">{{ $item->title }}</h3>
                         </a>
-
-                        <div class="mt-auto pt-3 flex items-baseline justify-between">
-                            <div class="font-bold text-base sm:text-lg text-primary">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
-                            <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
-                                <i data-lucide="eye" class="w-3 h-3"></i> {{ $item->views }}
-                            </span>
+                        <div class="mt-auto">
+                            <div class="font-bold text-[15px] sm:text-[17px] text-primary mb-1 truncate">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+                            <div class="flex items-center gap-1.5 text-[11px] text-gray-500">
+                                <i data-lucide="map-pin" class="w-3 h-3 text-primary flex-shrink-0"></i>
+                                <span class="truncate">{{ $item->location }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
