@@ -44,6 +44,13 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Keranjang Anda kosong.');
         }
 
+        // Validate stock before proceeding
+        foreach ($carts as $cart) {
+            if ($cart->product->stock < $cart->quantity) {
+                return redirect()->route('cart.index')->with('error', 'Stok untuk ' . $cart->product->title . ' tidak mencukupi. Sisa: ' . $cart->product->stock);
+            }
+        }
+
         DB::beginTransaction();
         try {
             $totalAmount = $carts->sum(function($cart) {
@@ -69,8 +76,13 @@ class CheckoutController extends Controller
                     'price' => $cart->product->price,
                 ]);
 
-                // Change product status to sold
-                $cart->product->update(['status' => 'sold']);
+                // Update stock and status if needed
+                $newStock = $cart->product->stock - $cart->quantity;
+                $updateData = ['stock' => $newStock];
+                if ($newStock <= 0) {
+                    $updateData['status'] = 'sold';
+                }
+                $cart->product->update($updateData);
             }
 
             // Clear cart

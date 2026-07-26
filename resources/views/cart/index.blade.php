@@ -91,8 +91,8 @@
                                     <input type="checkbox" checked
                                            class="item-check w-5 h-5 mt-1 rounded border-gray-300 accent-[#1F49F2] cursor-pointer flex-shrink-0"
                                            data-store="{{ $sellerId }}"
-                                           data-price="{{ $product->price }}"
-                                           data-title="{{ $product->title }}">
+                                           data-price="{{ $product->price * $item->quantity }}"
+                                           data-title="{{ $product->title }} (x{{ $item->quantity }})">
 
                                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1 min-w-0">
                                         <div class="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100">
@@ -107,7 +107,18 @@
                                                 <h3 class="font-semibold text-gray-900 hover:text-primary transition line-clamp-1 mb-1">{{ $product->title }}</h3>
                                             </a>
                                             <div class="text-sm text-gray-500 mb-2">Penjual: {{ $seller->name }}</div>
-                                            <div class="font-bold text-primary">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                                            <div class="font-bold text-primary mb-2">Rp {{ number_format($product->price * $item->quantity, 0, ',', '.') }} <span class="text-sm font-normal text-gray-500 ml-1">(Rp {{ number_format($product->price, 0, ',', '.') }} / pcs)</span></div>
+                                            
+                                            <!-- Quantity Update Form -->
+                                            <form action="{{ route('cart.update', $item->id) }}" method="POST" class="inline-block" id="form-qty-{{ $item->id }}">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm w-fit">
+                                                    <button type="button" onclick="const q = document.getElementById('qty-{{ $item->id }}'); if(q.value > 1) { q.value--; q.form.submit(); }" class="px-2 py-1 text-gray-500 hover:text-primary hover:bg-blue-50 rounded-l-lg transition">-</button>
+                                                    <input type="number" id="qty-{{ $item->id }}" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $product->stock }}" onchange="this.form.submit()" class="w-10 text-center border-none focus:ring-0 text-xs font-bold text-gray-900 p-0" readonly>
+                                                    <button type="button" onclick="const q = document.getElementById('qty-{{ $item->id }}'); if(q.value < {{ $product->stock }}) { q.value++; q.form.submit(); }" class="px-2 py-1 text-gray-500 hover:text-primary hover:bg-blue-50 rounded-r-lg transition">+</button>
+                                                </div>
+                                            </form>
                                         </div>
                                         <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end mt-2 sm:mt-0">
                                             <form action="{{ route('cart.destroy', $item->id) }}" method="POST">

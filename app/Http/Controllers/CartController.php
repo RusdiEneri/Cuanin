@@ -37,12 +37,22 @@ class CartController extends Controller
             return back()->with('error', 'Anda tidak bisa membeli produk Anda sendiri.');
         }
 
+        if ($product->stock < 1) {
+            return back()->with('error', 'Stok produk ini sudah habis.');
+        }
+
         $cart = Cart::where('user_id', Auth::id())
                     ->where('product_id', $request->product_id)
                     ->first();
 
+        $newQuantity = $cart ? $cart->quantity + $request->quantity : $request->quantity;
+        
+        if ($newQuantity > $product->stock) {
+            return back()->with('error', 'Jumlah melebihi sisa stok yang tersedia (' . $product->stock . ').');
+        }
+
         if ($cart) {
-            $cart->update(['quantity' => $cart->quantity + $request->quantity]);
+            $cart->update(['quantity' => $newQuantity]);
         } else {
             Cart::create([
                 'user_id'    => Auth::id(),
@@ -52,6 +62,23 @@ class CartController extends Controller
         }
 
         return redirect()->route('cart.index')->with('success', 'Produk ditambahkan ke keranjang.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $cart = Cart::where('user_id', Auth::id())->findOrFail($id);
+        
+        if ($request->quantity > $cart->product->stock) {
+            return back()->with('error', 'Jumlah melebihi sisa stok yang tersedia (' . $cart->product->stock . ').');
+        }
+
+        $cart->update(['quantity' => $request->quantity]);
+
+        return back()->with('success', 'Jumlah barang berhasil diperbarui.');
     }
 
     public function destroy($id)

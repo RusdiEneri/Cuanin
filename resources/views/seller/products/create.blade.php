@@ -123,6 +123,10 @@
                                 </div>
                             </div>
                             <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Stok Barang <span class="text-danger">*</span></label>
+                                <input type="number" name="stock" id="field-stock" value="{{ old('stock', 1) }}" placeholder="1" min="1" class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            </div>
+                            <div class="sm:col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi Pengiriman (Kota) <span class="text-danger">*</span></label>
                                 <input type="text" name="location" id="field-location" value="{{ old('location') }}" placeholder="Contoh: Jakarta Selatan" class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
                             </div>
