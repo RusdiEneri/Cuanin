@@ -93,7 +93,7 @@ CREATE TABLE `carts` (
 
 LOCK TABLES `carts` WRITE;
 /*!40000 ALTER TABLE `carts` DISABLE KEYS */;
-INSERT INTO `carts` VALUES (1,2,1,1,'2026-07-25 12:09:27','2026-07-25 12:09:27'),(5,3,9,1,'2026-07-25 13:42:53','2026-07-25 13:42:53'),(6,3,1,1,'2026-07-25 13:43:11','2026-07-25 13:43:11');
+INSERT INTO `carts` VALUES (6,3,1,1,'2026-07-25 13:43:11','2026-07-25 13:43:11');
 /*!40000 ALTER TABLE `carts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -227,7 +227,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -236,7 +236,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2026_07_14_094614_create_categories_table',1),(5,'2026_07_14_094615_create_orders_table',1),(6,'2026_07_14_094615_create_products_table',1),(7,'2026_07_14_094616_create_order_items_table',1),(8,'2026_07_14_094617_create_wishlists_table',1),(9,'2026_07_14_094618_create_carts_table',1),(10,'2026_07_14_094619_create_reviews_table',1),(11,'2026_07_14_094705_create_product_images_table',1),(12,'2026_07_14_113913_create_negotiations_table',1),(13,'2026_07_14_120627_add_quantity_to_carts_table',1);
+INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2026_07_14_094614_create_categories_table',1),(5,'2026_07_14_094615_create_orders_table',1),(6,'2026_07_14_094615_create_products_table',1),(7,'2026_07_14_094616_create_order_items_table',1),(8,'2026_07_14_094617_create_wishlists_table',1),(9,'2026_07_14_094618_create_carts_table',1),(10,'2026_07_14_094619_create_reviews_table',1),(11,'2026_07_14_094705_create_product_images_table',1),(12,'2026_07_14_113913_create_negotiations_table',1),(13,'2026_07_14_120627_add_quantity_to_carts_table',1),(14,'2026_07_26_000000_add_draft_status_to_products_table',2),(15,'2026_07_26_063349_simplify_condition_column_in_products_table',2),(16,'2026_07_26_065128_add_stock_to_products_table',2),(17,'2026_07_26_100000_add_pending_and_rejected_to_products_status',2);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -377,7 +377,7 @@ CREATE TABLE `product_images` (
   PRIMARY KEY (`id`),
   KEY `product_images_product_id_foreign` (`product_id`),
   CONSTRAINT `product_images_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -386,7 +386,7 @@ CREATE TABLE `product_images` (
 
 LOCK TABLES `product_images` WRITE;
 /*!40000 ALTER TABLE `product_images` DISABLE KEYS */;
-INSERT INTO `product_images` VALUES (1,1,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC9nuK_SCqlw6DKwus0ciYntpwfnnWx-fjyqlUv6FeavgEqAqWLo3GY8jo&s=10',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(2,2,'https://images.samsung.com/is/image/samsung/p6pim/id/2302/gallery/id-galaxy-s23-s918-sm-s918bzgqxid-thumb-534862772',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(3,3,'https://image.807garage.com/content/uploads/2025/7/air-max-plus-triple-black-gs-women-2.jpg',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(4,4,'https://myhartono.com/images/detailed/380/ASIA-00479.jpg',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(5,5,'https://www.hondacengkareng.com/wp-content/uploads/2020/06/Vario-150-eSP-CBS-ISS-Exclusive-Matte-Brown.jpg',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(6,6,'https://www.soho.id/173-superlarge_default/sofa-sofa-melinda-3-seater-cream.jpg',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(7,7,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjEt3bh8xbbayhmObQXI9Wb0YPIb14hhvP0is7H-YPuw&s=10',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(8,8,'https://down-id.img.susercontent.com/file/47200ad32980d5c124dab759fb4c101c',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(9,9,'products/uM3IJhygF4evqxKghPtvGCw5qRW9yLub44teCtfd.jpg',1,'2026-07-25 12:15:01','2026-07-25 12:15:01');
+INSERT INTO `product_images` VALUES (1,1,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC9nuK_SCqlw6DKwus0ciYntpwfnnWx-fjyqlUv6FeavgEqAqWLo3GY8jo&s=10',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(2,2,'https://images.samsung.com/is/image/samsung/p6pim/id/2302/gallery/id-galaxy-s23-s918-sm-s918bzgqxid-thumb-534862772',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(3,3,'https://image.807garage.com/content/uploads/2025/7/air-max-plus-triple-black-gs-women-2.jpg',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(4,4,'https://myhartono.com/images/detailed/380/ASIA-00479.jpg',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(5,5,'https://www.hondacengkareng.com/wp-content/uploads/2020/06/Vario-150-eSP-CBS-ISS-Exclusive-Matte-Brown.jpg',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(6,6,'https://www.soho.id/173-superlarge_default/sofa-sofa-melinda-3-seater-cream.jpg',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(7,7,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjEt3bh8xbbayhmObQXI9Wb0YPIb14hhvP0is7H-YPuw&s=10',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(8,8,'https://down-id.img.susercontent.com/file/47200ad32980d5c124dab759fb4c101c',1,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(10,10,'products/lIXNrXLP1tDP9H45t0zDAyJ7k3tUh5LdD9Mho7Me.jpg',1,'2026-07-26 00:58:27','2026-07-26 00:58:27');
 /*!40000 ALTER TABLE `product_images` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -405,9 +405,10 @@ CREATE TABLE `products` (
   `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` decimal(15,2) NOT NULL,
-  `condition` enum('Barang Baru','Like New','Sangat Baik','Baik','Cukup','Rusak Ringan') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stock` int NOT NULL DEFAULT '1',
+  `condition` enum('BNOB','Like New','Normal','Rusak Ringan','Rusak Parah') COLLATE utf8mb4_unicode_ci NOT NULL,
   `location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('active','sold','archived') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `status` enum('pending','active','sold','archived','draft','rejected') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
   `views` int NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -417,7 +418,7 @@ CREATE TABLE `products` (
   KEY `products_category_id_foreign` (`category_id`),
   CONSTRAINT `products_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
   CONSTRAINT `products_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -426,7 +427,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,1,1,'iPhone 13 Pro 256GB ex iBox','iphone-13-pro-256gb-ex-ibox','Mulus 98%, batre health 89%. Kelengkapan fullset original.',10500000.00,'Like New','Jakarta Selatan','active',125,'2026-07-25 12:09:02','2026-07-25 13:43:07'),(2,1,1,'Samsung Galaxy S23 Ultra 512GB','samsung-galaxy-s23-ultra-512gb','Garansi resmi SEIN, mulus 99%. Bonus case & tempered glass.',14200000.00,'Like New','Jakarta Pusat','active',211,'2026-07-25 12:09:02','2026-07-25 12:16:28'),(3,1,2,'Sepatu Nike Air Max - Size 42','sepatu-nike-air-max-size-42','Baru dipakai 2 kali, kondisi masih sangat baik seperti baru.',850000.00,'Sangat Baik','Bandung','active',45,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(4,1,5,'Sony PlayStation 5 Disc Edition','sony-playstation-5-disc-edition','Lengkap dengan 2 DualSense dan game Spiderman.',7800000.00,'Like New','Bekasi','active',312,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(5,1,3,'Honda Vario 150 Tahun 2021','honda-vario-150-tahun-2021','Pajak hidup, surat lengkap. KM masih 15rb-an.',18500000.00,'Sangat Baik','Depok','active',890,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(6,1,4,'Sofa Minimalis 3 Seater','sofa-minimalis-3-seater','Baru dibeli 3 bulan, dijual karena pindah rumah. Warna abu-abu.',1200000.00,'Like New','Tangerang','active',156,'2026-07-25 12:09:02','2026-07-25 13:37:19'),(7,1,6,'Komik Naruto Lengkap Vol 1-72','komik-naruto-lengkap-vol-1-72','Kondisi 90%, halaman utuh semua tidak ada yang sobek.',1400000.00,'Baik','Bandung','active',620,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(8,1,7,'Kandang Kucing 3 Tingkat + Aksesoris','kandang-kucing-3-tingkat-aksesoris','Ukuran 90x60x120cm, include hammock & tempat makan.',650000.00,'Baik','Bogor','active',114,'2026-07-25 12:09:02','2026-07-25 13:37:29'),(9,2,1,'Konsol','konsol-1785006900','Dekat Ilham',50000.00,'Barang Baru','Tuban','active',9,'2026-07-25 12:15:00','2026-07-25 13:42:50');
+INSERT INTO `products` VALUES (1,1,1,'iPhone 13 Pro 256GB ex iBox','iphone-13-pro-256gb-ex-ibox','Mulus 98%, batre health 89%. Kelengkapan fullset original.',10500000.00,1,'Like New','Jakarta Selatan','active',125,'2026-07-25 12:09:02','2026-07-25 13:43:07'),(2,1,1,'Samsung Galaxy S23 Ultra 512GB','samsung-galaxy-s23-ultra-512gb','Garansi resmi SEIN, mulus 99%. Bonus case & tempered glass.',14200000.00,1,'Like New','Jakarta Pusat','active',211,'2026-07-25 12:09:02','2026-07-25 12:16:28'),(3,1,2,'Sepatu Nike Air Max - Size 42','sepatu-nike-air-max-size-42','Baru dipakai 2 kali, kondisi masih sangat baik seperti baru.',850000.00,1,'Like New','Bandung','active',45,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(4,1,5,'Sony PlayStation 5 Disc Edition','sony-playstation-5-disc-edition','Lengkap dengan 2 DualSense dan game Spiderman.',7800000.00,1,'Like New','Bekasi','active',312,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(5,1,3,'Honda Vario 150 Tahun 2021','honda-vario-150-tahun-2021','Pajak hidup, surat lengkap. KM masih 15rb-an.',18500000.00,1,'Like New','Depok','active',890,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(6,1,4,'Sofa Minimalis 3 Seater','sofa-minimalis-3-seater','Baru dibeli 3 bulan, dijual karena pindah rumah. Warna abu-abu.',1200000.00,1,'Like New','Tangerang','active',156,'2026-07-25 12:09:02','2026-07-25 13:37:19'),(7,1,6,'Komik Naruto Lengkap Vol 1-72','komik-naruto-lengkap-vol-1-72','Kondisi 90%, halaman utuh semua tidak ada yang sobek.',1400000.00,1,'Normal','Bandung','active',620,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(8,1,7,'Kandang Kucing 3 Tingkat + Aksesoris','kandang-kucing-3-tingkat-aksesoris','Ukuran 90x60x120cm, include hammock & tempat makan.',650000.00,1,'Normal','Bogor','active',114,'2026-07-25 12:09:02','2026-07-25 13:37:29'),(10,2,4,'Mas Gibran','mas-gibran-1785052707','Wakil Presiden',50000.00,1,'BNOB','Disampng Prabowo','pending',0,'2026-07-26 00:58:27','2026-07-26 00:58:27');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -488,7 +489,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('SQgAZmvXeijTSo730w6iQNJvWVZhcNrZJac1tnSI',3,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36','YTo0OntzOjY6Il90b2tlbiI7czo0MDoib2t5QVdid1JvMmlacUJpYU1ZcGxYaVhyekt1NVhLMXZjOERMMFZ0ViI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjY6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9jYXJ0IjtzOjU6InJvdXRlIjtzOjEwOiJjYXJ0LmluZGV4Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mzt9',1785012459);
+INSERT INTO `sessions` VALUES ('XbcPxGyNXHJSxpVD99ajfH4RMbr8zDe7jQrLZENL',4,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36','YTo0OntzOjY6Il90b2tlbiI7czo0MDoidnV0UHZqd3JRTmJLMkF0SEh6cG5IQTlJcWtEUEc2TXdhWFZIUTY2VSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzc6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hZG1pbi9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MTU6ImFkbWluLmRhc2hib2FyZCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjQ7fQ==',1785052941);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -514,7 +515,7 @@ CREATE TABLE `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -523,7 +524,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Rusdi Saputra','rusdi@example.com',NULL,'$2y$12$F7JWe3d0TRJtSxOOw5uqjuawV7Ktn5F.ZnVlJzC.M6u8mubiO7tIi','penjual','081233649676','Jl. Kartini No.69, Gresik, Jawa Timur',NULL,NULL,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(2,'Ilham Prasetyo','ilham@example.com',NULL,'$2y$12$f8IAxIrDgvOx.ys53SAZz.xfJYYem8B0GYRZOVrjwsQvFdYoQqvZ2','penjual','089876543210','Jl. Gatot Subroto No. 45, Jakarta Pusat',NULL,NULL,'2026-07-25 12:09:02','2026-07-25 12:14:32'),(3,'budi','budi@example.com',NULL,'$2y$12$1zJXGBInHpw/Mt.ORVXFuOkfikqCWniqcqqOWunFtM60.W.pVVO6.','pembeli','08111111111',NULL,NULL,NULL,'2026-07-25 12:15:45','2026-07-25 12:15:45');
+INSERT INTO `users` VALUES (1,'Rusdi Saputra','rusdi@example.com',NULL,'$2y$12$F7JWe3d0TRJtSxOOw5uqjuawV7Ktn5F.ZnVlJzC.M6u8mubiO7tIi','penjual','081233649676','Jl. Kartini No.69, Gresik, Jawa Timur',NULL,NULL,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(2,'Ilham Prasetyo','ilham@example.com',NULL,'$2y$12$f8IAxIrDgvOx.ys53SAZz.xfJYYem8B0GYRZOVrjwsQvFdYoQqvZ2','penjual','089876543210','Jl. Gatot Subroto No. 45, Jakarta Pusat',NULL,NULL,'2026-07-25 12:09:02','2026-07-25 12:14:32'),(3,'budi','budi@example.com',NULL,'$2y$12$1zJXGBInHpw/Mt.ORVXFuOkfikqCWniqcqqOWunFtM60.W.pVVO6.','pembeli','08111111111',NULL,NULL,NULL,'2026-07-25 12:15:45','2026-07-25 12:15:45'),(4,'Administrator Cuanin','admin@cuanin.com',NULL,'$2y$12$IsZzOvhVkv8.iGHhAJKGsuWzN3PFrNfeV6kkaT5MTnHWhu1Mz17rG','admin','081200000001','Kantor Pusat Cuanin',NULL,NULL,'2026-07-26 00:52:12','2026-07-26 00:52:12');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -566,4 +567,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-26  3:47:39
+-- Dump completed on 2026-07-26 15:06:54

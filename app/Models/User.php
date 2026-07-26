@@ -82,15 +82,8 @@ class User extends Authenticatable
     // Relasi (sesuaikan jika ada tabel terkait)
     // ========================================
 
-    // Contoh: jika ada tabel products milik seller
-    // public function products()
-    // {
-    //     return $this->hasMany(Product::class);
-    // }
-
-    // Contoh: jika ada tabel orders milik buyer
-    // public function orders()
-    // {
-    //     return $this->hasMany(Order::class);
-    // }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

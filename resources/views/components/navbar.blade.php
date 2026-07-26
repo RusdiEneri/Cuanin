@@ -71,6 +71,7 @@
                             @endif
                             @if(Auth::user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="shield" class="w-4 h-4 mr-3"></i> Dashboard Admin</a>
+                            <a href="{{ route('admin.products.index') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="check-square" class="w-4 h-4 mr-3"></i> Verifikasi Produk</a>
                             @endif
                             <div class="h-px bg-gray-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}">
