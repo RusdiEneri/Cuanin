@@ -41,13 +41,16 @@
                     </a>
 
                     <!-- Cart -->
-                    <a href="{{ route('cart.index') }}" class="relative text-gray-600 hover:text-primary transition p-2 hover:bg-gray-50 rounded-lg" title="Keranjang">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-                        @php $cartCount = \App\Models\Cart::where('user_id', Auth::id())->count(); @endphp
-                        @if($cartCount > 0)
-                        <span class="absolute top-1 right-1 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-bold leading-none text-white bg-danger rounded-full">{{ $cartCount }}</span>
-                        @endif
-                    </a>
+<a href="{{ route('cart.index') }}" class="relative text-gray-600 hover:text-primary transition p-2 hover:bg-gray-50 rounded-lg" title="Keranjang">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+
+    @php $cartCount = \App\Models\Cart::where('user_id', Auth::id())->count(); @endphp
+
+    {{-- ✅ Badge HANYA di-render kalau ada isi. Kosong = tidak muncul sama sekali --}}
+    @if($cartCount > 0)
+        <span class="absolute top-1 right-1 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-bold leading-none text-white bg-danger rounded-full">{{ $cartCount }}</span>
+    @endif
+</a>
 
                     <!-- Profile Dropdown -->
                     <div id="profileDropdown" class="relative cursor-pointer">
@@ -71,6 +74,7 @@
                             @endif
                             @if(Auth::user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="shield" class="w-4 h-4 mr-3"></i> Dashboard Admin</a>
+                            <a href="{{ route('admin.products.index') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition"><i data-lucide="check-square" class="w-4 h-4 mr-3"></i> Verifikasi Produk</a>
                             @endif
                             <div class="h-px bg-gray-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}">
@@ -93,12 +97,15 @@
                     </a>
 
                     <!-- Cart with badge -->
-                    <a href="{{ route('cart.index') }}" class="relative text-gray-600 hover:text-primary transition p-2">
-                        <i data-lucide="shopping-cart" class="h-5 w-5"></i>
-                        @if($cartCount > 0)
-                        <span class="absolute top-0.5 right-0.5 inline-flex items-center justify-center min-w-[1rem] h-4 px-1 text-[9px] font-bold leading-none text-white bg-danger rounded-full">{{ $cartCount }}</span>
-                        @endif
-                    </a>
+<a href="{{ route('cart.index') }}" class="relative text-gray-600 hover:text-primary transition p-2">
+    <i data-lucide="shopping-cart" class="h-5 w-5"></i>
+
+    @php $cartCount = \App\Models\Cart::where('user_id', Auth::id())->count(); @endphp
+
+    @if($cartCount > 0)
+        <span class="absolute top-0.5 right-0.5 inline-flex items-center justify-center min-w-[1rem] h-4 px-1 text-[9px] font-bold leading-none text-white bg-danger rounded-full">{{ $cartCount }}</span>
+    @endif
+</a>
 
                     <!-- Avatar -->
                     <a href="{{ route('profile.index') }}" class="w-9 h-9 bg-blue-100 rounded-full overflow-hidden border-2 border-transparent hover:border-primary transition flex-shrink-0 mx-1">

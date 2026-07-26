@@ -19,6 +19,17 @@ class DatabaseSeeder extends Seeder
         // ============================================
         // 1. USERS
         // ============================================
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@cuanin.com'],
+            [
+                'name'         => 'Administrator Cuanin',
+                'password'     => bcrypt('password'),
+                'role'         => 'admin',
+                'phone_number' => '081200000001',
+                'address'      => 'Kantor Pusat Cuanin',
+            ]
+        );
+
         $penjual = User::firstOrCreate(
             ['email' => 'rusdi@example.com'],
             [

@@ -22,6 +22,17 @@ class CartController extends Controller
 
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'status' => 'unauthenticated',
+                    'message' => 'Silakan masuk terlebih dahulu untuk menambahkan barang ke keranjang.',
+                    'redirect' => route('login')
+                ], 401);
+            }
+            return redirect()->route('login')->with('error', 'Silakan masuk terlebih dahulu.');
+        }
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity'   => 'required|integer|min:1',
@@ -30,14 +41,23 @@ class CartController extends Controller
         $product = Product::findOrFail($request->product_id);
 
         if ($product->status !== 'active') {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Produk ini sudah tidak tersedia (Terjual/Diarsipkan).'], 422);
+            }
             return back()->with('error', 'Produk ini sudah tidak tersedia (Terjual/Diarsipkan).');
         }
 
         if ($product->user_id == Auth::id()) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Anda tidak bisa membeli produk Anda sendiri.'], 422);
+            }
             return back()->with('error', 'Anda tidak bisa membeli produk Anda sendiri.');
         }
 
         if ($product->stock < 1) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Stok produk ini sudah habis.'], 422);
+            }
             return back()->with('error', 'Stok produk ini sudah habis.');
         }
 
@@ -48,6 +68,9 @@ class CartController extends Controller
         $newQuantity = $cart ? $cart->quantity + $request->quantity : $request->quantity;
         
         if ($newQuantity > $product->stock) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Jumlah melebihi sisa stok yang tersedia (' . $product->stock . ').'], 422);
+            }
             return back()->with('error', 'Jumlah melebihi sisa stok yang tersedia (' . $product->stock . ').');
         }
 
@@ -58,6 +81,15 @@ class CartController extends Controller
                 'user_id'    => Auth::id(),
                 'product_id' => $request->product_id,
                 'quantity'   => $request->quantity,
+            ]);
+        }
+
+        if ($request->wantsJson() || $request->ajax()) {
+            $cartCount = Cart::where('user_id', Auth::id())->count();
+            return response()->json([
+                'status'     => 'success',
+                'message'    => 'Produk berhasil ditambahkan ke keranjang!',
+                'cart_count' => $cartCount,
             ]);
         }
 

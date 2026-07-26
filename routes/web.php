@@ -32,6 +32,8 @@ Route::get('/', function () {
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
 Route::get('/product/{slug}', [MarketplaceController::class, 'show'])->name('product.show');
 Route::view('/cara-jualan', 'cara-jualan')->name('cara-jualan');
+Route::view('/faq', 'faq')->name('faq');
+Route::view('/hubungi', 'hubungi')->name('hubungi');
 
 /*
 |--------------------------------------------------------------------------
@@ -117,6 +119,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/categories', [AdminController::class, 'categories'])->name('categories.index');
         Route::post('/categories', [AdminController::class, 'storeCategory'])->name('categories.store');
         Route::delete('/categories/{id}', [AdminController::class, 'destroyCategory'])->name('categories.destroy');
+
+        Route::get('/products', [AdminController::class, 'products'])->name('products.index');
+        Route::put('/products/{id}/status', [AdminController::class, 'updateProductStatus'])->name('products.status');
+        Route::delete('/products/{id}', [AdminController::class, 'destroyProduct'])->name('products.destroy');
     });
 });
 

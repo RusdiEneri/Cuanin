@@ -154,6 +154,7 @@ git push origin add/nama-kamu
 
 | Role    | Email              | Password   |
 |---------|--------------------|------------|
+| Admin   | admin@cuanin.com   | `password` |
 | Penjual | rusdi@example.com  | `password` |
 | Pembeli | ilham@example.com  | `password` |
 
@@ -179,3 +180,4 @@ git push origin add/nama-kamu
 - Nego harga antara pembeli dan penjual
 - Pemesanan langsung diarahkan via WhatsApp penjual
 - Review produk
+  

@@ -195,7 +195,7 @@
         @endphp
 
         <!-- Pengatur Jumlah & Action Buttons di-wrap form agar bisa submit quantity -->
-        <form action="{{ route('cart.store') }}" method="POST" class="w-full">
+        <form id="add-to-cart-form" action="{{ route('cart.store') }}" method="POST" class="w-full">
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             
@@ -347,4 +347,172 @@
     </div>
     @endif
 </div>
+
+<!-- ==================== MODAL SUKSES TAMBAH KERANJANG ==================== -->
+<div id="cart-success-modal" onclick="if(event.target === this) closeCartSuccessModal()" class="fixed inset-0 z-50 hidden bg-dark/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+    <div class="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden p-6 sm:p-8 transform scale-95 transition-transform duration-300">
+        <button type="button" onclick="closeCartSuccessModal()" class="absolute right-4 top-4 w-8 h-8 bg-gray-50 hover:bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-700 transition">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+
+        <div class="text-center">
+            <div class="w-16 h-16 bg-green-50 text-success rounded-full flex items-center justify-center mx-auto mb-4 border border-green-100 shadow-sm">
+                <i data-lucide="shopping-bag" class="w-8 h-8"></i>
+            </div>
+            
+            <h3 class="text-xl font-bold text-gray-900 mb-1">Berhasil Ditambahkan!</h3>
+            <p class="text-sm text-gray-500 mb-6">Produk pilihan Anda telah dimasukkan ke dalam keranjang belanja.</p>
+
+            <!-- Card Summary Produk -->
+            <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 flex items-center gap-3 text-left mb-6">
+                <div class="w-14 h-14 rounded-xl bg-white border border-gray-200 overflow-hidden flex-shrink-0">
+                    @if($product->displayImageUrl())
+                        <img src="{{ $product->displayImageUrl() }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center text-gray-300">
+                            <i data-lucide="image" class="w-5 h-5"></i>
+                        </div>
+                    @endif
+                </div>
+                <div class="flex-grow">
+                    <h4 class="font-bold text-gray-900 text-sm line-clamp-1">{{ $product->title }}</h4>
+                    <div class="text-xs text-gray-500 mt-0.5">Jumlah: <span id="cart-added-qty" class="font-bold text-gray-900">1</span> pcs</div>
+                    <div class="text-xs font-bold text-primary mt-0.5">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                </div>
+            </div>
+
+            <!-- Tombol Opsi -->
+            <div class="grid grid-cols-2 gap-3">
+                <button type="button" onclick="closeCartSuccessModal()" class="w-full py-3 px-4 rounded-xl border border-border-color text-gray-700 font-semibold bg-white hover:bg-gray-50 transition text-sm">
+                    Lanjut Belanja
+                </button>
+                <a href="{{ route('cart.index') }}" class="w-full py-3 px-4 rounded-xl bg-primary text-white font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 text-sm flex items-center justify-center gap-1.5">
+                    <i data-lucide="shopping-cart" class="w-4 h-4"></i> Lihat Keranjang
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== TOAST ERROR KERANJANG ==================== -->
+<div id="cart-error-toast" class="fixed top-10 left-1/2 -translate-x-1/2 z-[100] max-w-md w-full px-4 transform -translate-y-[150%] opacity-0 transition-all duration-500 ease-out pointer-events-none">
+    <div class="bg-white border border-red-200 rounded-2xl shadow-2xl p-4 flex items-center gap-3 pointer-events-auto">
+        <div class="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center flex-shrink-0 text-danger">
+            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1 text-sm font-medium text-gray-800" id="cart-error-toast-msg">
+            Gagal menambahkan ke keranjang.
+        </div>
+        <button onclick="hideCartErrorToast()" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cartForm = document.getElementById('add-to-cart-form');
+        if (!cartForm) return;
+
+        cartForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            
+            const submitBtn = cartForm.querySelector('button[type="submit"]');
+            const originalBtnHtml = submitBtn.innerHTML;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Memproses...`;
+            if (window.lucide) lucide.createIcons();
+
+            try {
+                const formData = new FormData(cartForm);
+                const response = await fetch(cartForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.status === 401) {
+                    window.location.href = data.redirect || '{{ route("login") }}';
+                    return;
+                }
+
+                if (response.ok && data.status === 'success') {
+                    // Update header cart badge
+                    document.querySelectorAll('.cart-badge-count').forEach(el => {
+                        el.textContent = data.cart_count;
+                        el.classList.remove('hidden');
+                    });
+
+                    // Set quantity in modal
+                    const qtyVal = document.getElementById('qty') ? document.getElementById('qty').value : 1;
+                    document.getElementById('cart-added-qty').textContent = qtyVal;
+
+                    // Open success popup modal
+                    openCartSuccessModal();
+                } else {
+                    showCartErrorToast(data.message || 'Gagal menambahkan ke keranjang.');
+                }
+            } catch (err) {
+                console.error(err);
+                showCartErrorToast('Terjadi kesalahan koneksi. Silakan coba lagi.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+                if (window.lucide) lucide.createIcons();
+            }
+        });
+    });
+
+    function openCartSuccessModal() {
+        const modal = document.getElementById('cart-success-modal');
+        if (!modal) return;
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modal.querySelector('div').classList.remove('scale-95');
+        }, 10);
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function closeCartSuccessModal() {
+        const modal = document.getElementById('cart-success-modal');
+        if (!modal) return;
+        modal.classList.add('opacity-0');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    let toastErrorTimeout = null;
+    function showCartErrorToast(msg) {
+        const toast = document.getElementById('cart-error-toast');
+        const msgEl = document.getElementById('cart-error-toast-msg');
+        if (!toast || !msgEl) return;
+
+        msgEl.textContent = msg;
+        toast.classList.remove('-translate-y-[150%]', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+
+        if (window.lucide) lucide.createIcons();
+
+        clearTimeout(toastErrorTimeout);
+        toastErrorTimeout = setTimeout(() => hideCartErrorToast(), 5000);
+    }
+
+    function hideCartErrorToast() {
+        const toast = document.getElementById('cart-error-toast');
+        if (!toast) return;
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('-translate-y-[150%]', 'opacity-0');
+    }
+</script>
+@endpush
 @endsection
