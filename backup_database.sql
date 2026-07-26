@@ -84,7 +84,7 @@ CREATE TABLE `carts` (
   KEY `carts_product_id_foreign` (`product_id`),
   CONSTRAINT `carts_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
   CONSTRAINT `carts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +93,7 @@ CREATE TABLE `carts` (
 
 LOCK TABLES `carts` WRITE;
 /*!40000 ALTER TABLE `carts` DISABLE KEYS */;
-INSERT INTO `carts` VALUES (6,3,1,1,'2026-07-25 13:43:11','2026-07-25 13:43:11');
+INSERT INTO `carts` VALUES (6,3,1,1,'2026-07-25 13:43:11','2026-07-25 13:43:11'),(7,3,2,1,'2026-07-26 01:17:03','2026-07-26 01:17:03');
 /*!40000 ALTER TABLE `carts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -427,7 +427,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,1,1,'iPhone 13 Pro 256GB ex iBox','iphone-13-pro-256gb-ex-ibox','Mulus 98%, batre health 89%. Kelengkapan fullset original.',10500000.00,1,'Like New','Jakarta Selatan','active',125,'2026-07-25 12:09:02','2026-07-25 13:43:07'),(2,1,1,'Samsung Galaxy S23 Ultra 512GB','samsung-galaxy-s23-ultra-512gb','Garansi resmi SEIN, mulus 99%. Bonus case & tempered glass.',14200000.00,1,'Like New','Jakarta Pusat','active',211,'2026-07-25 12:09:02','2026-07-25 12:16:28'),(3,1,2,'Sepatu Nike Air Max - Size 42','sepatu-nike-air-max-size-42','Baru dipakai 2 kali, kondisi masih sangat baik seperti baru.',850000.00,1,'Like New','Bandung','active',45,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(4,1,5,'Sony PlayStation 5 Disc Edition','sony-playstation-5-disc-edition','Lengkap dengan 2 DualSense dan game Spiderman.',7800000.00,1,'Like New','Bekasi','active',312,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(5,1,3,'Honda Vario 150 Tahun 2021','honda-vario-150-tahun-2021','Pajak hidup, surat lengkap. KM masih 15rb-an.',18500000.00,1,'Like New','Depok','active',890,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(6,1,4,'Sofa Minimalis 3 Seater','sofa-minimalis-3-seater','Baru dibeli 3 bulan, dijual karena pindah rumah. Warna abu-abu.',1200000.00,1,'Like New','Tangerang','active',156,'2026-07-25 12:09:02','2026-07-25 13:37:19'),(7,1,6,'Komik Naruto Lengkap Vol 1-72','komik-naruto-lengkap-vol-1-72','Kondisi 90%, halaman utuh semua tidak ada yang sobek.',1400000.00,1,'Normal','Bandung','active',620,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(8,1,7,'Kandang Kucing 3 Tingkat + Aksesoris','kandang-kucing-3-tingkat-aksesoris','Ukuran 90x60x120cm, include hammock & tempat makan.',650000.00,1,'Normal','Bogor','active',114,'2026-07-25 12:09:02','2026-07-25 13:37:29'),(10,2,4,'Mas Gibran','mas-gibran-1785052707','Wakil Presiden',50000.00,1,'BNOB','Disampng Prabowo','pending',0,'2026-07-26 00:58:27','2026-07-26 00:58:27');
+INSERT INTO `products` VALUES (1,1,1,'iPhone 13 Pro 256GB ex iBox','iphone-13-pro-256gb-ex-ibox','Mulus 98%, batre health 89%. Kelengkapan fullset original.',10500000.00,1,'Like New','Jakarta Selatan','active',125,'2026-07-25 12:09:02','2026-07-25 13:43:07'),(2,1,1,'Samsung Galaxy S23 Ultra 512GB','samsung-galaxy-s23-ultra-512gb','Garansi resmi SEIN, mulus 99%. Bonus case & tempered glass.',14200000.00,1,'Like New','Jakarta Pusat','active',218,'2026-07-25 12:09:02','2026-07-26 01:17:00'),(3,1,2,'Sepatu Nike Air Max - Size 42','sepatu-nike-air-max-size-42','Baru dipakai 2 kali, kondisi masih sangat baik seperti baru.',850000.00,1,'Like New','Bandung','active',45,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(4,1,5,'Sony PlayStation 5 Disc Edition','sony-playstation-5-disc-edition','Lengkap dengan 2 DualSense dan game Spiderman.',7800000.00,1,'Like New','Bekasi','active',312,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(5,1,3,'Honda Vario 150 Tahun 2021','honda-vario-150-tahun-2021','Pajak hidup, surat lengkap. KM masih 15rb-an.',18500000.00,1,'Like New','Depok','active',890,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(6,1,4,'Sofa Minimalis 3 Seater','sofa-minimalis-3-seater','Baru dibeli 3 bulan, dijual karena pindah rumah. Warna abu-abu.',1200000.00,1,'Like New','Tangerang','active',156,'2026-07-25 12:09:02','2026-07-25 13:37:19'),(7,1,6,'Komik Naruto Lengkap Vol 1-72','komik-naruto-lengkap-vol-1-72','Kondisi 90%, halaman utuh semua tidak ada yang sobek.',1400000.00,1,'Normal','Bandung','active',620,'2026-07-25 12:09:02','2026-07-25 12:09:02'),(8,1,7,'Kandang Kucing 3 Tingkat + Aksesoris','kandang-kucing-3-tingkat-aksesoris','Ukuran 90x60x120cm, include hammock & tempat makan.',650000.00,1,'Normal','Bogor','active',114,'2026-07-25 12:09:02','2026-07-25 13:37:29'),(10,2,4,'Mas Gibran','mas-gibran-1785052707','Wakil Presiden',50000.00,1,'BNOB','Disampng Prabowo','pending',0,'2026-07-26 00:58:27','2026-07-26 00:58:27');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -489,7 +489,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('XbcPxGyNXHJSxpVD99ajfH4RMbr8zDe7jQrLZENL',4,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36','YTo0OntzOjY6Il90b2tlbiI7czo0MDoidnV0UHZqd3JRTmJLMkF0SEh6cG5IQTlJcWtEUEc2TXdhWFZIUTY2VSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzc6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hZG1pbi9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MTU6ImFkbWluLmRhc2hib2FyZCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjQ7fQ==',1785052941);
+INSERT INTO `sessions` VALUES ('DsOKrnvOc9dx2r6fL8ix8ur0ItsKMOpg7nmo5txk',NULL,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36','YTozOntzOjY6Il90b2tlbiI7czo0MDoiUUlQUlNGVDhNeTRwMlB2c1ljYXRWOVpYU1JMclR2Smx2SlVoZWc3MyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7czo1OiJyb3V0ZSI7czo0OiJob21lIjt9fQ==',1785054023);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -567,4 +567,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-26 15:06:54
+-- Dump completed on 2026-07-26 15:20:28
