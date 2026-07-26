@@ -8,16 +8,17 @@ use App\Models\Product;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Storage;
+
 class AdminController extends Controller
 {
-    public function __construct()
+    public function callAction($method, $parameters)
     {
-        $this->middleware(function ($request, $next) {
-            if (auth()->check() && auth()->user()->role !== 'admin') {
-                abort(403, 'Unauthorized access.');
-            }
-            return $next($request);
-        });
+        if (!auth()->check() || auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access.');
+        }
+
+        return $this->$method(...array_values($parameters));
     }
 
     public function dashboard()
@@ -26,8 +27,83 @@ class AdminController extends Controller
         $totalCategories = Category::count();
         $totalProducts = Product::count();
         $totalOrders = Order::count();
+        $pendingProductsCount = Product::where('status', 'pending')->count();
 
-        return view('admin.dashboard', compact('totalUsers', 'totalCategories', 'totalProducts', 'totalOrders'));
+        return view('admin.dashboard', compact('totalUsers', 'totalCategories', 'totalProducts', 'totalOrders', 'pendingProductsCount'));
+    }
+
+    public function products(Request $request)
+    {
+        $status = $request->query('status', 'pending'); // Default tab: pending verification
+
+        $query = Product::with(['user', 'category', 'primaryImage', 'productImages'])->latest();
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($u) use ($search) {
+                      $u->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $products = $query->paginate(15)->withQueryString();
+
+        $counts = [
+            'pending'  => Product::where('status', 'pending')->count(),
+            'active'   => Product::where('status', 'active')->count(),
+            'rejected' => Product::where('status', 'rejected')->count(),
+            'draft'    => Product::where('status', 'draft')->count(),
+            'all'      => Product::count(),
+        ];
+
+        return view('admin.products.index', compact('products', 'status', 'counts'));
+    }
+
+    public function updateProductStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:active,rejected,pending,archived',
+        ]);
+
+        $product = Product::findOrFail($id);
+        $product->update(['status' => $request->status]);
+
+        $statusLabels = [
+            'active'   => 'disetujui dan dipublikasikan',
+            'rejected' => 'ditolak',
+            'pending'  => 'diubah menjadi pending',
+            'archived' => 'diarsipkan',
+        ];
+
+        $message = "Produk \"{$product->title}\" berhasil " . ($statusLabels[$request->status] ?? 'diperbarui') . '.';
+
+        return back()->with('success', $message);
+    }
+
+    public function destroyProduct($id)
+    {
+        $product = Product::with('productImages')->findOrFail($id);
+
+        foreach ($product->productImages as $image) {
+            if (!str_starts_with($image->image_path, 'http')) {
+                if (Storage::disk('public')->exists($image->image_path)) {
+                    Storage::disk('public')->delete($image->image_path);
+                }
+            }
+            $image->delete();
+        }
+
+        $productTitle = $product->title;
+        $product->delete();
+
+        return back()->with('success', "Produk \"{$productTitle}\" berhasil dihapus dari sistem.");
     }
 
     public function users()

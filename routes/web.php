@@ -117,6 +117,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/categories', [AdminController::class, 'categories'])->name('categories.index');
         Route::post('/categories', [AdminController::class, 'storeCategory'])->name('categories.store');
         Route::delete('/categories/{id}', [AdminController::class, 'destroyCategory'])->name('categories.destroy');
+
+        Route::get('/products', [AdminController::class, 'products'])->name('products.index');
+        Route::put('/products/{id}/status', [AdminController::class, 'updateProductStatus'])->name('products.status');
+        Route::delete('/products/{id}', [AdminController::class, 'destroyProduct'])->name('products.destroy');
     });
 });
 

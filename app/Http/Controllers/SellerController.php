@@ -116,7 +116,7 @@ class SellerController extends Controller
             'stock' => $request->stock,
             'condition' => $request->condition,
             'location' => $request->location,
-            'status' => 'active',
+            'status' => 'pending',
         ]);
 
         if ($request->hasFile('images')) {
@@ -130,7 +130,7 @@ class SellerController extends Controller
             }
         }
 
-        return redirect()->route('seller.dashboard')->with('success', 'Pembayaran dikonfirmasi! Produk berhasil dipublikasikan.');
+        return redirect()->route('seller.dashboard')->with('success', 'Pembayaran dikonfirmasi! Produk Anda berhasil dikirim dan sedang menunggu verifikasi dari Admin.');
     }
 
     public function edit($id)
@@ -165,7 +165,7 @@ class SellerController extends Controller
         'stock'         => 'required|integer|min:0',
         'location'      => 'required|string|max:255',
         'description'   => 'required|string',
-        'status'        => 'required|in:active,sold,archived,draft',
+        'status'        => 'required|in:pending,active,rejected,sold,archived,draft',
         'images.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', // Maksimal 5MB per foto
     ]);
 

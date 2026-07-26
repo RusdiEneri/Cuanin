@@ -95,12 +95,20 @@
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full border border-green-100">
                                 <i data-lucide="check-circle" class="w-3 h-3"></i> Aktif
                             </span>
+                        @elseif($product->status == 'pending')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-50 text-yellow-800 text-xs font-semibold rounded-full border border-yellow-200">
+                                <i data-lucide="clock" class="w-3 h-3 text-yellow-600"></i> Menunggu Verifikasi
+                            </span>
+                        @elseif($product->status == 'rejected')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded-full border border-red-200">
+                                <i data-lucide="x-circle" class="w-3 h-3 text-red-600"></i> Ditolak Admin
+                            </span>
                         @elseif($product->status == 'draft')
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-orange-50 text-orange-700 text-xs font-semibold rounded-full border border-orange-100">
                                 <i data-lucide="file-edit" class="w-3 h-3"></i> Draft
                             </span>
                         @elseif($product->status == 'sold')
-                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-50 text-yellow-700 text-xs font-semibold rounded-full border border-yellow-100">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full border border-blue-100">
                                 <i data-lucide="package-check" class="w-3 h-3"></i> Terjual
                             </span>
                         @else
