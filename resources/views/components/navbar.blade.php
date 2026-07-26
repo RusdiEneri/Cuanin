@@ -1,14 +1,14 @@
 <nav class="bg-white sticky top-0 z-50 border-b border-border-color shadow-sm">
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <!-- BARIS 1: Header utama -->
-        <div class="flex justify-between items-center h-16 md:h-24 gap-4 md:gap-6">
+        <div class="flex justify-between items-center h-16 md:h-[72px] gap-4 md:gap-6">
             <!-- Logo -->
             <div class="flex-shrink-0 flex items-center">
                 <a href="/" class="flex items-center" aria-label="Cuanin - Beranda">
                     <img src="{{ asset('logo.png') }}?v2"
                          alt="Cuanin"
                          draggable="false"
-                         class="h-8 md:h-10 w-auto max-w-[120px] md:max-w-[150px] object-contain select-none translate-y-0.5 md:translate-y-1">
+                         class="h-8 md:h-9 w-auto max-w-[120px] md:max-w-[140px] object-contain select-none translate-y-0.5 md:translate-y-1">
                 </a>
             </div>
 
@@ -27,7 +27,7 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
                 <a href="{{ Auth::check() && Auth::user()->role == 'penjual' ? route('seller.dashboard') : route('profile.index') }}" class="hidden lg:flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition font-medium">
-                    <i data-lucide="shopping-bag" class="h-5 w-5"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                     <span>Mulai Jualan</span>
                 </a>
 
@@ -36,13 +36,13 @@
                     <a href="{{ route('register') }}" class="bg-primary text-white px-5 py-2.5 rounded-full font-medium hover:bg-blue-700 transition shadow-md shadow-blue-500/30">Daftar</a>
                 @else
                     <!-- Wishlist -->
-                    <a href="{{ route('wishlist.index') }}" class="relative text-gray-600 hover:text-danger transition p-2 hover:bg-gray-50 rounded-lg">
-                        <i data-lucide="heart" class="h-6 w-6"></i>
+                    <a href="{{ route('wishlist.index') }}" class="relative text-gray-600 hover:text-danger transition p-2 hover:bg-gray-50 rounded-lg" title="Wishlist">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                     </a>
 
                     <!-- Cart -->
-                    <a href="{{ route('cart.index') }}" class="relative text-gray-600 hover:text-primary transition p-2 hover:bg-gray-50 rounded-lg">
-                        <i data-lucide="shopping-cart" class="h-6 w-6"></i>
+                    <a href="{{ route('cart.index') }}" class="relative text-gray-600 hover:text-primary transition p-2 hover:bg-gray-50 rounded-lg" title="Keranjang">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
                         @php $cartCount = \App\Models\Cart::where('user_id', Auth::id())->count(); @endphp
                         @if($cartCount > 0)
                         <span class="absolute top-1 right-1 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-bold leading-none text-white bg-danger rounded-full">{{ $cartCount }}</span>
