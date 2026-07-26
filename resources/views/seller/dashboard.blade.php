@@ -33,18 +33,22 @@
     <!-- Product List -->
     <!-- Product List -->
 <div class="bg-white rounded-3xl border border-border-color shadow-sm overflow-hidden">
-    <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-        <h2 class="text-lg font-bold text-gray-900">Daftar Produk Anda</h2>
-        <form method="GET" action="{{ route('seller.dashboard') }}" class="relative w-64">
+    <div class="p-6 flex justify-between items-center bg-gradient-to-r from-primary to-blue-600 relative overflow-hidden">
+        {{-- Dekorasi Latar Belakang --}}
+        <div class="absolute -top-16 -right-16 w-48 h-48 bg-white opacity-10 rounded-full blur-2xl"></div>
+        <div class="absolute -bottom-8 right-32 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
+        
+        <h2 class="text-lg font-bold text-white relative z-10">Daftar Produk Anda</h2>
+        <form method="GET" action="{{ route('seller.dashboard') }}" class="relative w-64 z-10 group">
             <input
                 type="text"
                 name="search"
                 value="{{ request('search') }}"
                 placeholder="Cari produk..."
-                class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm text-gray-700 placeholder-gray-400 shadow-sm focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition"
+                class="w-full pl-10 pr-4 py-2 bg-white rounded-full text-sm text-gray-900 placeholder-gray-500 shadow-md focus:outline-none focus:ring-4 focus:ring-white/40 transition-all"
             >
-            <button type="submit" class="absolute left-4 top-2.5">
-                <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+            <button type="submit" class="absolute left-3.5 top-2.5">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors"></i>
             </button>
         </form>
     </div>
@@ -54,21 +58,21 @@
             <thead>
                 {{-- ✏️ Header tegas: bg solid + uppercase + garis bawah tebal --}}
                 <tr class="bg-gray-50 text-gray-600 text-xs font-semibold uppercase tracking-wider border-b-2 border-gray-200">
-                    <th class="px-6 py-4">Produk</th>
-                    <th class="px-6 py-4">Harga</th>
-                    <th class="px-6 py-4">Status</th>
-                    <th class="px-6 py-4">Dilihat</th>
-                    <th class="px-6 py-4">Aksi</th>
+                    <th class="px-6 py-4 text-center">Produk</th>
+                    <th class="px-6 py-4 text-center">Harga</th>
+                    <th class="px-6 py-4 text-center">Status</th>
+                    <th class="px-6 py-4 text-center">Dilihat</th>
+                    <th class="px-6 py-4 text-center">Aksi</th>
                 </tr>
             </thead>
             {{-- ✏️ Garis pemisah baris: gray-100 -> gray-200 (pakai gray-300 jika ingin lebih tegas) --}}
-            <tbody class="divide-y divide-gray-300">
+            <tbody class="divide-y divide-gray-200">
                 @forelse($products as $product)
                 {{-- ✏️ Zebra + hover lebih kontras --}}
-                <tr class="bg-white even:bg-slate-50 hover:bg-blue-100 transition-colors">
+                <tr class="bg-white hover:bg-blue-50/50 hover:shadow-sm transition-all duration-200 group">
                     <td class="px-6 py-4">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
+                        <div class="flex items-center justify-center gap-4 text-left">
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0 group-hover:border-primary/30 transition-colors">
                                 @if($product->primaryImage)
                                     @php
                                         $imgUrl = str_starts_with($product->primaryImage->image_path, 'http') ? $product->primaryImage->image_path : asset('storage/' . $product->primaryImage->image_path);
@@ -86,11 +90,11 @@
                             </div>
                         </div>
                     </td>
-                    <td class="px-6 py-4">
-                        <div class="font-semibold text-gray-900">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                    <td class="px-6 py-4 text-center">
+                        <div class="font-semibold text-gray-900 group-hover:text-primary transition-colors">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
                     </td>
 
-                    <td class="px-6 py-4">
+                    <td class="px-6 py-4 text-center">
                         @if($product->status == 'active')
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full border border-green-100">
                                 <i data-lucide="check-circle" class="w-3 h-3"></i> Aktif
@@ -119,13 +123,13 @@
                     </td>
 
                     {{-- ✏️ Angka "Dilihat" lebih tegas --}}
-                    <td class="px-6 py-4 text-gray-700 font-medium">
+                    <td class="px-6 py-4 text-center text-gray-700 font-medium">
                         {{ $product->views }}
                     </td>
 
-                    <td class="px-6 py-4">
+                    <td class="px-6 py-4 text-center">
                         {{-- ✏️ Ikon aksi: gray-400 -> gray-500 + area hover bulat supaya tidak samar --}}
-                        <div class="flex items-center gap-1">
+                        <div class="flex items-center justify-center gap-2">
                             @if($product->status == 'draft')
                                 <a href="{{ route('seller.products.edit', $product->id) }}"
                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-white hover:bg-blue-700 transition" title="Lanjutkan">
