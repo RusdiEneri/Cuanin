@@ -22,9 +22,8 @@
                 <h4 class="font-semibold text-gray-900 mb-3">Bantuan</h4>
                 {{-- FIX: tambah leading-relaxed agar baseline baris pertama impas dgn <p> kolom 1 --}}
                 <ul class="space-y-1.5 text-sm text-gray-500 leading-relaxed">
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Pusat Bantuan</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">FAQ</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Hubungi Kami</a></li>
+                    <li><a href="{{ route('faq') }}" class="hover:text-primary transition">FAQ</a></li>
+                    <li><a href="{{ route('hubungi') }}" class="hover:text-primary transition">Hubungi Kami</a></li>
                 </ul>
             </div>
 

@@ -32,6 +32,8 @@ Route::get('/', function () {
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
 Route::get('/product/{slug}', [MarketplaceController::class, 'show'])->name('product.show');
 Route::view('/cara-jualan', 'cara-jualan')->name('cara-jualan');
+Route::view('/faq', 'faq')->name('faq');
+Route::view('/hubungi', 'hubungi')->name('hubungi');
 
 /*
 |--------------------------------------------------------------------------
