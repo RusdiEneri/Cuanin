@@ -52,7 +52,7 @@
                 
                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold leading-[1.1] mb-3 md:mb-4 tracking-tight text-white drop-shadow-lg">
                     Temukan <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500 drop-shadow-none">Barang Bekas</span> <br>
+                    <span class="text-secondary drop-shadow-none">Barang Bekas</span> <br>
                     Berkualitas!
                 </h1>
                 
