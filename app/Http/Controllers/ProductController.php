@@ -34,8 +34,9 @@ class ProductController extends Controller
         $validated = $request->validate([
             'title'         => 'required|string|max:255',
             'category_id'   => 'required|exists:categories,id',
-            'condition'     => 'required|in:Barang Baru,Like New,Sangat Baik,Baik,Cukup,Rusak Ringan',
+            'condition'     => 'required|in:BNOB,Like New,Normal,Rusak Ringan,Rusak Parah',
             'price'         => 'required|numeric|min:0',
+            'stock'         => 'required|integer|min:0',
             'location'      => 'required|string|max:255',
             'description'   => 'required|string',
             'status'        => 'required|in:active,sold,archived',

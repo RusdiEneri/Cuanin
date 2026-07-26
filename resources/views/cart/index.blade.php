@@ -16,14 +16,6 @@
             <h1 class="text-2xl font-bold text-gray-900 mb-2">Keranjang Belanja</h1>
             <p class="text-gray-500">Periksa kembali barang yang akan Anda beli.</p>
         </div>
-
-        @if($carts->count() > 0)
-            <button type="button" id="clear-cart-btn"
-                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-200 text-danger hover:bg-red-50 font-semibold text-sm transition">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                Hapus Semua
-            </button>
-        @endif
     </div>
 
     @if(session('success'))
@@ -42,8 +34,16 @@
         <div class="flex flex-col lg:flex-row gap-8">
 
             <!-- CART ITEMS (PER TOKO + CHECKBOX) -->
-            <div class="w-full lg:w-2/3 space-y-6">
-                @foreach($grouped as $sellerId => $items)
+            <div class="w-full lg:w-2/3">
+                <!-- Hapus Semua diletakkan di atas card keranjang -->
+                <div class="flex justify-end mb-4">
+                    <button type="button" id="clear-cart-btn" class="text-danger hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5 border border-red-100 bg-white shadow-sm">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Semua
+                    </button>
+                </div>
+
+                <div class="space-y-6">
+                    @foreach($grouped as $sellerId => $items)
                     @php
                         $seller   = $items->first()->product->user;
                         $subtotal = $items->sum(fn($i) => $i->product->price);
@@ -91,8 +91,8 @@
                                     <input type="checkbox" checked
                                            class="item-check w-5 h-5 mt-1 rounded border-gray-300 accent-[#1F49F2] cursor-pointer flex-shrink-0"
                                            data-store="{{ $sellerId }}"
-                                           data-price="{{ $product->price }}"
-                                           data-title="{{ $product->title }}">
+                                           data-price="{{ $product->price * $item->quantity }}"
+                                           data-title="{{ $product->title }} (x{{ $item->quantity }})">
 
                                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1 min-w-0">
                                         <div class="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100">
@@ -107,7 +107,18 @@
                                                 <h3 class="font-semibold text-gray-900 hover:text-primary transition line-clamp-1 mb-1">{{ $product->title }}</h3>
                                             </a>
                                             <div class="text-sm text-gray-500 mb-2">Penjual: {{ $seller->name }}</div>
-                                            <div class="font-bold text-primary">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                                            <div class="font-bold text-primary mb-2">Rp {{ number_format($product->price * $item->quantity, 0, ',', '.') }} <span class="text-sm font-normal text-gray-500 ml-1">(Rp {{ number_format($product->price, 0, ',', '.') }} / pcs)</span></div>
+                                            
+                                            <!-- Quantity Update Form -->
+                                            <form action="{{ route('cart.update', $item->id) }}" method="POST" class="inline-block" id="form-qty-{{ $item->id }}">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm w-fit">
+                                                    <button type="button" onclick="const q = document.getElementById('qty-{{ $item->id }}'); if(q.value > 1) { q.value--; q.form.submit(); }" class="px-2 py-1 text-gray-500 hover:text-primary hover:bg-blue-50 rounded-l-lg transition">-</button>
+                                                    <input type="number" id="qty-{{ $item->id }}" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $product->stock }}" onchange="this.form.submit()" class="w-10 text-center border-none focus:ring-0 text-xs font-bold text-gray-900 p-0" readonly>
+                                                    <button type="button" onclick="const q = document.getElementById('qty-{{ $item->id }}'); if(q.value < {{ $product->stock }}) { q.value++; q.form.submit(); }" class="px-2 py-1 text-gray-500 hover:text-primary hover:bg-blue-50 rounded-r-lg transition">+</button>
+                                                </div>
+                                            </form>
                                         </div>
                                         <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end mt-2 sm:mt-0">
                                             <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
@@ -123,20 +134,13 @@
                             @endforeach
                         </div>
 
-                        {{-- Footer Toko --}}
-                        <div class="px-5 sm:px-6 py-4 border-t border-gray-100 bg-gray-50/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <p class="text-sm text-gray-500">
-                                Total terpilih: <span class="store-foot-total font-semibold text-gray-900" data-store="{{ $sellerId }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-                            </p>
-                            <button type="button" data-store="{{ $sellerId }}"
-                                class="store-wa-btn inline-flex items-center justify-center gap-2 bg-[#1F49F2] hover:bg-[#1a3fcc] text-white font-semibold px-5 py-2.5 rounded-xl transition shadow-sm w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed">
-                                <i data-lucide="message-circle" class="w-4 h-4"></i> Lanjut via WhatsApp
-                            </button>
-                        </div>
+                        {{-- Footer Toko dihapus sesuai permintaan agar tidak redundan --}}
                     </div>
                 @endforeach
+                </div>
             </div>
 
+            <!-- RINGKASAN -->
             <!-- RINGKASAN -->
             <div class="w-full lg:w-1/3">
                 <div class="bg-white rounded-3xl border border-border-color shadow-sm p-6 sticky top-24">

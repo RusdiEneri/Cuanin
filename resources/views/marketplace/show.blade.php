@@ -117,8 +117,8 @@
                     <div>
                         <div class="flex items-center gap-2 mb-3">
                             <span class="text-xs font-medium text-primary bg-blue-50 px-2.5 py-1 rounded-md">{{ $product->category->name }}</span>
-                            <span class="text-xs font-medium flex items-center gap-1 {{ $product->condition == 'Barang Baru' ? 'text-secondary bg-yellow-50' : 'text-success bg-green-50' }} px-2.5 py-1 rounded-md">
-                                <i data-lucide="{{ $product->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $product->condition == 'Barang Baru' ? 'fill-current' : '' }}"></i> {{ $product->condition }}
+                            <span class="text-xs font-medium flex items-center gap-1 {{ $product->condition == 'BNOB' ? 'text-secondary bg-yellow-50' : 'text-success bg-green-50' }} px-2.5 py-1 rounded-md">
+                                <i data-lucide="{{ $product->condition == 'BNOB' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $product->condition == 'BNOB' ? 'fill-current' : '' }}"></i> {{ $product->condition }}
                             </span>
                         </div>
                         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-2">{{ $product->title }}</h1>
@@ -144,8 +144,15 @@
                     @endif
                 </div>
 
-                <div class="font-bold text-3xl text-primary mb-8 pb-8 border-b border-gray-100">
-                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                <div class="flex items-end gap-3 mb-8 pb-8 border-b border-gray-100">
+                    <div class="font-bold text-3xl text-primary">
+                        Rp {{ number_format($product->price, 0, ',', '.') }}
+                    </div>
+                    @if($product->stock > 0)
+                        <div class="text-sm font-medium text-gray-500 mb-1">Sisa Stok: <span class="text-gray-900">{{ $product->stock }}</span></div>
+                    @else
+                        <div class="text-sm font-semibold text-danger bg-red-50 px-2 py-0.5 rounded-md mb-1">Stok Habis</div>
+                    @endif
                 </div>
 
                 <div class="mb-8 flex-grow">
@@ -178,7 +185,7 @@
 
                 <!-- 🚨 ACTION BUTTONS (Dinamis berdasarkan Status) 🚨 -->
 <div class="mt-auto">
-    @if($product->status === 'active')
+    @if($product->status === 'active' && $product->stock > 0)
         @php
             $waNumber = $product->user->phone_number;
             if (substr($waNumber, 0, 1) == '0') {
@@ -187,37 +194,45 @@
             $waText = "Halo *" . $product->user->name . "*, saya tertarik dengan barang *" . $product->title . "* yang Anda jual di Cuanin seharga Rp " . number_format($product->price, 0, ',', '.') . ". Apakah masih tersedia?";
         @endphp
 
-        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+        <!-- Pengatur Jumlah & Action Buttons di-wrap form agar bisa submit quantity -->
+        <form action="{{ route('cart.store') }}" method="POST" class="w-full">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $product->id }}">
+            
+            <div class="flex items-center gap-4 mb-5 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <span class="text-sm font-medium text-gray-700">Atur Jumlah:</span>
+                <div class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <button type="button" onclick="const q = document.getElementById('qty'); if(q.value > 1) q.value--;" class="px-3 py-1.5 text-gray-500 hover:text-primary hover:bg-blue-50 rounded-l-lg transition">-</button>
+                    <input type="number" id="qty" name="quantity" value="1" min="1" max="{{ $product->stock }}" class="w-12 text-center border-none focus:ring-0 text-sm font-bold text-gray-900 p-0" readonly>
+                    <button type="button" onclick="const q = document.getElementById('qty'); if(q.value < {{ $product->stock }}) q.value++;" class="px-3 py-1.5 text-gray-500 hover:text-primary hover:bg-blue-50 rounded-r-lg transition">+</button>
+                </div>
+            </div>
 
-            {{-- Baris 1: Nego Harga (kiri) | Masukkan Keranjang (kanan) --}}
-            <button type="button"
-                    onclick="document.getElementById('nego-modal').classList.remove('hidden')"
-                    class="w-full py-3.5 px-4 bg-yellow-400 text-dark font-semibold rounded-xl hover:bg-yellow-500 transition shadow-md shadow-yellow-500/20 flex items-center justify-center gap-2 text-sm sm:text-base">
-                <i data-lucide="handshake" class="w-5 h-5"></i> Nego Harga
-            </button>
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                {{-- Baris 1: Nego Harga (kiri) | Masukkan Keranjang (kanan) --}}
+                <button type="button"
+                        onclick="document.getElementById('nego-modal').classList.remove('hidden')"
+                        class="w-full py-3.5 px-4 bg-yellow-400 text-dark font-semibold rounded-xl hover:bg-yellow-500 transition shadow-md shadow-yellow-500/20 flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <i data-lucide="handshake" class="w-5 h-5"></i> Nego Harga
+                </button>
 
-                     {{-- ⬇️ col-span-2 DIHAPUS supaya sejajar dengan Nego Harga --}}
-            <form action="{{ route('cart.store') }}" method="POST" class="w-full">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                <input type="hidden" name="quantity" value="1">
                 <button type="submit"
                         class="w-full py-3.5 px-4 bg-primary text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 text-sm sm:text-base">
                     <i data-lucide="shopping-cart" class="w-5 h-5"></i> Masukkan Keranjang
                 </button>
-            </form>  
-
-            {{-- Baris 2: Beli Sekarang full width (col-span-2) --}}
-            <a href="https://wa.me/{{ $waNumber }}?text={{ urlencode($waText) }}" target="_blank"
-               class="col-span-2 w-full py-3.5 px-4 bg-white border border-primary text-primary font-semibold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2">
-                <i data-lucide="message-circle" class="w-5 h-5"></i> Beli Sekarang
-            </a>
-
-        </div>
+            
+                {{-- Baris 2: Beli Sekarang full width (col-span-2) --}}
+                <a href="https://wa.me/{{ $waNumber }}?text={{ urlencode($waText) }}" target="_blank"
+                   onclick="this.href = 'https://wa.me/{{ $waNumber }}?text=' + encodeURIComponent('Halo *{{ $product->user->name }}*, saya tertarik membeli *' + document.getElementById('qty').value + 'x {{ $product->title }}* seharga Rp {{ number_format($product->price, 0, ',', '.') }}/pcs. Apakah masih tersedia?')"
+                   class="col-span-2 w-full py-3.5 px-4 bg-white border border-primary text-primary font-semibold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i> Beli Sekarang
+                </a>
+            </div>
+        </form>
     @else
-        <!-- Tampilan jika produk Terjual / Diarsipkan -->
+        <!-- Tampilan jika produk Terjual / Diarsipkan / Stok Habis -->
         <button disabled class="w-full py-3.5 px-4 bg-gray-200 text-gray-500 font-semibold rounded-xl cursor-not-allowed flex items-center justify-center gap-2">
-            <i data-lucide="ban" class="w-5 h-5"></i> Produk Tidak Tersedia
+            <i data-lucide="ban" class="w-5 h-5"></i> {{ $product->stock <= 0 ? 'Stok Habis' : 'Produk Tidak Tersedia' }}
         </button>
     @endif
 </div>
@@ -317,7 +332,7 @@
                         </div>
                     @endif
                     <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
-                        <i data-lucide="{{ $item->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'Barang Baru' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->condition }}
+                        <i data-lucide="{{ $item->condition == 'BNOB' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->condition == 'BNOB' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->condition }}
                     </div>
                 </a>
                 <div class="p-4 flex-grow flex flex-col">

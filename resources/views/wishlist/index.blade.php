@@ -35,7 +35,7 @@
                     @endif
                     
                     <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm">
-                        <i data-lucide="{{ $item->product->condition == 'Barang Baru' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->product->condition == 'Barang Baru' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->product->condition }}
+                        <i data-lucide="{{ $item->product->condition == 'BNOB' ? 'star' : 'check-circle-2' }}" class="w-3 h-3 {{ $item->product->condition == 'BNOB' ? 'text-secondary fill-current' : 'text-success' }}"></i> {{ $item->product->condition }}
                     </div>
                 </a>
                 
