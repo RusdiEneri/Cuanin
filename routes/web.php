@@ -31,7 +31,7 @@ Route::get('/', function () {
 
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
 Route::get('/product/{slug}', [MarketplaceController::class, 'show'])->name('product.show');
-Route::get('/seller/{id}', [MarketplaceController::class, 'sellerProfile'])->name('seller.profile');
+Route::get('/seller/{id}', [MarketplaceController::class, 'sellerProfile'])->whereNumber('id')->name('seller.profile');
 Route::view('/cara-jualan', 'cara-jualan')->name('cara-jualan');
 Route::view('/faq', 'faq')->name('faq');
 Route::view('/hubungi', 'hubungi')->name('hubungi');
