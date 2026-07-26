@@ -12,6 +12,14 @@ class Product extends Model
 {
     use HasFactory;
 
+    public const CONDITIONS = [
+        'BNOB' => 'BNOB (Brand New Open Box)',
+        'Like New' => 'Like New',
+        'Bagus' => 'Bagus',
+        'Rusak Ringan' => 'Rusak Ringan',
+        'Rusak Parah' => 'Rusak Parah'
+    ];
+
     protected $fillable = [
         'user_id',
         'category_id', 

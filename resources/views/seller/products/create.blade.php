@@ -97,11 +97,9 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Kondisi <span class="text-danger">*</span></label>
                                 <select name="condition" id="field-condition" class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition bg-white cursor-pointer">
                                     <option value="">Pilih Kondisi</option>
-                                    <option value="BNOB" {{ old('condition') == 'BNOB' ? 'selected' : '' }}>BNOB (Brand New Open Box)</option>
-                                    <option value="Like New" {{ old('condition') == 'Like New' ? 'selected' : '' }}>Like New</option>
-                                    <option value="Normal" {{ old('condition') == 'Normal' ? 'selected' : '' }}>Normal</option>
-                                    <option value="Rusak Ringan" {{ old('condition') == 'Rusak Ringan' ? 'selected' : '' }}>Rusak Ringan</option>
-                                    <option value="Rusak Parah" {{ old('condition') == 'Rusak Parah' ? 'selected' : '' }}>Rusak Parah</option>
+                                    @foreach(\App\Models\Product::CONDITIONS as $value => $label)
+                                        <option value="{{ $value }}" {{ old('condition') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
