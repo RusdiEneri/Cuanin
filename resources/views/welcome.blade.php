@@ -307,12 +307,12 @@
             <div id="categoryCarousel" class="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth pb-2 -mx-4 px-4" style="scroll-snap-type: x mandatory;">
                 @foreach($categories as $cat)
                 <a href="{{ route('marketplace', ['category' => $cat->id]) }}" 
-                   class="category-card flex-shrink-0 w-[140px] bg-white border border-border-color rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition group"
+                   class="category-card flex-shrink-0 w-[140px] bg-white border border-border-color rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:bg-blue-50 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition duration-300 group"
                    style="scroll-snap-align: start;">
-                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition">
+                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition duration-300">
                         <i data-lucide="{{ $cat->icon ?? 'box' }}" class="w-6 h-6"></i>
                     </div>
-                    <span class="font-medium text-xs text-gray-700 text-center group-hover:text-primary transition line-clamp-2">{{ $cat->name }}</span>
+                    <span class="font-medium text-xs text-gray-700 text-center group-hover:text-primary transition duration-300 line-clamp-2">{{ $cat->name }}</span>
                 </a>
                 @endforeach
             </div>
@@ -324,11 +324,11 @@
         {{-- Desktop: Grid Normal --}}
         <div class="hidden md:grid grid-cols-4 lg:grid-cols-6 gap-4">
             @foreach($categories as $cat)
-            <a href="{{ route('marketplace', ['category' => $cat->id]) }}" class="bg-white border border-border-color rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition group">
-                <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition">
+            <a href="{{ route('marketplace', ['category' => $cat->id]) }}" class="bg-white border border-border-color rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:bg-blue-50 hover:border-primary hover:shadow-lg hover:shadow-blue-500/10 transition duration-300 group">
+                <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition duration-300">
                     <i data-lucide="{{ $cat->icon ?? 'box' }}" class="w-7 h-7"></i>
                 </div>
-                <span class="font-medium text-base text-gray-700 text-center group-hover:text-primary transition line-clamp-1">{{ $cat->name }}</span>
+                <span class="font-medium text-base text-gray-700 text-center group-hover:text-primary transition duration-300 line-clamp-1">{{ $cat->name }}</span>
             </a>
             @endforeach
         </div>
