@@ -1,7 +1,7 @@
 <nav class="bg-white sticky top-0 z-50 border-b border-border-color shadow-sm">
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <!-- BARIS 1: Header utama -->
-        <div class="flex justify-between items-center h-16 md:h-[72px] gap-4 md:gap-6">
+        <div class="flex justify-between items-center h-16 md:h-[88px] gap-4 md:gap-6">
             <!-- Logo -->
             <div class="flex-shrink-0 flex items-center">
                 <a href="/" class="flex items-center" aria-label="Cuanin - Beranda">
