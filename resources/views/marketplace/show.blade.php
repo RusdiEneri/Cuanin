@@ -162,24 +162,35 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-50 rounded-2xl p-5 mb-8 flex items-center gap-4 border border-gray-100">
-                    <div class="w-14 h-14 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
+                <div class="bg-gray-50/80 rounded-2xl p-5 mb-8 flex items-center gap-4 border border-gray-200 hover:border-primary/30 transition shadow-xs">
+                    <div class="relative w-14 h-14 bg-gray-200 rounded-2xl overflow-hidden flex-shrink-0 border border-gray-200 shadow-xs">
                         @if($product->user->avatar)
                             <img src="{{ asset('storage/' . $product->user->avatar) }}" alt="{{ $product->user->name }}" class="w-full h-full object-cover">
                         @else
-                            <div class="w-full h-full bg-blue-100 flex items-center justify-center text-primary font-bold text-xl">
-                                {{ substr($product->user->name, 0, 1) }}
+                            <div class="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
+                                {{ strtoupper(substr($product->user->name, 0, 1)) }}
                             </div>
                         @endif
                     </div>
                     <div class="flex-grow">
-                        <h4 class="font-semibold text-gray-900">{{ $product->user->name }}</h4>
-                        <div class="flex items-center gap-1 text-sm text-gray-500 mt-1">
-                            <i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i> {{ $product->location }}
+                        <div class="flex items-center gap-2">
+                            <h4 class="font-bold text-gray-900 leading-tight">{{ $product->user->name }}</h4>
+                            <span class="bg-secondary text-dark text-[10px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider inline-flex items-center gap-0.5 shadow-xs">
+                                <i data-lucide="shield-check" class="w-3 h-3"></i> Star
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                            <span class="flex items-center gap-1">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-gray-400"></i> {{ $product->location }}
+                            </span>
+                            <span>•</span>
+                            <span class="text-emerald-600 font-medium flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Aktif
+                            </span>
                         </div>
                     </div>
-                    <a href="javascript:void(0)" onclick="alert('Fitur Profil Penjual belum diimplementasi')" class="px-4 py-2 bg-white border border-border-color text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 transition">
-                        Kunjungi Profil
+                    <a href="{{ route('seller.profile', $product->user->id) }}" class="px-4 py-2.5 bg-white border border-primary/30 text-primary text-xs sm:text-sm font-semibold rounded-xl hover:bg-primary hover:text-white transition flex items-center gap-1.5 shadow-xs">
+                        <i data-lucide="store" class="w-4 h-4"></i> Kunjungi Profil
                     </a>
                 </div>
 
