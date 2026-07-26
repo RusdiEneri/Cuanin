@@ -32,12 +32,12 @@
             <div class="flex flex-col items-start pr-2">
                 <h4 class="font-semibold text-gray-900 mb-3">Kategori</h4>
                 <ul class="space-y-1.5 text-sm text-gray-500 leading-relaxed">
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Elektronik</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Pakaian</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Kendaraan</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Furnitur</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Hobi & Mainan</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-primary transition">Buku</a></li>
+                    <li><a href="{{ route('marketplace', ['category' => 1]) }}" class="hover:text-primary transition">Elektronik</a></li>
+                    <li><a href="{{ route('marketplace', ['category' => 2]) }}" class="hover:text-primary transition">Pakaian</a></li>
+                    <li><a href="{{ route('marketplace', ['category' => 3]) }}" class="hover:text-primary transition">Kendaraan</a></li>
+                    <li><a href="{{ route('marketplace', ['category' => 4]) }}" class="hover:text-primary transition">Furnitur</a></li>
+                    <li><a href="{{ route('marketplace', ['category' => 5]) }}" class="hover:text-primary transition">Hobi & Mainan</a></li>
+                    <li><a href="{{ route('marketplace', ['category' => 6]) }}" class="hover:text-primary transition">Buku</a></li>
                 </ul>
             </div>
 
