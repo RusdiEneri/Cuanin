@@ -27,12 +27,40 @@
         50%    { transform: translateY(-9px); }
     }
 
-    .coin{
+    .coin {
+        position: absolute;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        color: #92400e;
+        background: linear-gradient(145deg, #fef3c7 0%, #fbbf24 45%, #f59e0b 100%);
+        border: 3px solid #fef9c3;
+        box-shadow: 0 12px 28px -6px rgba(245, 158, 11, .55),
+                    inset 0 2px 5px rgba(255, 255, 255, .75),
+                    inset 0 -3px 6px rgba(146, 64, 14, .35);
+        transform-style: preserve-3d;
+        will-change: transform;
+        user-select: none;
+    }
+    .coin::after {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border-radius: 9999px;
+        border: 2px dashed rgba(146, 64, 14, .35);
+    }
+    .coin-stage .coin {
         position: relative; width: 100%; height: 100%;
         transform-style: preserve-3d;
         will-change: transform;
         animation: cuanin-coin-spin 3.4s linear infinite;
+        background: none;
+        border: none;
+        box-shadow: none;
     }
+    .coin-stage .coin::after { display: none; }
 
     .coin-face{
         position: absolute; inset: 0; border-radius: 9999px;
@@ -88,29 +116,67 @@
         .coin, .coin-float, .coin-shadow{ animation: none; }
         .coin{ transform: rotateY(-22deg) rotateX(14deg); }
     }
+    /* ukuran */
+    .coin-xl { width: 9rem;   height: 9rem;   font-size: 3.5rem; border-width: 5px; position: relative; }
+    .coin-lg { width: 5.5rem; height: 5.5rem; font-size: 2rem; }
+    .coin-md { width: 4rem;   height: 4rem;   font-size: 1.5rem; }
+    .coin-sm { width: 3rem;   height: 3rem;   font-size: 1.1rem; }
+
+    /* posisi koin melayang (tersebar di panel biru) */
+    .pos-1 { top: 12%; left: 14%; }
+    .pos-2 { top: 16%; right: 15%; }
+    .pos-3 { bottom: 18%; left: 16%; }
+    .pos-4 { bottom: 12%; right: 14%; }
+    .pos-5 { top: 44%; left: 7%; }
+    .pos-6 { top: 38%; right: 8%; }
+
+    /* variasi animasi */
+    .anim-1 { animation: floatSpin 6s   ease-in-out infinite; }
+    .anim-2 { animation: floatSpin 7.5s ease-in-out infinite .4s; }
+    .anim-3 { animation: floatSpin 5.5s ease-in-out infinite .8s; }
+    .anim-4 { animation: floatSpin 8s   ease-in-out infinite .2s; }
+    .anim-5 { animation: floatY    4.5s ease-in-out infinite .6s; }
+    .anim-6 { animation: floatY    5s   ease-in-out infinite 1s; }
+
+    @keyframes floatSpin {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50%      { transform: translateY(-15px) rotate(10deg); }
+    }
+    @keyframes floatY {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-14px); }
+    }
+    @keyframes pulseGlow {
+        0%, 100% { opacity: .35; transform: scale(1); }
+        50%      { opacity: .6;  transform: scale(1.08); }
+    }
 </style>
 
 @php $coinLayers = 40; @endphp
 
-{{-- [FIX] padding ATAS dikurangi (py-8/sm:py-12 -> pt-6/sm:pt-8) biar card naik dikit & bagian bawah gak ke-potong di laptop --}}
-<div class="bg-background px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12 lg:px-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 flex flex-col justify-center min-h-[calc(100vh-180px)]">
 
-    {{-- [FIX] card diperlebar: lg:max-w-5xl -> lg:max-w-6xl xl:max-w-7xl biar gak banyak space kosong kiri-kanan --}}
-    <div class="font-poppins mx-auto w-full max-w-md lg:max-w-6xl xl:max-w-7xl grid lg:grid-cols-2 bg-white rounded-3xl shadow-xl shadow-blue-900/10 border border-gray-100 overflow-hidden">
+    <div class="font-poppins w-full grid grid-cols-1 lg:grid-cols-2 bg-white rounded-3xl shadow-2xl shadow-blue-900/30 border border-gray-100 overflow-hidden min-h-[500px] lg:min-h-[560px]">
 
         {{-- ══ KOLOM KIRI : PANEL BRANDING (desktop only) ══ --}}
-        <div class="hidden lg:flex relative flex-col items-center justify-center text-center p-10 xl:p-12 bg-primary text-white overflow-hidden">
+        <div class="hidden lg:flex relative flex-col items-center justify-center text-center p-6 xl:p-8 bg-gradient-to-br from-primary via-blue-700 to-blue-900 text-white overflow-hidden">
 
-            <div class="absolute inset-0 opacity-60"
-                 style="background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 22px 22px;"></div>
-            <div class="absolute -top-20 -right-16 w-72 h-72 bg-secondary rounded-full mix-blend-overlay filter blur-3xl opacity-30"></div>
-            <div class="absolute -bottom-24 -left-16 w-72 h-72 bg-blue-950 rounded-full filter blur-3xl opacity-40"></div>
-            <div class="absolute top-1/3 -left-10 w-40 h-40 bg-secondary rounded-full filter blur-3xl opacity-20"></div>
+            <!-- blurred glow decoration -->
+            <div class="absolute -top-16 -right-16 w-72 h-72 bg-secondary rounded-full mix-blend-screen filter blur-3xl opacity-30"></div>
+            <div class="absolute -bottom-20 -left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-screen filter blur-3xl opacity-30"></div>
+
+            <!-- koin melayang (absolute) -->
+            <div class="coin coin-lg pos-1 anim-1">C</div>
+            <div class="coin coin-md pos-2 anim-2">C</div>
+            <div class="coin coin-sm pos-3 anim-3">C</div>
+            <div class="coin coin-md pos-4 anim-4">C</div>
+            <div class="coin coin-sm pos-5 anim-5">C</div>
+            <div class="coin coin-lg pos-6 anim-6">C</div>
 
             <div class="relative z-10 flex flex-col items-center">
 
                 {{-- KOIN 3D (desktop) --}}
-                <div class="relative inline-block mb-6 xl:mb-8">
+                <div class="relative inline-flex items-center justify-center mb-6 xl:mb-8">
                     <div class="coin-float">
                         <div class="absolute inset-0 -m-4 rounded-full bg-secondary opacity-40 blur-2xl pointer-events-none"></div>
                         <div class="coin-stage coin-stage--lg relative" aria-hidden="true">
@@ -129,14 +195,14 @@
                     </div>
                 </div>
 
-                <h2 class="text-3xl xl:text-4xl font-extrabold leading-tight max-w-xs xl:max-w-sm">
+                <h2 class="text-3xl xl:text-4xl font-extrabold leading-tight max-w-xs xl:max-w-sm drop-shadow-sm">
                     Jual Beli Barang Bekas, <span class="text-secondary">Jadi Cuan!</span>
                 </h2>
             </div>
         </div>
 
         {{-- ══ KOLOM KANAN : FORM LOGIN ══ --}}
-        <div class="relative flex flex-col justify-center p-8 sm:p-10 xl:p-12">
+        <div class="relative flex flex-col justify-center p-4 sm:p-6 xl:p-8">
 
             <div class="absolute top-0 right-0 w-32 h-32 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-10 -mr-10 -mt-10 pointer-events-none"></div>
             <div class="absolute bottom-0 left-0 w-32 h-32 bg-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 -ml-10 -mb-10 pointer-events-none"></div>
@@ -192,10 +258,10 @@
                 </div>
                 @endif
 
-                <form class="mt-8 space-y-5" action="{{ route('login.post') }}" method="POST">
+                <form class="mt-4 space-y-3" action="{{ route('login.post') }}" method="POST">
                     @csrf
 
-                    <div class="space-y-4">
+                    <div class="space-y-3">
 
                         <div>
                             <label for="login" class="block text-sm font-medium text-gray-700 mb-1">
@@ -282,7 +348,7 @@
                     </div>
                 </form>
 
-                <div class="mt-8 text-center text-sm text-gray-500">
+                <div class="mt-4 text-center text-sm text-gray-500">
                     Belum punya akun?
                     <a href="{{ route('register') }}" class="font-medium text-primary hover:text-blue-700 transition">Daftar sekarang</a>
                 </div>
