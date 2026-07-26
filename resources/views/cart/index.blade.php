@@ -16,14 +16,6 @@
             <h1 class="text-2xl font-bold text-gray-900 mb-2">Keranjang Belanja</h1>
             <p class="text-gray-500">Periksa kembali barang yang akan Anda beli.</p>
         </div>
-
-        @if($carts->count() > 0)
-            <button type="button" id="clear-cart-btn"
-                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-200 text-danger hover:bg-red-50 font-semibold text-sm transition">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                Hapus Semua
-            </button>
-        @endif
     </div>
 
     @if(session('success'))
@@ -42,8 +34,16 @@
         <div class="flex flex-col lg:flex-row gap-8">
 
             <!-- CART ITEMS (PER TOKO + CHECKBOX) -->
-            <div class="w-full lg:w-2/3 space-y-6">
-                @foreach($grouped as $sellerId => $items)
+            <div class="w-full lg:w-2/3">
+                <!-- Hapus Semua diletakkan di atas card keranjang -->
+                <div class="flex justify-end mb-4">
+                    <button type="button" id="clear-cart-btn" class="text-danger hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5 border border-red-100 bg-white shadow-sm">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Semua
+                    </button>
+                </div>
+
+                <div class="space-y-6">
+                    @foreach($grouped as $sellerId => $items)
                     @php
                         $seller   = $items->first()->product->user;
                         $subtotal = $items->sum(fn($i) => $i->product->price);
@@ -137,8 +137,10 @@
                         {{-- Footer Toko dihapus sesuai permintaan agar tidak redundan --}}
                     </div>
                 @endforeach
+                </div>
             </div>
 
+            <!-- RINGKASAN -->
             <!-- RINGKASAN -->
             <div class="w-full lg:w-1/3">
                 <div class="bg-white rounded-3xl border border-border-color shadow-sm p-6 sticky top-24">
