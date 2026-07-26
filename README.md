@@ -3,11 +3,11 @@
 Cuanin adalah marketplace untuk jual beli barang bekas (preloved). Pengguna dapat menjelajah produk, memasukkan ke keranjang, mengajukan nego harga, dan melakukan pemesanan langsung melalui WhatsApp penjual.
 
 ## Prasyarat
-- PHP >= 8.2
-- Composer
-- Node.js & NPM
-- MySQL
-- Git
+- PHP >= 8.2 [Link Download](https://www.php.net/downloads.php)
+- Composer [Link Download](https://getcomposer.org/download/)
+- Node.js & NPM [Link Download](https://nodejs.org/en/download)
+- MySQL Xampp [Link Download Xampp](https://www.apachefriends.org/download.html) / Laragon [Link Download Laragon](https://laragon.org/download)
+- Git [Link Download](https://git-scm.com/install/windows)
 
 ---
 
