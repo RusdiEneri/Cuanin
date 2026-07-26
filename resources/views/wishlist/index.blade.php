@@ -52,15 +52,10 @@
                             <span class="truncate">{{ $item->product->location }}</span>
                         </div>
                         
-                        <!-- Add to Cart Form -->
-                        <form action="{{ route('cart.store') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $item->product_id }}">
-                            <input type="hidden" name="quantity" value="1">
-                            <button type="submit" class="w-full bg-blue-50 text-primary py-2 rounded-xl text-[13px] sm:text-sm font-medium hover:bg-primary hover:text-white transition flex items-center justify-center gap-2">
-                                <i data-lucide="shopping-cart" class="w-4 h-4"></i> Keranjang
-                            </button>
-                        </form>
+                        <!-- Lihat Detail Button -->
+                        <a href="{{ route('product.show', $item->product->slug) }}" class="w-full bg-blue-50 text-primary py-2 rounded-xl text-[13px] sm:text-sm font-medium hover:bg-primary hover:text-white transition flex items-center justify-center gap-2">
+                            <i data-lucide="eye" class="w-4 h-4"></i> Lihat Detail
+                        </a>
                     </div>
                 </div>
             </div>
