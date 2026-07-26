@@ -193,14 +193,14 @@
                         }
 
                         /* 3 Cards - Simetris */
-                        .hero-card-3-0 { z-index: 10; transform: translateX(-80px) translateY(10px) rotate(-6deg) scale(0.85); opacity: 0.65; filter: blur(1.5px); }
-                        .hero-card-3-0:hover { z-index: 40; transform: translateX(-80px) translateY(0) rotate(0deg) scale(1); opacity: 1; filter: blur(0); }
+                        .hero-card-3-0 { z-index: 10; transform: translateX(-80px) translateY(10px) rotate(-6deg) scale(0.85); opacity: 0.55; filter: blur(2px) brightness(0.85); }
+                        .hero-card-3-0:hover { z-index: 40; transform: translateX(-80px) translateY(0) rotate(0deg) scale(1); opacity: 1; filter: blur(0) brightness(1); }
                         
                         .hero-card-3-1 { z-index: 30; transform: translateY(0); box-shadow: 0 0 30px rgba(255,255,255,0.2); opacity: 1; }
                         .hero-card-3-1:hover { transform: translateY(-5px); box-shadow: 0 0 40px rgba(255,255,255,0.4); }
                         
-                        .hero-card-3-2 { z-index: 20; transform: translateX(80px) translateY(10px) rotate(6deg) scale(0.85); opacity: 0.65; filter: blur(1.5px); }
-                        .hero-card-3-2:hover { z-index: 40; transform: translateX(80px) translateY(0) rotate(0deg) scale(1); opacity: 1; filter: blur(0); }
+                        .hero-card-3-2 { z-index: 20; transform: translateX(80px) translateY(10px) rotate(6deg) scale(0.85); opacity: 0.55; filter: blur(2px) brightness(0.85); }
+                        .hero-card-3-2:hover { z-index: 40; transform: translateX(80px) translateY(0) rotate(0deg) scale(1); opacity: 1; filter: blur(0) brightness(1); }
                         
                         /* 2 Cards */
                         .hero-card-2-0 { z-index: 20; transform: translateX(-64px) rotate(-3deg); }
@@ -517,6 +517,37 @@ document.addEventListener('DOMContentLoaded', function() {
         const walk = (x - startX) * 1.5;
         carousel.scrollLeft = scrollLeft - walk;
     });
+
+    // --- Hero Cards 3D Auto-Rotation ---
+    const fanContainer = document.getElementById('hero-fan-container');
+    if (fanContainer) {
+        // Only target cards that are part of the 3-card layout
+        const fanCards = Array.from(fanContainer.querySelectorAll('.hero-card-fan')).filter(card => 
+            card.classList.contains('hero-card-3-0') || 
+            card.classList.contains('hero-card-3-1') || 
+            card.classList.contains('hero-card-3-2')
+        );
+        
+        if (fanCards.length === 3) {
+            let classes = ['hero-card-3-0', 'hero-card-3-1', 'hero-card-3-2'];
+            let rotateInterval;
+            
+            const startRotation = () => {
+                rotateInterval = setInterval(() => {
+                    fanCards.forEach(card => classes.forEach(cls => card.classList.remove(cls)));
+                    // Rotate classes array
+                    classes.push(classes.shift());
+                    fanCards.forEach((card, i) => card.classList.add(classes[i]));
+                }, 3000);
+            };
+            
+            const stopRotation = () => clearInterval(rotateInterval);
+            
+            startRotation();
+            fanContainer.addEventListener('mouseenter', stopRotation);
+            fanContainer.addEventListener('mouseleave', startRotation);
+        }
+    }
 });
 </script>
 @endpush
