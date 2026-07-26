@@ -1,4 +1,4 @@
-# Cuanin - Marketplace Barang Bekas
+
 ---
 
 <div align="center">
@@ -9,6 +9,7 @@
 
 ---
 
+# Cuanin - Marketplace Barang Bekas
 Cuanin adalah marketplace untuk jual beli barang bekas (preloved). Pengguna dapat menjelajah produk, memasukkan ke keranjang, mengajukan nego harga, dan melakukan pemesanan langsung melalui WhatsApp penjual.
 
 ## Prasyarat
