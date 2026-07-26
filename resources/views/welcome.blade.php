@@ -87,39 +87,142 @@
                     <style>
                         .hero-card-fan {
                             position: absolute;
+                            box-sizing: border-box;
+                            width: 240px;
+                            height: 330px;
+                            overflow: hidden;
+                            display: flex;
+                            flex-direction: column;
+                            padding: 14px;
+                            border-radius: 16px;
+                            background: rgba(255,255,255,0.1);
+                            backdrop-filter: blur(16px);
+                            -webkit-backdrop-filter: blur(16px);
+                            border: 1px solid rgba(255,255,255,0.2);
+                            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
                             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                            height: 300px;
+                            text-decoration: none;
+                        }
+                        .hero-card-header {
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            margin-bottom: 10px;
+                            height: 40px;
+                            flex-shrink: 0;
+                        }
+                        .hero-card-icon {
+                            width: 36px;
+                            height: 36px;
+                            min-width: 36px;
+                            background: rgba(255,255,255,0.2);
+                            border: 1px solid rgba(255,255,255,0.3);
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: white;
+                        }
+                        .hero-card-icon i, .hero-card-icon svg { width: 18px; height: 18px; }
+                        .hero-card-title {
+                            color: white;
+                            font-weight: 700;
+                            font-size: 13px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                        .hero-card-subtitle {
+                            color: rgba(191,219,254,1);
+                            font-size: 11px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                        .hero-card-image {
+                            flex: 1;
+                            min-height: 0;
+                            border-radius: 12px;
+                            overflow: hidden;
+                            background: rgba(255,255,255,0.05);
+                            border: 1px solid rgba(255,255,255,0.1);
+                            margin-bottom: 10px;
+                        }
+                        .hero-card-image img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            transition: transform 0.7s ease-out;
+                        }
+                        .hero-card-fan:hover .hero-card-image img {
+                            transform: scale(1.1);
+                        }
+                        .hero-card-footer {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            height: 30px;
+                            flex-shrink: 0;
+                        }
+                        .hero-card-price {
+                            color: white;
+                            font-weight: 800;
+                            font-size: 16px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            padding-right: 8px;
+                        }
+                        .hero-card-btn {
+                            background: linear-gradient(to right, #facc15, #eab308);
+                            color: #172554;
+                            font-size: 11px;
+                            font-weight: 700;
+                            padding: 4px 14px;
+                            border-radius: 9999px;
+                            text-transform: uppercase;
+                            letter-spacing: 0.05em;
+                            flex-shrink: 0;
                         }
                         
-                        /* Focus Effect: Saat container di-hover, pudarkan kartu yang TIDAK di-hover */
+                        /* Focus Effect */
                         #hero-fan-container:hover .hero-card-fan:not(:hover) {
                             opacity: 0.15 !important;
                             filter: blur(4px) brightness(0.6);
                             z-index: 1;
                         }
 
-                        /* 3 Cards Layout */
-                        .hero-card-3-0 { z-index: 10; transform: translateX(-80px) translateY(8px) rotate(-6deg); opacity: 0.7; }
-                        .hero-card-3-0:hover { z-index: 40; transform: translateX(-80px) translateY(0px) rotate(0deg); opacity: 1; }
+                        /* 3 Cards - Simetris */
+                        .hero-card-3-0 { z-index: 10; transform: translateX(-80px) translateY(10px) rotate(-6deg) scale(0.85); opacity: 0.65; filter: blur(1.5px); }
+                        .hero-card-3-0:hover { z-index: 40; transform: translateX(-80px) translateY(0) rotate(0deg) scale(1); opacity: 1; filter: blur(0); }
                         
                         .hero-card-3-1 { z-index: 30; transform: translateY(0); box-shadow: 0 0 30px rgba(255,255,255,0.2); opacity: 1; }
                         .hero-card-3-1:hover { transform: translateY(-5px); box-shadow: 0 0 40px rgba(255,255,255,0.4); }
                         
-                        .hero-card-3-2 { z-index: 20; transform: translateX(80px) translateY(24px) rotate(6deg); opacity: 0.7; }
-                        .hero-card-3-2:hover { z-index: 40; transform: translateX(80px) translateY(16px) rotate(0deg); opacity: 1; }
+                        .hero-card-3-2 { z-index: 20; transform: translateX(80px) translateY(10px) rotate(6deg) scale(0.85); opacity: 0.65; filter: blur(1.5px); }
+                        .hero-card-3-2:hover { z-index: 40; transform: translateX(80px) translateY(0) rotate(0deg) scale(1); opacity: 1; filter: blur(0); }
                         
-                        /* 2 Cards Layout */
+                        /* 2 Cards */
                         .hero-card-2-0 { z-index: 20; transform: translateX(-64px) rotate(-3deg); }
                         .hero-card-2-0:hover { z-index: 40; transform: translateX(-64px) translateY(-8px) rotate(0deg); }
                         .hero-card-2-1 { z-index: 10; transform: translateX(64px) translateY(16px) rotate(3deg); }
                         .hero-card-2-1:hover { z-index: 40; transform: translateX(64px) translateY(8px) rotate(0deg); }
                         
                         @media (min-width: 1024px) {
-                            .hero-card-fan { height: 360px; }
-                            .hero-card-3-0 { transform: translateX(-112px) translateY(8px) rotate(-6deg); }
-                            .hero-card-3-0:hover { transform: translateX(-112px) translateY(0px) rotate(0deg); }
-                            .hero-card-3-2 { transform: translateX(112px) translateY(24px) rotate(6deg); }
-                            .hero-card-3-2:hover { transform: translateX(112px) translateY(16px) rotate(0deg); }
+                            .hero-card-fan { width: 270px; height: 380px; padding: 18px; }
+                            .hero-card-header { height: 44px; margin-bottom: 12px; }
+                            .hero-card-icon { width: 42px; height: 42px; min-width: 42px; }
+                            .hero-card-icon i, .hero-card-icon svg { width: 22px; height: 22px; }
+                            .hero-card-title { font-size: 15px; }
+                            .hero-card-subtitle { font-size: 12px; }
+                            .hero-card-image { margin-bottom: 12px; }
+                            .hero-card-footer { height: 34px; }
+                            .hero-card-price { font-size: 18px; }
+                            .hero-card-btn { padding: 5px 16px; font-size: 12px; }
+                            .hero-card-3-0 { transform: translateX(-110px) translateY(10px) rotate(-6deg) scale(0.85); }
+                            .hero-card-3-0:hover { transform: translateX(-110px) translateY(0) rotate(0deg) scale(1); }
+                            .hero-card-3-2 { transform: translateX(110px) translateY(10px) rotate(6deg) scale(0.85); }
+                            .hero-card-3-2:hover { transform: translateX(110px) translateY(0) rotate(0deg) scale(1); }
                         }
                     </style>
 
@@ -145,23 +248,22 @@
                                 }
                             @endphp
                             
-                            <a href="{{ route('product.show', $product->slug ?? $product->id) }}" 
-                               class="flex flex-col bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-4 lg:p-5 shadow-2xl transition-all duration-500 ease-out w-56 lg:w-64 {{ $posClass }}">
-                                <div class="flex items-center gap-3 mb-3 lg:mb-4">
-                                    <div class="w-10 h-10 lg:w-12 lg:h-12 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center text-white shrink-0 shadow-inner">
-                                        <i data-lucide="{{ $icon }}" class="w-5 h-5 lg:w-6 lg:h-6"></i>
+                            <a href="{{ route('product.show', $product->slug ?? $product->id) }}" class="{{ $posClass }}">
+                                <div class="hero-card-header">
+                                    <div class="hero-card-icon">
+                                        <i data-lucide="{{ $icon }}"></i>
                                     </div>
-                                    <div class="overflow-hidden">
-                                        <h3 class="text-white font-bold text-sm lg:text-base truncate" title="{{ $product->title }}">{{ $product->title }}</h3>
-                                        <p class="text-blue-200 text-xs lg:text-sm truncate">{{ $product->category->name ?? 'Lainnya' }} • {{ $product->condition }}</p>
+                                    <div style="overflow:hidden; min-width:0;">
+                                        <div class="hero-card-title" title="{{ $product->title }}">{{ $product->title }}</div>
+                                        <div class="hero-card-subtitle">{{ $product->category->name ?? 'Lainnya' }} • {{ $product->condition }}</div>
                                     </div>
                                 </div>
-                                <div class="w-full flex-1 min-h-0 bg-white/5 border border-white/10 rounded-xl mb-3 lg:mb-4 overflow-hidden relative group">
-                                    <img src="{{ $imgUrl }}" alt="{{ $product->title }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-out">
+                                <div class="hero-card-image">
+                                    <img src="{{ $imgUrl }}" alt="{{ $product->title }}">
                                 </div>
-                                <div class="mt-auto flex justify-between items-center">
-                                    <span class="text-white font-extrabold text-lg lg:text-xl truncate pr-2">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                                    <span class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-950 text-xs font-bold px-3 py-1 lg:px-4 lg:py-1.5 rounded-full uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform">Beli</span>
+                                <div class="hero-card-footer">
+                                    <span class="hero-card-price">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                    <span class="hero-card-btn">Beli</span>
                                 </div>
                             </a>
                         @endforeach
