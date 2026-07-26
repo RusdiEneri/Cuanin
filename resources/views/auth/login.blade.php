@@ -1,64 +1,380 @@
 @extends('layouts.app')
 
+@section('title', 'Login')
+
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-3xl shadow-xl shadow-blue-900/5 border border-gray-100 relative overflow-hidden">
-        
-        <!-- Decoration -->
-        <div class="absolute top-0 right-0 w-32 h-32 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 -mr-10 -mt-10"></div>
-        <div class="absolute bottom-0 left-0 w-32 h-32 bg-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 -ml-10 -mb-10"></div>
 
-        <div class="relative z-10">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang Kembali!</h2>
-                <p class="text-gray-500 text-sm">Masuk untuk melanjutkan aktivitas jual beli kamu.</p>
-            </div>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-            @if(session('error'))
-            <div class="mt-4 bg-red-50 text-danger p-3 rounded-xl flex items-center gap-2 text-sm border border-red-100">
-                <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                {{ session('error') }}
-            </div>
-            @endif
+    .font-poppins{
+        font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
 
-            <form class="mt-8 space-y-5" action="{{ route('login.post') }}" method="POST">
-                @csrf
-                <div class="space-y-4">
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" placeholder="contoh@email.com" value="{{ old('email') }}">
-                        @error('email')
-                            <p class="text-danger text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-between mb-1">
-                            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                            <a href="javascript:void(0)" class="text-sm font-medium text-primary hover:text-blue-700 transition" onclick="alert('Fitur Lupa Password belum diimplementasi')">Lupa password?</a>
+    /* ═══════════════════ KOIN 3D ═══════════════════ */
+    .coin-stage{
+        --coin-t: 12px;
+        width: 88px; height: 88px;
+        perspective: 900px;
+        perspective-origin: 50% 50%;
+    }
+    .coin-stage--lg{ --coin-t: 16px; width: 112px; height: 112px; }
+    @media (min-width: 1280px){ .coin-stage--lg{ --coin-t: 18px; width: 128px; height: 128px; } }
+
+    .coin-float{ animation: cuanin-coin-float 3.8s ease-in-out infinite; }
+    @keyframes cuanin-coin-float{
+        0%,100%{ transform: translateY(0); }
+        50%    { transform: translateY(-9px); }
+    }
+
+    .coin {
+        position: absolute;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        color: #92400e;
+        background: linear-gradient(145deg, #fef3c7 0%, #fbbf24 45%, #f59e0b 100%);
+        border: 3px solid #fef9c3;
+        box-shadow: 0 12px 28px -6px rgba(245, 158, 11, .55),
+                    inset 0 2px 5px rgba(255, 255, 255, .75),
+                    inset 0 -3px 6px rgba(146, 64, 14, .35);
+        transform-style: preserve-3d;
+        will-change: transform;
+        user-select: none;
+    }
+    .coin::after {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border-radius: 9999px;
+        border: 2px dashed rgba(146, 64, 14, .35);
+    }
+    .coin-stage .coin {
+        position: relative; width: 100%; height: 100%;
+        transform-style: preserve-3d;
+        will-change: transform;
+        animation: cuanin-coin-spin 3.4s linear infinite;
+        background: none;
+        border: none;
+        box-shadow: none;
+    }
+    .coin-stage .coin::after { display: none; }
+
+    .coin-face{
+        position: absolute; inset: 0; border-radius: 9999px;
+        display: flex; align-items: center; justify-content: center;
+        backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        border: 3px solid #b45309;
+        background: radial-gradient(circle at 32% 28%,
+            #fff7cc 0%, #fde047 22%, #facc15 45%, #eab308 70%, #a16207 100%);
+        box-shadow:
+            inset 0 0 0 4px rgba(255,255,255,.35),
+            inset 0  6px 10px rgba(255,255,255,.55),
+            inset 0 -6px 10px rgba(120,53,15,.45),
+            0 8px 18px rgba(180,83,9,.35);
+    }
+    .coin-face::before{
+        content: ""; position: absolute; inset: 8px;
+        border-radius: 9999px; border: 2px dashed rgba(120,53,15,.45);
+    }
+    .coin-face.front{ transform: translateZ(calc(var(--coin-t) / 2 + .6px)); }
+    .coin-face.back { transform: rotateY(180deg) translateZ(calc(var(--coin-t) / 2 + .6px)); }
+
+    .coin-emblem{ color: #78350f; filter: drop-shadow(0 1px 0 rgba(255,255,255,.5)); }
+
+    .coin-edge{
+        position: absolute; inset: 0; border-radius: 9999px;
+        backface-visibility: visible;
+        background: linear-gradient(180deg,
+            #fef08a 0%, #eab308 20%, #a16207 47%,
+            #713f12 52%, #a16207 80%, #fef08a 100%);
+        box-shadow:
+            inset 0  1px 1px rgba(255,255,255,.55),
+            inset 0 -1px 2px rgba(0,0,0,.45);
+    }
+
+    .coin-shadow{
+        width: 64%; height: 12px; margin: 16px auto 0;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center, rgba(15,23,42,.30), rgba(15,23,42,0) 72%);
+        filter: blur(2px);
+        animation: cuanin-coin-shadow 3.8s ease-in-out infinite;
+    }
+    @keyframes cuanin-coin-shadow{
+        0%,100%{ transform: scaleX(1);   opacity: .55; }
+        50%    { transform: scaleX(.68); opacity: .28; }
+    }
+
+    @keyframes cuanin-coin-spin{
+        0%   { transform: rotateY(0deg)   rotateX(14deg); }
+        100% { transform: rotateY(360deg) rotateX(14deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+        .coin, .coin-float, .coin-shadow{ animation: none; }
+        .coin{ transform: rotateY(-22deg) rotateX(14deg); }
+    }
+    /* ukuran */
+    .coin-xl { width: 9rem;   height: 9rem;   font-size: 3.5rem; border-width: 5px; position: relative; }
+    .coin-lg { width: 5.5rem; height: 5.5rem; font-size: 2rem; }
+    .coin-md { width: 4rem;   height: 4rem;   font-size: 1.5rem; }
+    .coin-sm { width: 3rem;   height: 3rem;   font-size: 1.1rem; }
+
+    /* posisi koin melayang (tersebar di panel biru) */
+    .pos-1 { top: 12%; left: 14%; }
+    .pos-2 { top: 16%; right: 15%; }
+    .pos-3 { bottom: 18%; left: 16%; }
+    .pos-4 { bottom: 12%; right: 14%; }
+    .pos-5 { top: 44%; left: 7%; }
+    .pos-6 { top: 38%; right: 8%; }
+
+    /* variasi animasi */
+    .anim-1 { animation: floatSpin 6s   ease-in-out infinite; }
+    .anim-2 { animation: floatSpin 7.5s ease-in-out infinite .4s; }
+    .anim-3 { animation: floatSpin 5.5s ease-in-out infinite .8s; }
+    .anim-4 { animation: floatSpin 8s   ease-in-out infinite .2s; }
+    .anim-5 { animation: floatY    4.5s ease-in-out infinite .6s; }
+    .anim-6 { animation: floatY    5s   ease-in-out infinite 1s; }
+
+    @keyframes floatSpin {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50%      { transform: translateY(-15px) rotate(10deg); }
+    }
+    @keyframes floatY {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-14px); }
+    }
+    @keyframes pulseGlow {
+        0%, 100% { opacity: .35; transform: scale(1); }
+        50%      { opacity: .6;  transform: scale(1.08); }
+    }
+</style>
+
+@php $coinLayers = 40; @endphp
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 flex flex-col justify-center min-h-[calc(100vh-180px)]">
+
+    <div class="font-poppins w-full grid grid-cols-1 lg:grid-cols-2 bg-white rounded-3xl shadow-2xl shadow-blue-900/30 border border-gray-100 overflow-hidden min-h-[500px] lg:min-h-[560px]">
+
+        {{-- ══ KOLOM KIRI : PANEL BRANDING (desktop only) ══ --}}
+        <div class="hidden lg:flex relative flex-col items-center justify-center text-center p-6 xl:p-8 bg-gradient-to-br from-primary via-blue-700 to-blue-900 text-white overflow-hidden">
+
+            <!-- blurred glow decoration -->
+            <div class="absolute -top-16 -right-16 w-72 h-72 bg-secondary rounded-full mix-blend-screen filter blur-3xl opacity-30"></div>
+            <div class="absolute -bottom-20 -left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-screen filter blur-3xl opacity-30"></div>
+
+            <!-- koin melayang (absolute) -->
+            <div class="coin coin-lg pos-1 anim-1">C</div>
+            <div class="coin coin-md pos-2 anim-2">C</div>
+            <div class="coin coin-sm pos-3 anim-3">C</div>
+            <div class="coin coin-md pos-4 anim-4">C</div>
+            <div class="coin coin-sm pos-5 anim-5">C</div>
+            <div class="coin coin-lg pos-6 anim-6">C</div>
+
+            <div class="relative z-10 flex flex-col items-center">
+
+                {{-- KOIN 3D (desktop) --}}
+                <div class="relative inline-flex items-center justify-center mb-6 xl:mb-8">
+                    <div class="coin-float">
+                        <div class="absolute inset-0 -m-4 rounded-full bg-secondary opacity-40 blur-2xl pointer-events-none"></div>
+                        <div class="coin-stage coin-stage--lg relative" aria-hidden="true">
+                            <div class="coin">
+                                <div class="coin-face front">
+                                    <i data-lucide="dollar-sign" class="coin-emblem w-12 h-12 xl:w-14 xl:h-14"></i>
+                                </div>
+                                <div class="coin-face back">
+                                    <i data-lucide="dollar-sign" class="coin-emblem w-12 h-12 xl:w-14 xl:h-14"></i>
+                                </div>
+                                @for ($i = 0; $i < $coinLayers; $i++)
+                                    <div class="coin-edge" style="transform: translateZ(calc(({{ $i }} / {{ $coinLayers - 1 }} - 0.5) * var(--coin-t)))"></div>
+                                @endfor
+                            </div>
                         </div>
-                        <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none block w-full px-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" placeholder="••••••••">
                     </div>
                 </div>
 
-                <div class="flex items-center">
-                    <input id="remember-me" name="remember" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                    <label for="remember-me" class="ml-2 block text-sm text-gray-700">
-                        Ingat saya
-                    </label>
-                </div>
-
-                <div>
-                    <button type="submit" class="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-md shadow-blue-500/20 text-sm font-semibold text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition transform hover:-translate-y-0.5">
-                        Masuk
-                    </button>
-                </div>
-            </form>
-
-            <div class="mt-8 text-center text-sm text-gray-500">
-                Belum punya akun? 
-                <a href="{{ route('register') }}" class="font-medium text-primary hover:text-blue-700 transition">Daftar sekarang</a>
+                <h2 class="text-3xl xl:text-4xl font-extrabold leading-tight max-w-xs xl:max-w-sm drop-shadow-sm">
+                    Jual Beli Barang Bekas, <span class="text-secondary">Jadi Cuan!</span>
+                </h2>
             </div>
         </div>
+
+        {{-- ══ KOLOM KANAN : FORM LOGIN ══ --}}
+        <div class="relative flex flex-col justify-center p-4 sm:p-6 xl:p-8">
+
+            <div class="absolute top-0 right-0 w-32 h-32 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-10 -mr-10 -mt-10 pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 -ml-10 -mb-10 pointer-events-none"></div>
+
+            <div class="relative z-10">
+
+                {{-- HEADER MOBILE : KOIN 3D --}}
+                <div class="lg:hidden flex flex-col items-center mb-6">
+                    <div class="relative mb-1">
+                        <div class="coin-float">
+                            <div class="absolute inset-0 -m-3 rounded-full bg-secondary opacity-40 blur-xl pointer-events-none"></div>
+                            <div class="coin-stage relative" aria-hidden="true">
+                                <div class="coin">
+                                    <div class="coin-face front">
+                                        <i data-lucide="dollar-sign" class="coin-emblem w-9 h-9"></i>
+                                    </div>
+                                    <div class="coin-face back">
+                                        <i data-lucide="dollar-sign" class="coin-emblem w-9 h-9"></i>
+                                    </div>
+                                    @for ($i = 0; $i < $coinLayers; $i++)
+                                        <div class="coin-edge" style="transform: translateZ(calc(({{ $i }} / {{ $coinLayers - 1 }} - 0.5) * var(--coin-t)))"></div>
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="coin-shadow" aria-hidden="true"></div>
+                </div>
+
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang Kembali!</h2>
+                    <p class="text-gray-500 text-sm">Masuk untuk melanjutkan aktivitas jual beli kamu.</p>
+                </div>
+
+                @if(session('error'))
+                <div class="mt-4 bg-red-50 text-danger p-3 rounded-xl flex items-center gap-2 text-sm border border-red-100" role="alert">
+                    <i data-lucide="circle-alert" class="w-5 h-5 shrink-0"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
+                @endif
+
+                @if(session('success'))
+                <div class="mt-4 bg-green-50 text-green-700 p-3 rounded-xl flex items-center gap-2 text-sm border border-green-100" role="alert">
+                    <i data-lucide="circle-check" class="w-5 h-5 shrink-0"></i>
+                    <span>{{ session('success') }}</span>
+                </div>
+                @endif
+
+                @if(session('status'))
+                <div class="mt-4 bg-blue-50 text-blue-700 p-3 rounded-xl flex items-center gap-2 text-sm border border-blue-100" role="alert">
+                    <i data-lucide="info" class="w-5 h-5 shrink-0"></i>
+                    <span>{{ session('status') }}</span>
+                </div>
+                @endif
+
+                <form class="mt-4 space-y-3" action="{{ route('login.post') }}" method="POST">
+                    @csrf
+
+                    <div class="space-y-3">
+
+                        <div>
+                            <label for="login" class="block text-sm font-medium text-gray-700 mb-1">
+                                Email / Nomor HP
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i data-lucide="at-sign" class="w-4 h-4 text-gray-400"></i>
+                                </div>
+                                <input
+                                    id="login" name="login" type="text"
+                                    autocomplete="username" required autofocus
+                                    class="appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition @error('login') border-danger ring-1 ring-danger @enderror"
+                                    placeholder="rusdi@example.com"
+                                    value="{{ old('login') }}"
+                                    aria-describedby="login-error"
+                                >
+                            </div>
+                            @error('login')
+                                <p id="login-error" class="text-danger text-xs mt-1 flex items-center gap-1" role="alert">
+                                    <i data-lucide="circle-alert" class="w-3 h-3"></i>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                                @if(Route::has('password.request'))
+                                    <a href="{{ route('password.request') }}" class="text-sm font-medium text-primary hover:text-blue-700 transition">
+                                        Lupa password?
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i data-lucide="lock" class="w-4 h-4 text-gray-400"></i>
+                                </div>
+                                <input
+                                    id="password" name="password" type="password"
+                                    autocomplete="current-password" required
+                                    class="appearance-none block w-full pl-11 pr-12 py-3 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition @error('password') border-danger ring-1 ring-danger @enderror"
+                                    placeholder="••••••••"
+                                    aria-describedby="password-error"
+                                >
+                                <button
+                                    type="button" onclick="togglePassword()"
+                                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition cursor-pointer"
+                                    aria-label="Toggle password visibility"
+                                >
+                                    <i data-lucide="eye" class="w-4 h-4" id="eye-icon"></i>
+                                    <i data-lucide="eye-off" class="w-4 h-4 hidden" id="eye-off-icon"></i>
+                                </button>
+                            </div>
+                            @error('password')
+                                <p id="password-error" class="text-danger text-xs mt-1 flex items-center gap-1" role="alert">
+                                    <i data-lucide="circle-alert" class="w-3 h-3"></i>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input
+                            id="remember-me" name="remember" type="checkbox"
+                            {{ old('remember') ? 'checked' : '' }}
+                            class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                        >
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                            Ingat saya
+                        </label>
+                    </div>
+
+                    <div>
+                        <button
+                            type="submit"
+                            class="w-full flex justify-center items-center gap-2 py-3.5 px-4 border border-transparent rounded-xl shadow-md shadow-blue-500/20 text-sm font-semibold text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                        >
+                            <i data-lucide="log-in" class="w-4 h-4"></i>
+                            Masuk
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-4 text-center text-sm text-gray-500">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}" class="font-medium text-primary hover:text-blue-700 transition">Daftar sekarang</a>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+        const eyeOffIcon = document.getElementById('eye-off-icon');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.add('hidden');
+            eyeOffIcon.classList.remove('hidden');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('hidden');
+            eyeOffIcon.classList.add('hidden');
+        }
+    }
+</script>
+@endpush
