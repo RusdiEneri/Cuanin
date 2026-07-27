@@ -123,7 +123,8 @@
                                     </div>
                                     <div class="flex-grow">
                                         <h3 class="font-semibold text-gray-900 text-sm line-clamp-1 mb-1">{{ $offer->product->title }}</h3>
-                                        <div class="text-xs text-gray-500 mb-2">Penawar: {{ $offer->buyer->name }}</div>
+                                        <!-- <div class="text-xs text-gray-500 mb-2">Penawar: {{ $offer->buyer->name }}</div> -->
+                                        <div class="text-xs text-gray-500 mb-2">Penawar: Anonim</div>
                                         <div class="flex items-center gap-2">
                                             <span class="text-sm line-through text-gray-400">Rp {{ number_format($offer->product->price, 0, ',', '.') }}</span>
                                             <span class="font-bold text-success">Rp {{ number_format($offer->offered_price, 0, ',', '.') }}</span>
