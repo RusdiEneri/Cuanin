@@ -1,10 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-8 pb-6 md:pb-8">
+<div class="bg-gray-50/50 pt-6 md:pt-8 pb-8 md:pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{-- ================= HERO ================= --}}
+        <div id="heroCard" class="bg-primary rounded-3xl overflow-hidden relative shadow-2xl shadow-blue-900/30">
 
-    {{-- ================= HERO ================= --}}
-    <div id="heroCard" class="bg-primary rounded-3xl overflow-hidden relative mb-6 md:mb-8 shadow-2xl shadow-blue-900/30">
         {{-- Base Gradient --}}
         <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-primary to-blue-950"></div>
         
@@ -290,10 +291,13 @@
                 </div>
             </div>
         </div>
+        </div>
     </div>
+</div>
 
-    {{-- ================= KATEGORI (SWIPE DI MOBILE) ================= --}}
-    <div class="mb-12 md:mb-16">
+{{-- ================= KATEGORI (SWIPE DI MOBILE) ================= --}}
+<div class="bg-white py-12 md:py-16 border-y border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-end mb-6">
             <div>
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Kategori Pilihan</h2>
@@ -333,9 +337,11 @@
             @endforeach
         </div>
     </div>
+</div>
 
-    {{-- ================= REKOMENDASI ================= --}}
-    <div class="mb-12 md:mb-16">
+{{-- ================= REKOMENDASI ================= --}}
+<div class="bg-gray-50 py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-end mb-6">
             <div>
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Rekomendasi Terbaru</h2>
