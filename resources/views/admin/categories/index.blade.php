@@ -92,6 +92,12 @@
                     </tbody>
                 </table>
             </div>
+            
+            @if($categories->hasPages())
+                <div class="p-6 border-t border-gray-100 bg-gray-50/50">
+                    {{ $categories->links() }}
+                </div>
+            @endif
         </div>
 
     </div>

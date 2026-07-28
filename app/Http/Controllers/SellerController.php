@@ -91,12 +91,17 @@ class SellerController extends Controller
             return redirect()->route('seller.dashboard')->with('success', 'Produk disimpan sebagai draft. Anda bisa melanjutkan kapan saja.');
         }
 
+        if ($request->has('price') && is_string($request->price)) {
+            $request->merge(['price' => preg_replace('/[^0-9]/', '', $request->price)]);
+        }
+
         // Publish: full validation
         $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price' => 'required|numeric|min:0|max:9999999999999.99',
+            'stock' => 'required|integer|min:1',
             'condition' => 'required|string',
             'location' => 'required|string',
             'images' => 'required|array|min:1|max:5',

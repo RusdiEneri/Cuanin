@@ -145,13 +145,13 @@
                                         <div class="flex items-center gap-2">
                                             <form action="{{ route('negotiations.reject', $offer->id) }}" method="POST">
                                                 @csrf @method('PUT')
-                                                <button type="submit" class="px-3 py-1.5 bg-white border border-gray-200 text-danger text-sm font-semibold rounded-lg hover:bg-red-50 transition">
+                                                <button type="submit" onclick="confirmAction(event, 'Tolak Penawaran', 'Apakah Anda yakin ingin menolak penawaran ini?', 'Ya, Tolak', '#f59e0b')" class="px-3 py-1.5 bg-white border border-gray-200 text-danger text-sm font-semibold rounded-lg hover:bg-red-50 transition">
                                                     Tolak
                                                 </button>
                                             </form>
                                             <form action="{{ route('negotiations.accept', $offer->id) }}" method="POST">
                                                 @csrf @method('PUT')
-                                                <button type="submit" class="px-3 py-1.5 bg-success text-white text-sm font-semibold rounded-lg hover:bg-green-600 transition">
+                                                <button type="submit" onclick="confirmAction(event, 'Terima Penawaran', 'Apakah Anda yakin ingin menerima penawaran ini?', 'Ya, Terima', '#10b981')" class="px-3 py-1.5 bg-success text-white text-sm font-semibold rounded-lg hover:bg-green-600 transition">
                                                     Terima
                                                 </button>
                                             </form>

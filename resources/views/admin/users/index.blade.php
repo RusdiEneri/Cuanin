@@ -80,6 +80,12 @@
                 </tbody>
             </table>
         </div>
+        
+        @if($users->hasPages())
+            <div class="p-6 border-t border-gray-100 bg-gray-50/50">
+                {{ $users->links() }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection
