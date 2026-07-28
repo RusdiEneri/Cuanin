@@ -421,7 +421,7 @@
                                     <div>
                                         <h4 class="text-sm font-bold text-gray-900 mb-1">Biaya Jasa Listing</h4>
                                         <p class="text-sm text-gray-600 leading-relaxed">
-                                            Biaya ini dikenakan satu kali untuk mendukung operasional marketplace Cuanin. Produk Anda akan otomatis aktif setelah pembayaran terkonfirmasi.
+                                            Biaya ini dikenakan satu kali untuk mendukung operasional marketplace Cuanin. Setelah bukti pembayaran diunggah, produk Anda akan berstatus <strong>menunggu verifikasi</strong> oleh admin sebelum ditampilkan di marketplace.
                                         </p>
                                     </div>
                                 </div>

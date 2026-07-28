@@ -106,7 +106,13 @@ class SellerController extends Controller
             'location' => 'required|string',
             'images' => 'required|array|min:1|max:5',
             'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
+
+        $paymentProofPath = null;
+        if ($request->hasFile('payment_proof')) {
+            $paymentProofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
+        }
 
         $product = Product::create([
             'user_id' => Auth::id(),
@@ -115,9 +121,11 @@ class SellerController extends Controller
             'slug' => Str::slug($request->title) . '-' . time(),
             'description' => $request->description,
             'price' => $request->price,
+            'stock' => $request->stock ?? 1,
             'condition' => $request->condition,
             'location' => $request->location,
-            'status' => 'active',
+            'status' => 'pending',
+            'payment_proof' => $paymentProofPath,
         ]);
 
         if ($request->hasFile('images')) {
@@ -131,11 +139,11 @@ class SellerController extends Controller
             }
         }
 
-        return redirect()->route('seller.dashboard')->with('success', 'Pembayaran dikonfirmasi! Produk berhasil dipublikasikan.');
+        return redirect()->route('seller.dashboard')->with('success', 'Bukti pembayaran berhasil diunggah! Produk Anda sedang menunggu verifikasi oleh admin.');
     }
 
     public function edit($id)
-{
+    {
         $product = Product::with('productImages')->findOrFail($id);
         
         // Security: hanya owner yang bisa edit
@@ -148,53 +156,68 @@ class SellerController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    // 1. Ambil data produk berdasarkan ID
-    $product = \App\Models\Product::findOrFail($id);
+    {
+        // 1. Ambil data produk berdasarkan ID
+        $product = Product::findOrFail($id);
 
-    // 2. Security: Pastikan yang mengedit adalah pemilik produk
-    if ($product->user_id !== auth()->id()) {
-        abort(403, 'Anda tidak memiliki akses untuk mengubah produk ini.');
-    }
-
-    // 3. Validasi input dari form
-    $validated = $request->validate([
-        'title'         => 'required|string|max:255',
-        'category_id'   => 'required|exists:categories,id',
-        'condition'     => 'required|in:Barang Baru,Like New,Sangat Baik,Baik,Cukup,Rusak Ringan',
-        'price'         => 'required|numeric|min:0|max:9999999999999.99',
-        'location'      => 'required|string|max:255',
-        'description'   => 'required|string',
-        'status'        => 'required|in:active,sold,archived,draft',
-        'images.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', // Maksimal 5MB per foto
-    ]);
-
-    // 4. Generate slug baru
-    $validated['slug'] = \Illuminate\Support\Str::slug($validated['title']) . '-' . $product->id;
-
-    // 5. Update data utama produk
-    $product->update($validated);
-
-    // 6. Handle Upload Foto Baru (Jika ada file gambar yang dikirim)
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            // Simpan file ke storage/app/public/products/
-            $path = $image->store('products', 'public');
-            
-            // Simpan record ke database
-            \App\Models\ProductImage::create([
-                'product_id' => $product->id, // PENTING: Gunakan $product->id, BUKAN $id
-                'image_path' => $path,
-                // Otomatis jadikan foto utama (primary) jika produk ini belum punya foto sama sekali
-                'is_primary' => $product->productImages()->count() === 0, 
-            ]);
+        // 2. Security: Pastikan yang mengedit adalah pemilik produk
+        if ($product->user_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses untuk mengubah produk ini.');
         }
-    }
 
-    // 7. Redirect kembali ke dashboard dengan pesan sukses
-    return redirect()->route('seller.dashboard')
-                     ->with('success', 'Produk dan foto berhasil diperbarui!');
-}
+        if ($request->has('price') && is_string($request->price)) {
+            $request->merge(['price' => preg_replace('/[^0-9]/', '', $request->price)]);
+        }
+
+        // 3. Validasi input dari form
+        $validated = $request->validate([
+            'title'         => 'required|string|max:255',
+            'category_id'   => 'required|exists:categories,id',
+            'condition'     => 'required|string',
+            'price'         => 'required|numeric|min:0|max:9999999999999.99',
+            'stock'         => 'nullable|integer|min:0',
+            'location'      => 'required|string|max:255',
+            'description'   => 'required|string',
+            'status'        => 'required|in:active,sold,archived,draft,pending,rejected',
+            'images.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'payment_proof' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        // 4. Generate slug baru
+        $validated['slug'] = Str::slug($validated['title']) . '-' . $product->id;
+
+        // Handle Upload Bukti Pembayaran Baru (jika ada)
+        if ($request->hasFile('payment_proof')) {
+            if ($product->payment_proof && !str_starts_with($product->payment_proof, 'http')) {
+                Storage::disk('public')->delete($product->payment_proof);
+            }
+            $validated['payment_proof'] = $request->file('payment_proof')->store('payment_proofs', 'public');
+        }
+
+        // 5. Update data utama produk
+        $product->update($validated);
+
+        // 6. Handle Upload Foto Baru (Jika ada file gambar yang dikirim)
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('products', 'public');
+                
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $path,
+                    'is_primary' => $product->productImages()->count() === 0, 
+                ]);
+            }
+        }
+
+        $message = ($product->status === 'pending')
+            ? 'Bukti pembayaran berhasil dikirim! Produk Anda sedang menunggu verifikasi oleh admin.'
+            : 'Produk dan foto berhasil diperbarui!';
+
+        // 7. Redirect kembali ke dashboard dengan pesan sukses
+        return redirect()->route('seller.dashboard')
+                         ->with('success', $message);
+    }
 
     public function destroy($id)
     {
