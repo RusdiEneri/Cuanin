@@ -8,17 +8,16 @@ use App\Models\Product;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Storage;
-
 class AdminController extends Controller
 {
-    public function callAction($method, $parameters)
+    public function __construct()
     {
-        if (!auth()->check() || auth()->user()->role !== 'admin') {
-            abort(403, 'Unauthorized access.');
-        }
-
-        return $this->$method(...array_values($parameters));
+        $this->middleware(function ($request, $next) {
+            if (auth()->check() && auth()->user()->role !== 'admin') {
+                abort(403, 'Unauthorized access.');
+            }
+            return $next($request);
+        });
     }
 
     public function dashboard()
@@ -27,6 +26,7 @@ class AdminController extends Controller
         $totalCategories = Category::count();
         $totalProducts = Product::count();
         $totalOrders = Order::count();
+
         $pendingProductsCount = Product::where('status', 'pending')->count();
 
         return view('admin.dashboard', compact('totalUsers', 'totalCategories', 'totalProducts', 'totalOrders', 'pendingProductsCount'));
@@ -53,7 +53,7 @@ class AdminController extends Controller
             });
         }
 
-        $products = $query->paginate(15)->withQueryString();
+        $products = $query->paginate(10)->withQueryString();
 
         $counts = [
             'pending'  => Product::where('status', 'pending')->count(),
@@ -108,7 +108,7 @@ class AdminController extends Controller
 
     public function users()
     {
-        $users = User::latest()->get();
+        $users = User::latest()->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
@@ -123,7 +123,7 @@ class AdminController extends Controller
 
     public function categories()
     {
-        $categories = Category::withCount('products')->latest()->get();
+        $categories = Category::withCount('products')->latest()->paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
 

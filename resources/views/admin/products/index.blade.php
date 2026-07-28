@@ -217,7 +217,7 @@
                                         @method('PUT')
                                         <input type="hidden" name="status" value="active">
                                         <button type="submit" 
-                                                onclick="return confirm('Setujui dan publikasikan produk ini ke marketplace?');"
+                                                onclick="confirmAction(event, 'Setujui Produk', 'Setujui dan publikasikan produk ini ke marketplace?', 'Ya, Setujui', '#10b981')"
                                                 class="px-3 py-1.5 rounded-xl bg-success text-white text-xs font-semibold hover:bg-green-700 transition shadow-md shadow-green-500/20 flex items-center gap-1"
                                                 title="Setujui Produk">
                                             <i data-lucide="check" class="w-3.5 h-3.5"></i> Setujui
@@ -232,7 +232,7 @@
                                         @method('PUT')
                                         <input type="hidden" name="status" value="rejected">
                                         <button type="submit" 
-                                                onclick="return confirm('Tolak produk ini? Penjual akan melihat status produk ditolak.');"
+                                                onclick="confirmAction(event, 'Tolak Produk', 'Tolak produk ini? Penjual akan melihat status produk ditolak.', 'Ya, Tolak', '#f59e0b')"
                                                 class="px-3 py-1.5 rounded-xl bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition shadow-md shadow-amber-500/20 flex items-center gap-1"
                                                 title="Tolak Produk">
                                             <i data-lucide="x" class="w-3.5 h-3.5"></i> Tolak
@@ -241,7 +241,7 @@
                                 @endif
 
                                 <!-- Form Hapus Produk -->
-                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin MENGHAPUS PERMANEN produk ini? Semua foto produk juga akan dihapus dari sistem.');">
+                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="inline-block" onsubmit="confirmAction(event, 'Hapus Permanen', 'Apakah Anda yakin ingin MENGHAPUS PERMANEN produk ini? Semua foto produk juga akan dihapus dari sistem.', 'Ya, Hapus', '#ef4444')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
@@ -476,7 +476,7 @@
                     <input type="hidden" name="_token" value="${csrf}">
                     <input type="hidden" name="_method" value="PUT">
                     <input type="hidden" name="status" value="active">
-                    <button type="submit" onclick="return confirm('Setujui produk ini?');" class="px-5 py-2.5 rounded-full bg-success text-white font-semibold text-sm hover:bg-green-700 transition shadow-md shadow-green-500/20">
+                    <button type="submit" onclick="confirmAction(event, 'Setujui Produk', 'Setujui produk ini?', 'Ya, Setujui', '#10b981')" class="px-5 py-2.5 rounded-full bg-success text-white font-semibold text-sm hover:bg-green-700 transition shadow-md shadow-green-500/20">
                         Setujui Produk
                     </button>
                 </form>
@@ -486,7 +486,7 @@
                     <input type="hidden" name="_token" value="${csrf}">
                     <input type="hidden" name="_method" value="PUT">
                     <input type="hidden" name="status" value="rejected">
-                    <button type="submit" onclick="return confirm('Tolak produk ini?');" class="px-5 py-2.5 rounded-full bg-amber-500 text-white font-semibold text-sm hover:bg-amber-600 transition shadow-md shadow-amber-500/20">
+                    <button type="submit" onclick="confirmAction(event, 'Tolak Produk', 'Tolak produk ini?', 'Ya, Tolak', '#f59e0b')" class="px-5 py-2.5 rounded-full bg-amber-500 text-white font-semibold text-sm hover:bg-amber-600 transition shadow-md shadow-amber-500/20">
                         Tolak Produk
                     </button>
                 </form>
