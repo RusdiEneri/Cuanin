@@ -341,6 +341,17 @@
                 </p>
             </div>
 
+            <!-- Bukti Pembayaran Listing -->
+            <div class="mb-6">
+                <h4 class="text-sm font-bold text-gray-900 mb-2 flex items-center justify-between">
+                    <span>Bukti Pembayaran Listing:</span>
+                    <span id="modal-payment-status"></span>
+                </h4>
+                <div id="modal-payment-proof-container" class="p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
             <!-- Modal Verification Action Footer -->
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                 <button type="button" onclick="closeProductModal()" class="px-5 py-2.5 rounded-full border border-border-color text-gray-700 font-medium hover:bg-gray-50 text-sm transition">
@@ -416,6 +427,44 @@
             mainUrl = 'https://via.placeholder.com/400x300?text=No+Image';
         }
         primaryImgEl.src = mainUrl;
+
+        // Payment Proof handling
+        const paymentProofContainer = document.getElementById('modal-payment-proof-container');
+        const paymentStatusEl = document.getElementById('modal-payment-status');
+
+        if (product.payment_proof) {
+            const proofUrl = product.payment_proof.startsWith('http') 
+                ? product.payment_proof 
+                : `/storage/${product.payment_proof.replace(/^\//, '')}`;
+            
+            paymentStatusEl.innerHTML = `<span class="text-xs px-2.5 py-0.5 rounded-full bg-green-100 text-green-800 font-semibold inline-flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-green-600"></i> Bukti Ada</span>`;
+            
+            paymentProofContainer.innerHTML = `
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <div class="w-full sm:w-44 h-32 bg-white rounded-xl border border-gray-200 overflow-hidden flex-shrink-0 relative group">
+                        <img src="${proofUrl}" class="w-full h-full object-contain bg-gray-100">
+                        <a href="${proofUrl}" target="_blank" class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-semibold gap-1">
+                            <i data-lucide="external-link" class="w-4 h-4"></i> Zoom
+                        </a>
+                    </div>
+                    <div class="text-xs text-gray-600 space-y-1">
+                        <p class="font-semibold text-gray-900">Periksa bukti transaksi transfer dari penjual.</p>
+                        <p class="text-gray-500">Pastikan nominal transfer sesuai dengan biaya listing sebelum menyetujui produk.</p>
+                        <a href="${proofUrl}" target="_blank" class="inline-flex items-center gap-1 text-primary font-semibold hover:underline pt-1">
+                            <i data-lucide="eye" class="w-3.5 h-3.5"></i> Buka Gambar Ukuran Penuh
+                        </a>
+                    </div>
+                </div>
+            `;
+        } else {
+            paymentStatusEl.innerHTML = `<span class="text-xs px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 font-semibold inline-flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3 text-yellow-600"></i> Belum Ada Bukti</span>`;
+            paymentProofContainer.innerHTML = `
+                <div class="flex items-center gap-3 text-amber-700">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="text-xs">Penjual belum mengunggah foto bukti pembayaran untuk produk ini.</span>
+                </div>
+            `;
+        }
 
         // Modal Action buttons (Approve / Reject)
         let approveUrl = `/admin/products/${product.id}/status`;

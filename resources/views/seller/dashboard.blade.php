@@ -9,9 +9,9 @@
             <p class="text-gray-500">Kelola toko dan pantau performa penjualan Anda.</p>
         </div>
         <div class="flex gap-3">
-            <a href="{{ route('seller.orders.index') }}" class="px-5 py-2.5 bg-white border border-border-color text-gray-700 rounded-full font-medium hover:bg-gray-50 transition shadow-sm flex items-center gap-2">
+            <!-- <a href="{{ route('seller.orders.index') }}" class="px-5 py-2.5 bg-white border border-border-color text-gray-700 rounded-full font-medium hover:bg-gray-50 transition shadow-sm flex items-center gap-2">
                 <i data-lucide="package-search" class="w-4 h-4"></i> Kelola Pesanan
-            </a>
+            </a> -->
             <a href="{{ route('seller.products.create') }}" class="px-5 py-2.5 bg-primary text-white rounded-full font-medium hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
                 <i data-lucide="plus" class="w-4 h-4"></i> Tambah Produk
             </a>
@@ -71,13 +71,10 @@
                 {{-- ✏️ Zebra + hover lebih kontras --}}
                 <tr class="bg-white hover:bg-blue-50/50 hover:shadow-sm transition-all duration-200 group">
                     <td class="px-6 py-4">
-                        <div class="flex items-center justify-center gap-4 text-left">
+                        <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0 group-hover:border-primary/30 transition-colors">
-                                @if($product->primaryImage)
-                                    @php
-                                        $imgUrl = str_starts_with($product->primaryImage->image_path, 'http') ? $product->primaryImage->image_path : asset('storage/' . $product->primaryImage->image_path);
-                                    @endphp
-                                    <img src="{{ $imgUrl }}" class="w-full h-full object-cover">
+                                @if($product->displayImageUrl())
+                                    <img src="{{ $product->displayImageUrl() }}" class="w-full h-full object-cover">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-gray-300">
                                         <i data-lucide="image" class="w-5 h-5"></i>

@@ -50,6 +50,10 @@ class SellerController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->has('price') && is_string($request->price)) {
+            $request->merge(['price' => preg_replace('/[^0-9]/', '', $request->price)]);
+        }
+
         $action = $request->input('action', 'publish'); // 'draft' or 'publish'
 
         if ($action === 'draft') {
@@ -104,9 +108,13 @@ class SellerController extends Controller
             'location' => 'required|string',
             'images' => 'required|array|min:1|max:5',
             'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ], [
+            'payment_proof.required' => 'Foto bukti pembayaran wajib diunggah sebelum publikasi.',
+            'images.required' => 'Minimal 1 foto produk wajib diunggah.',
         ]);
 
-        $product = Product::create([
+        $productData = [
             'user_id' => Auth::id(),
             'category_id' => $request->category_id,
             'title' => $request->title,
@@ -117,7 +125,13 @@ class SellerController extends Controller
             'condition' => $request->condition,
             'location' => $request->location,
             'status' => 'pending',
-        ]);
+        ];
+
+        if ($request->hasFile('payment_proof')) {
+            $productData['payment_proof'] = $request->file('payment_proof')->store('payment_proofs', 'public');
+        }
+
+        $product = Product::create($productData);
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
@@ -148,6 +162,10 @@ class SellerController extends Controller
 
     public function update(Request $request, $id)
 {
+    if ($request->has('price') && is_string($request->price)) {
+        $request->merge(['price' => preg_replace('/[^0-9]/', '', $request->price)]);
+    }
+
     // 1. Ambil data produk berdasarkan ID
     $product = \App\Models\Product::findOrFail($id);
 
@@ -167,7 +185,13 @@ class SellerController extends Controller
         'description'   => 'required|string',
         'status'        => 'required|in:pending,active,rejected,sold,archived,draft',
         'images.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', // Maksimal 5MB per foto
+        'payment_proof' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
     ]);
+
+    // Validasi tambahan: Jika produk dikirim untuk verifikasi (pending), wajib ada bukti pembayaran
+    if ($validated['status'] === 'pending' && !$product->payment_proof && !$request->hasFile('payment_proof')) {
+        return back()->withErrors(['payment_proof' => 'Foto bukti pembayaran wajib diunggah untuk mengirimkan produk ke admin.'])->withInput();
+    }
 
     // 4. Generate slug baru
     $validated['slug'] = \Illuminate\Support\Str::slug($validated['title']) . '-' . $product->id;
@@ -191,7 +215,18 @@ class SellerController extends Controller
         }
     }
 
-    // 7. Redirect kembali ke dashboard dengan pesan sukses
+    // 7. Handle Upload Bukti Pembayaran
+    if ($request->hasFile('payment_proof')) {
+        // Hapus file bukti lama jika ada
+        if ($product->payment_proof && !str_starts_with($product->payment_proof, 'http')) {
+            Storage::disk('public')->delete($product->payment_proof);
+        }
+        $product->update([
+            'payment_proof' => $request->file('payment_proof')->store('payment_proofs', 'public'),
+        ]);
+    }
+
+    // 8. Redirect kembali ke dashboard dengan pesan sukses
     return redirect()->route('seller.dashboard')
                      ->with('success', 'Produk dan foto berhasil diperbarui!');
 }

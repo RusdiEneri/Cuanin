@@ -32,6 +32,7 @@ class Product extends Model
         'location',
         'status',
         'views',
+        'payment_proof',
     ];
 
     public function category(): BelongsTo
@@ -79,5 +80,18 @@ class Product extends Model
         }
 
         return asset('storage/' . ltrim($image->image_path, '/'));
+    }
+
+    public function paymentProofUrl(): ?string
+    {
+        if (!$this->payment_proof) {
+            return null;
+        }
+
+        if (str_starts_with($this->payment_proof, 'http')) {
+            return $this->payment_proof;
+        }
+
+        return asset('storage/' . ltrim($this->payment_proof, '/'));
     }
 }
