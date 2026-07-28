@@ -115,9 +115,16 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp) <span class="text-danger">*</span></label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <span class="text-gray-500">Rp</span>
+                                        <span class="text-gray-500 font-semibold">Rp</span>
                                     </div>
-                                    <input type="number" name="price" id="field-price" value="{{ old('price') }}" placeholder="100000" min="0" class="appearance-none block w-full pl-12 pr-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                                    <input type="text" 
+                                           id="field-price-display" 
+                                           value="{{ old('price') ? number_format((float)old('price'), 0, ',', '.') : '' }}" 
+                                           placeholder="100.000" 
+                                           inputmode="numeric"
+                                           oninput="formatPriceInput(this)"
+                                           class="appearance-none block w-full pl-12 pr-4 py-3 border border-border-color rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                                    <input type="hidden" name="price" id="field-price" value="{{ old('price') }}">
                                 </div>
                             </div>
                             <div>
@@ -305,7 +312,7 @@
                                         <div class="absolute -left-[25px] bg-primary w-6 h-6 rounded-full flex items-center justify-center border-4 border-white shadow-sm ring-1 ring-gray-100">
                                             <span class="text-[10px] font-bold text-white">4</span>
                                         </div>
-                                        <p class="text-sm text-gray-600 pt-0.5 pl-3">Setelah berhasil, klik tombol <strong>"Konfirmasi Pembayaran"</strong> di bawah ini.</p>
+                                        <p class="text-sm text-gray-600 pt-0.5 pl-3">Upload <strong>bukti pembayaran</strong> di bawah ini, lalu klik tombol <strong>"Konfirmasi Pembayaran"</strong>.</p>
                                     </div>
                                 </div>
                             </div>
@@ -321,6 +328,36 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Upload Bukti Pembayaran -->
+                    <div class="mt-8 pt-8 border-t border-gray-100">
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">Upload Bukti Pembayaran <span class="text-danger">*</span></h4>
+                        <p class="text-sm text-gray-500 mb-4">Upload screenshot/foto bukti transfer Anda agar admin dapat memverifikasi pembayaran.</p>
+                        
+                        <div id="payment-proof-upload-area">
+                            <label for="payment-proof-input" class="flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer bg-gray-50 hover:bg-blue-50 hover:border-primary transition-all duration-300 group">
+                                <div class="flex flex-col items-center justify-center py-4">
+                                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-3 group-hover:bg-blue-200 transition">
+                                        <i data-lucide="receipt" class="w-6 h-6 text-primary"></i>
+                                    </div>
+                                    <p class="text-sm text-gray-500"><span class="font-semibold text-primary">Klik untuk upload</span> atau drag & drop</p>
+                                    <p class="text-xs text-gray-400 mt-1">PNG, JPG, JPEG, WEBP (Maks. 5MB)</p>
+                                </div>
+                                <input id="payment-proof-input" type="file" name="payment_proof" accept="image/jpeg,image/png,image/jpg,image/webp" class="hidden" onchange="previewPaymentProof(event)" />
+                            </label>
+                        </div>
+
+                        <!-- Preview Bukti Pembayaran -->
+                        <div id="payment-proof-preview" class="hidden mt-4">
+                            <div class="relative inline-block rounded-2xl overflow-hidden border border-gray-200 shadow-sm group">
+                                <img id="payment-proof-img" src="" alt="Bukti Pembayaran" class="max-w-xs max-h-64 object-contain bg-gray-50">
+                                <button type="button" onclick="removePaymentProof()" class="absolute top-2 right-2 bg-white/90 hover:bg-red-50 text-gray-700 hover:text-danger rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition shadow-sm">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-green-600 mt-2 flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Bukti pembayaran siap diupload</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Step 2 Buttons -->
@@ -334,9 +371,9 @@
                             <i data-lucide="arrow-left" class="w-4 h-4"></i>
                             Kembali
                         </button>
-                        <button type="submit" onclick="document.getElementById('form-action').value='publish'" class="bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
-                            <i data-lucide="check-circle" class="w-4 h-4"></i>
-                            Konfirmasi Pembayaran & Publikasikan
+                        <button type="button" onclick="submitPublish()" class="bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            Konfirmasi Pembayaran & Kirim Verifikasi
                         </button>
                     </div>
                 </div>
@@ -348,9 +385,86 @@
 @push('scripts')
 <script>
     // ========================================
-    // IMAGE UPLOAD (sama dengan versi lama)
+    // FORMAT HARGA RUPIAH DENGAN TITIK
     // ========================================
+    function formatPriceInput(el) {
+        let cursorPosition = el.selectionStart;
+        let originalLength = el.value.length;
+
+        let rawValue = el.value.replace(/[^0-9]/g, '');
+        
+        const hiddenInput = document.getElementById('field-price');
+        if (hiddenInput) {
+            hiddenInput.value = rawValue;
+            hiddenInput.dispatchEvent(new Event('input'));
+        }
+
+        if (!rawValue) {
+            el.value = '';
+            return;
+        }
+
+        let formatted = new Intl.NumberFormat('id-ID').format(rawValue);
+        el.value = formatted;
+
+        let lengthDifference = formatted.length - originalLength;
+        cursorPosition = Math.max(0, cursorPosition + lengthDifference);
+        try {
+            el.setSelectionRange(cursorPosition, cursorPosition);
+        } catch(e) {}
+    }
     let selectedFiles = [];
+
+    // ========================================
+    // BUKTI PEMBAYARAN PREVIEW & SUBMIT
+    // ========================================
+    function previewPaymentProof(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('payment-proof-img');
+            const preview = document.getElementById('payment-proof-preview');
+            const uploadArea = document.getElementById('payment-proof-upload-area');
+
+            img.src = e.target.result;
+            preview.classList.remove('hidden');
+            uploadArea.classList.add('hidden');
+
+            if (window.lucide) window.lucide.createIcons();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removePaymentProof() {
+        const input = document.getElementById('payment-proof-input');
+        const preview = document.getElementById('payment-proof-preview');
+        const uploadArea = document.getElementById('payment-proof-upload-area');
+
+        input.value = '';
+        preview.classList.add('hidden');
+        uploadArea.classList.remove('hidden');
+    }
+
+    function submitPublish() {
+        const proofInput = document.getElementById('payment-proof-input');
+        if (!proofInput || !proofInput.files || proofInput.files.length === 0) {
+            showToast('Harap upload foto bukti pembayaran terlebih dahulu!');
+            const area = document.getElementById('payment-proof-upload-area');
+            if (area) {
+                area.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const label = area.querySelector('label');
+                if (label) {
+                    label.classList.add('border-danger', 'bg-red-50');
+                    setTimeout(() => label.classList.remove('border-danger', 'bg-red-50'), 3000);
+                }
+            }
+            return false;
+        }
+        document.getElementById('form-action').value = 'publish';
+        document.getElementById('product-form').submit();
+    }
 
     const MAX_SIZE   = 2 * 1024 * 1024;
     const MAX_DIM    = 1600;
