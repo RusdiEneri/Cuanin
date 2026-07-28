@@ -143,7 +143,7 @@
                                 </a>
                             @endif
                             <form action="{{ route('seller.products.destroy', $product->id) }}" method="POST" class="inline-block"
-                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
+                                  onsubmit="confirmAction(event, 'Hapus Produk?', 'Apakah Anda yakin ingin menghapus produk ini? Data yang sudah dihapus tidak bisa dikembalikan.', 'Ya, Hapus', '#ef4444')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
