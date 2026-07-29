@@ -1,18 +1,18 @@
 #!/bin/sh
 
-# Hapus file 'hot' agar Laravel Wajib memakai hasil build Vite di public/build
+# Hapus penanda dev server Vite
 rm -f public/hot
 
-# Cache Laravel
+# Optimization Cache Laravel
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Jalankan migrasi & seeder
+# Migrasi & Seeder
 php artisan migrate --force --seed || true
 
 # Symlink storage
 php artisan storage:link || true
 
-# Jalankan server (Wajib pakai --port=$PORT agar terhubung ke Railway)
-php artisan serve --host=0.0.0.0
+# Jalankan Nginx + PHP-FPM bawaan Nixpacks (Bukan artisan serve)
+php-fpm -D && nginx -g 'daemon off;'
