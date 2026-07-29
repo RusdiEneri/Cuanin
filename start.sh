@@ -8,7 +8,8 @@ php artisan route:cache  || true
 php artisan view:cache   || true
 
 # Migrasi + seed awal (seeder kamu pakai firstOrCreate, jadi aman diulang)
-php artisan migrate --force --seed || true
+php artisan migrate:fresh --force --seed || true
+mysql -u root -p db_cuanin < backup_database.sql
 
 # Symlink storage (biar gambar bisa diakses)
 php artisan storage:link || true
