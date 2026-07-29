@@ -1,6 +1,6 @@
 {
-  "providers": ["php", "node"],
   "variables": {
-    "NIXPACKS_NODE_VERSION": "20"
+    "NIXPACKS_NODE_VERSION": "20",
+    "NIXPACKS_PHP_ROOT_DIR": "public"
   }
 }
