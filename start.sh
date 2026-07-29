@@ -1,18 +1,18 @@
 #!/bin/sh
 
-# Hapus penanda dev server Vite
+# Hapus penanda dev server Vite jika terbawa dari lokal
 rm -f public/hot
 
-# Optimization Cache Laravel
+# Clear & Cache Laravel
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Migrasi & Seeder
+# Jalankan migrasi & seeder
 php artisan migrate --force --seed || true
 
 # Symlink storage
 php artisan storage:link || true
 
-# Jalankan Nginx + PHP-FPM bawaan Nixpacks (Bukan artisan serve)
-php-fpm -D && nginx -g 'daemon off;'
+# Jalankan server bawaan Laravel dengan port terisolasi
+php artisan serve --host=0.0.0.0 --port="${PORT:-8000}"
