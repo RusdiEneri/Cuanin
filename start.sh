@@ -15,4 +15,4 @@ php artisan migrate --force --seed || true
 php artisan storage:link || true
 
 # Jalankan server (Wajib pakai --port=$PORT agar terhubung ke Railway)
-php artisan serve --host=0.0.0.0 --port=$PORT
+php artisan serve --host=0.0.0.0
