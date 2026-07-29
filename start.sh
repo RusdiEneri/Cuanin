@@ -1,15 +1,16 @@
 #!/bin/sh
 
-# Optimize cache Laravel
+# Cache Laravel
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Jalankan Migrasi + Seeder
-php artisan migrate --force --seed
+# Jalankan migrasi & seeder (ditambah || true agar error seeder tidak mematikan server)
+php artisan migrate --force --seed || true
 
 # Symlink storage
 php artisan storage:link || true
 
-# Jalankan Web Server (Wajib di baris paling akhir)
-php artisan serve --host=0.0.0.0 --port=$PORT
+# Wajib di paling bawah: Jalankan server
+# php artisan serve --host=0.0.0.0 
+npm run dev
