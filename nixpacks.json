@@ -1,0 +1,6 @@
+{
+  "providers": ["php", "node"],
+  "variables": {
+    "NIXPACKS_NODE_VERSION": "20"
+  }
+}
