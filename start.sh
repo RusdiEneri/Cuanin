@@ -9,10 +9,9 @@ php artisan view:cache   || true
 
 # Migrasi + seed awal (seeder kamu pakai firstOrCreate, jadi aman diulang)
 php artisan migrate:fresh --force --seed || true
-mysql -u root -p db_cuanin < backup_database.sql
 
 # Symlink storage (biar gambar bisa diakses)
 php artisan storage:link || true
 
 # Jalankan server Laravel di port Railway
-php artisan serve --host=0.0.0.0 --port="${PORT:-8000}"
+php artisan serve --host=0.0.0.0
