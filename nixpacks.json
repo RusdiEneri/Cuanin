@@ -1,6 +1,7 @@
 {
   "variables": {
     "NIXPACKS_NODE_VERSION": "20",
+    "NIXPACKS_PHP_VERSION": "8.2",
     "NIXPACKS_PHP_ROOT_DIR": "public"
   }
 }
