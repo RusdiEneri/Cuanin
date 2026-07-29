@@ -14,4 +14,4 @@ php artisan storage:link || true
 # Wajib di paling bawah: Jalankan server
 # php artisan serve --host=0.0.0.0 
 npm run build
-npm run dev
+php artisan serve --host=0.0.0.0
