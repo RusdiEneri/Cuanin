@@ -30,6 +30,26 @@
 
     {{-- Stack untuk CSS tambahan dari child view --}}
     @stack('styles')
+    <!-- PWA Manifest & Meta Tags -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0ea5e9"> <!-- Samakan dengan manifest -->
+
+<!-- Khusus iOS (Safari) agar tampil full-screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cuanin">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+
+<!-- Register Service Worker -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('Cuanin Service Worker Terdaftar!'))
+                .catch(err => console.log('SW Gagal:', err));
+        });
+    }
+</script>
 </head>
 <body class="font-sans antialiased text-dark bg-background flex flex-col min-h-screen">
 
