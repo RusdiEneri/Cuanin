@@ -3,11 +3,55 @@
 
 <div align="center">
     <p>
-        <img align="center" alt="count" src="./public/logo.png">
+        <img align="center" alt="Logo" src="./public/logo.png">
     </p>
 </div>
 
 ---
+
+<h2 align="center">👥 CORE TEAM</h2>
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://github.com/RusdiEneri">
+        <img src="https://github.com/RusdiEneri.png" width="100" height="100" /><br />
+        <b>RusdiEneri</b>
+      </a><br />
+      <sub>Project Lead</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/capankaa">
+        <img src="https://github.com/capankaa.png" width="100" height="100" /><br />
+        <b>capankaa</b>
+      </a><br />
+      <sub>Project Manager</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/rkyarc">
+        <img src="https://github.com/rkyarc.png" width="100" height="100" /><br />
+        <b>rkyarc</b>
+      </a><br />
+      <sub>Frontend Developer</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/IkbarXD">
+        <img src="https://github.com/IkbarXD.png" width="100" height="100" /><br />
+        <b>IkbarXD</b>
+      </a><br />
+      <sub>Backend Developer</sub>
+    </td>
+    <!-- <td align="center">
+      <a href="https://github.com/claude">
+        <img src="https://github.com/claude.png" width="100" height="100" /><br />
+        <b>claude</b>
+      </a><br />
+      <sub>AI Assistant</sub>
+    </td> -->
+  </tr>
+</table>
+ 
+ ------
 
 # Cuanin - Marketplace Barang Bekas
 Cuanin adalah marketplace untuk jual beli barang bekas (preloved). Pengguna dapat menjelajah produk, memasukkan ke keranjang, mengajukan nego harga, dan melakukan pemesanan langsung melalui WhatsApp penjual.
